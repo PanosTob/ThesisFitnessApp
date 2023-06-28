@@ -4,8 +4,8 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 
 val darkColorsPalette = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
+    primary = ColorPrimary,
+    secondary = ColorSecondary,
     tertiary = Pink80
     /*primary = primaryColor,
     primaryVariant = primaryDarkColor,
@@ -22,8 +22,8 @@ val darkColorsPalette = darkColorScheme(
 )
 
 val lightColorsPalette = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
+    primary = ColorPrimary,
+    secondary = ColorSecondary,
     tertiary = Pink40
     /*primary = primaryColor,
     primaryVariant = primaryDarkColor,

@@ -162,14 +162,24 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:${rootProject.extra.get("navVersion")}")
 
     //COMPOSE LIBS
-    implementation ("androidx.compose:compose-bom:2023.06.01")
-    implementation ("androidx.activity:activity-compose:1.7.2")
+    implementation("androidx.compose:compose-bom:2023.06.01")
+    implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-    implementation ("androidx.compose.ui:ui")
-    implementation ("androidx.compose.ui:ui-graphics")
-    implementation ("androidx.compose.ui:ui-tooling-preview")
-    implementation ("androidx.compose.material3:material3")
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
+
+    val accompanistVersion by extra { "0.30.1" }
+    implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-permissions:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
+
+    //Video Player
+    implementation("com.google.android.exoplayer:exoplayer:2.18.1")
 
     //Google Libs
     implementation(platform("com.google.firebase:firebase-bom:32.1.1"))

@@ -2,12 +2,10 @@ package gr.dipae.thesisfitnessapp.ui.base
 
 import android.content.Context
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.annotation.CallSuper
-import androidx.appcompat.app.AppCompatActivity
 import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.viewbinding.ViewBinding
 import gr.dipae.thesisfitnessapp.domain.profile.language.entity.LanguageResult
 import gr.dipae.thesisfitnessapp.util.PREFS_LANGUAGE
 import gr.dipae.thesisfitnessapp.util.THESIS_FITNESS_PREFS
@@ -15,17 +13,11 @@ import gr.dipae.thesisfitnessapp.util.encryptor.Encryptor
 import gr.dipae.thesisfitnessapp.util.ext.get
 import gr.dipae.thesisfitnessapp.util.ext.updateLocale
 
-abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
-
-    protected lateinit var binding: VB
-
-    abstract fun getViewBinding(): VB
+abstract class BaseActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         updateLocale(getSavedLanguage(this))
-        binding = getViewBinding()
-        setContentView(binding.root)
     }
 
     @CallSuper

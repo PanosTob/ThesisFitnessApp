@@ -10,12 +10,10 @@ import android.view.ViewGroup
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.util.ext.drawBehindSystemUI
 import gr.dipae.thesisfitnessapp.util.ext.hideSystemUI
-import kotlinx.coroutines.launch
 
 abstract class BaseFragment<VB : ViewBinding> : Fragment() {
 
@@ -61,18 +59,13 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
         return _binding?.root
     }
 
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
-    }
-
     private fun updateStatusBar() {
         if (!isInnerFragment()) {
             updateStatusBarType(getStatusBarType(), getStatusBarColor(), isFullscreen(), drawBehindSystemUI(), isImmersiveSystemUI())
         }
     }
 
-    fun updateStatusBarType(
+    private fun updateStatusBarType(
         statusBarType: StatusBarType,
         @ColorRes statusBarColor: Int?,
         isFullscreen: Boolean,
@@ -83,23 +76,21 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
             drawBehindSystemUI -> activity?.drawBehindSystemUI()
             isImmersiveSystemUI -> activity?.hideSystemUI()
             statusBarType == StatusBarType.LIGHT -> {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                    // prevent light color with white text
-                    activity?.window?.statusBarColor = Color.BLACK
-                } else {
-                    if (isFullscreen) {
-                        activity?.window?.statusBarColor = handleStatusBarColor(statusBarColor)
-                        activity?.window?.navigationBarColor = handleNavigationBarColor()
+                if (isFullscreen) {
+                    activity?.window?.statusBarColor = handleStatusBarColor(statusBarColor)
+                    activity?.window?.navigationBarColor = handleNavigationBarColor()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         activity?.window?.decorView?.systemUiVisibility =
                             (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR)
-                    } else {
-                        activity?.window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        context?.let {
-                            activity?.window?.statusBarColor = ContextCompat.getColor(it, statusBarColor ?: R.color.white)
-                        }
+                    }
+                } else {
+                    activity?.window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    context?.let {
+                        activity?.window?.statusBarColor = ContextCompat.getColor(it, statusBarColor ?: R.color.white)
                     }
                 }
             }
+
             statusBarType == StatusBarType.DARK -> {
                 if (isFullscreen) {
                     activity?.window?.statusBarColor = handleStatusBarColor(statusBarColor)
@@ -130,21 +121,6 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
             ContextCompat.getColor(requireContext(), getNavigationBarColor()!!)
         } else {
             Color.TRANSPARENT
-        }
-    }
-
-    protected fun launch(
-        preload: suspend () -> Unit = {},
-        postload: () -> Unit = {},
-        function: suspend () -> Unit
-    ) {
-        lifecycleScope.launch {
-            preload.invoke()
-            function.invoke()
-        }.apply {
-            invokeOnCompletion {
-                postload.invoke()
-            }
         }
     }
 }

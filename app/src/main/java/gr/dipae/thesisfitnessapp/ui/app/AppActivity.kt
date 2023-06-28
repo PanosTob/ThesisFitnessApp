@@ -1,43 +1,59 @@
 package gr.dipae.thesisfitnessapp.ui.app
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.activity.viewModels
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.Observer
+import dagger.hilt.android.AndroidEntryPoint
+import gr.dipae.thesisfitnessapp.ui.base.BaseActivity
 import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
 
-class AppActivity : ComponentActivity() {
+@ExperimentalComposeUiApi
+@AndroidEntryPoint
+class AppActivity : BaseActivity() {
+
+    private val viewModel: AppViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupObservers()
         setContent {
-            ThesisFitnessAppTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Greeting("Android")
-                }
+            ThesisFitnessAppTheme(statusBarColor = Color.Black) {
+                AppNavHost(viewModel)
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    private fun setupObservers() {
+        with(viewModel) {
+            restartApp.observe(this@AppActivity, Observer(this@AppActivity::restartApp))
+            recreateApp.observe(this@AppActivity, Observer(this@AppActivity::recreateApp))
+            submitLanguageChange.observe(this@AppActivity, Observer(::submitLanguageChange))
+        }
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ThesisFitnessAppTheme {
-        Greeting("Android")
+    private fun restartApp(unit: Unit) {
+        restartApp()
+    }
+
+    private fun recreateApp(unit: Unit) {
+        recreate()
+    }
+
+    private fun submitLanguageChange(unit: Unit) {
+        viewModel.recreateApp()
+    }
+
+    companion object {
+        fun Activity.restartApp() {
+            finishAffinity()
+            val intent = Intent(this, AppActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
     }
 }
