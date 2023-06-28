@@ -2,7 +2,7 @@
 
 plugins {
     id("com.android.application")
-    id("com.google.gms.google-services")
+//    id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("kotlin-android")
     kotlin("kapt")
@@ -181,6 +181,7 @@ dependencies {
     //Room Libs
     val roomVersion by extra { "2.5.2" }
     implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.databinding:adapters:3.2.0-alpha11")
     kapt("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")
@@ -197,6 +198,9 @@ dependencies {
     val moshi by extra { "1.15.0" }
     implementation("com.squareup.moshi:moshi-kotlin:$moshi")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi")
+
+    implementation("com.jakewharton.timber:timber:4.7.1")
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 
     //Hilt Libs | Dependency injection
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")

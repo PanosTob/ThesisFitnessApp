@@ -1,8 +1,6 @@
-package gr.dipae.thesisfitnessapp
+package gr.dipae.thesisfitnessapp.ui.app
 
 import android.os.Bundle
-import android.view.ViewGroup
-import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
 
-class MainActivity : ComponentActivity() {
+class AppActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
