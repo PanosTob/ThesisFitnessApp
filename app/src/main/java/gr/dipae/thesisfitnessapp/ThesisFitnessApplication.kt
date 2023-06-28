@@ -9,6 +9,7 @@ import gr.dipae.thesisfitnessapp.domain.profile.language.entity.LanguageResult
 import gr.dipae.thesisfitnessapp.util.PREFS_LANGUAGE
 import gr.dipae.thesisfitnessapp.util.ext.get
 import gr.dipae.thesisfitnessapp.util.ext.set
+import io.grpc.android.BuildConfig
 import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
@@ -23,10 +24,10 @@ class ThesisFitnessApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        /*// Debug Only
+        // Debug Only
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-        }*/
+        }
 
         setupLocale(prefs.get())
     }

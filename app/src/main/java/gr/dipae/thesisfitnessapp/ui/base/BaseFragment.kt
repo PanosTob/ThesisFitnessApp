@@ -101,7 +101,7 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
                     activity?.window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     context?.let {
                         activity?.window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        activity?.window?.statusBarColor = ContextCompat.getColor(it, statusBarColor ?: R.color.purple_500)
+                        activity?.window?.statusBarColor = ContextCompat.getColor(it, statusBarColor ?: R.color.black)
                     }
                 }
             }
