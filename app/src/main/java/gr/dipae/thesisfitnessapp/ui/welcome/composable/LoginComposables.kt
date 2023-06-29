@@ -43,12 +43,12 @@ import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDouble_32dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingEighth_2dp
 import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
-import gr.dipae.thesisfitnessapp.ui.welcome.model.WelcomeUiState
+import gr.dipae.thesisfitnessapp.ui.welcome.model.LoginUiState
 import gr.dipae.thesisfitnessapp.util.ext.pxToDp
 
 @Composable
-fun WelcomeContent(
-    uiState: WelcomeUiState
+fun LoginContent(
+    uiState: LoginUiState
 ) {
     val screenHeightDp = LocalConfiguration.current.screenHeightDp
     var contentHeightDp by remember { mutableStateOf(IntSize.Zero) }
@@ -128,8 +128,8 @@ fun WelcomeContent(
 
 @Preview
 @Composable
-fun WelcomeContentPreview() {
+fun LoginContentPreview() {
     ThesisFitnessAppTheme {
-        WelcomeContent(WelcomeUiState())
+        LoginContent(LoginUiState())
     }
 }

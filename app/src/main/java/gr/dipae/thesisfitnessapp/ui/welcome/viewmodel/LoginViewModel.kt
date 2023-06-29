@@ -4,16 +4,16 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
-import gr.dipae.thesisfitnessapp.ui.welcome.model.WelcomeUiState
+import gr.dipae.thesisfitnessapp.ui.welcome.model.LoginUiState
 import javax.inject.Inject
 
 @HiltViewModel
-class WelcomeViewModel @Inject constructor(
+class LoginViewModel @Inject constructor(
 
 ) : BaseViewModel() {
 
-    private val _uiState = mutableStateOf(WelcomeUiState())
-    val uiState: State<WelcomeUiState> = _uiState
+    private val _uiState = mutableStateOf(LoginUiState())
+    val uiState: State<LoginUiState> = _uiState
 
     fun init() {
 
