@@ -5,8 +5,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import gr.dipae.thesisfitnessapp.ui.splash.navigation.SplashSubscriptionRoute
+import gr.dipae.thesisfitnessapp.ui.splash.navigation.SplashRoute
 import gr.dipae.thesisfitnessapp.ui.splash.navigation.splashScreen
+import gr.dipae.thesisfitnessapp.ui.welcome.navigation.navigateToWelcome
+import gr.dipae.thesisfitnessapp.ui.welcome.navigation.welcomeScreen
 
 @ExperimentalComposeUiApi
 @Composable
@@ -20,7 +22,10 @@ fun AppNavHost(
 
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = SplashSubscriptionRoute) {
-        splashScreen()
+    NavHost(navController = navController, startDestination = SplashRoute) {
+        splashScreen {
+            navController.navigateToWelcome()
+        }
+        welcomeScreen()
     }
 }

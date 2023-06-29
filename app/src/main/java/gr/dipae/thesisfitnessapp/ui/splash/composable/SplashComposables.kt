@@ -12,12 +12,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import gr.dipae.thesisfitnessapp.R
-import gr.dipae.thesisfitnessapp.ui.splash.model.SplashUiState
 import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
 
 @Composable
 fun SplashContent(
-    uiState: SplashUiState
 ) {
     Surface(color = Color.Black) {
         Image(
@@ -26,7 +24,7 @@ fun SplashContent(
                 .wrapContentSize()
                 .fillMaxWidth(0.8f)
                 .aspectRatio(1f),
-            painter = painterResource(id = uiState.img),
+            painter = painterResource(id = R.drawable.app_logo),
             contentDescription = ""
         )
     }
@@ -36,8 +34,6 @@ fun SplashContent(
 @Composable
 fun SplashContentPreview() {
     ThesisFitnessAppTheme {
-        SplashContent(
-            SplashUiState(R.drawable.app_logo)
-        )
+        SplashContent()
     }
 }

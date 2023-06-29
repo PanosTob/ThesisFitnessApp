@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ThesisFitnessApp</string>
+
+    <!-- Welcome Screen -->
+    <string name="welcome_screen_title">Welcome</string>
+    <string name="welcome_screen_sign_in_btn">Sign in with Google</string>
+    <string name="welcome_screen_guest_btn">Or continue as Guest</string>
 </resources>

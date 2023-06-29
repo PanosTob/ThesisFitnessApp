@@ -1,7 +1,8 @@
 package gr.dipae.thesisfitnessapp.ui.splash.model
 
-import androidx.annotation.DrawableRes
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 
 data class SplashUiState(
-    @DrawableRes val img: Int
+    val navigateToWelcome: MutableState<Boolean> = mutableStateOf(false)
 )

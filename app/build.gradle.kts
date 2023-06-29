@@ -57,20 +57,20 @@ android {
         abortOnError = false
     }
 
-    signingConfigs {
+    /*signingConfigs {
         getByName("debug") {
             storeFile = file("keystore/debug.keystore")
             keyAlias = "androiddebugkey"
             storePassword = "android"
             keyPassword = "android"
         }
-        /*create("release") {
+        create("release") {
             storeFile = file("keystore/thesis_fitness.jks")
             keyAlias = "ThesisFitnessApp"
             keyPassword = "f5FW2HhkPGcgkt7"
             storePassword = "f5FW2HhkPGcgkt7"
-        }*/
-    }
+        }
+    }*/
 
     buildTypes {
         debug {

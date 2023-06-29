@@ -13,34 +13,38 @@ val openSansFontFamily = FontFamily(
     Font(R.font.open_sans_bold, FontWeight.Bold)
 )
 
+val lexendDecaFontFamily = FontFamily(
+    Font(R.font.lexend_deca_medium, FontWeight.Medium)
+)
+
 val thesisFitnessTypography = Typography(
     headlineLarge = TextStyle(
-        fontFamily = openSansFontFamily,
+        fontFamily = lexendDecaFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 18.sp
     ),
     headlineMedium = TextStyle(
-        fontFamily = openSansFontFamily,
+        fontFamily = lexendDecaFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp
     ),
     headlineSmall = TextStyle(
-        fontFamily = openSansFontFamily,
+        fontFamily = lexendDecaFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp
     ),
     bodyLarge = TextStyle(
-        fontFamily = openSansFontFamily,
+        fontFamily = lexendDecaFontFamily,
         fontWeight = FontWeight.Thin,
         fontSize = 14.sp
     ),
     bodyMedium = TextStyle(
-        fontFamily = openSansFontFamily,
+        fontFamily = lexendDecaFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp
     ),
     labelLarge = TextStyle(
-        fontFamily = openSansFontFamily,
+        fontFamily = lexendDecaFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 18.sp
     )
