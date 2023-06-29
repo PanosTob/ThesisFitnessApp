@@ -2,7 +2,7 @@
 
 plugins {
     id("com.android.application")
-//    id("com.google.gms.google-services")
+    id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("kotlin-android")
     kotlin("kapt")
@@ -60,16 +60,16 @@ android {
     signingConfigs {
         getByName("debug") {
             storeFile = file("keystore/debug.keystore")
-            keyAlias = "panostob"
-            storePassword = "12345678"
-            keyPassword = "12345678"
+            keyAlias = "androiddebugkey"
+            storePassword = "android"
+            keyPassword = "android"
         }
-        create("release") {
+        /*create("release") {
             storeFile = file("keystore/thesis_fitness.jks")
             keyAlias = "ThesisFitnessApp"
             keyPassword = "f5FW2HhkPGcgkt7"
             storePassword = "f5FW2HhkPGcgkt7"
-        }
+        }*/
     }
 
     buildTypes {
@@ -103,7 +103,7 @@ android {
             dimension = "env"
             resValue("string", "app_name", "Thesis Fitness")
 
-            signingConfig = signingConfigs.getByName("release")
+//            signingConfig = signingConfigs.getByName("release")
         }
     }
 
@@ -179,7 +179,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
 
     //Video Player
-    implementation("com.google.android.exoplayer:exoplayer:2.18.1")
+    implementation("com.google.android.exoplayer:exoplayer:2.18.7")
 
     //Google Libs
     implementation(platform("com.google.firebase:firebase-bom:32.1.1"))

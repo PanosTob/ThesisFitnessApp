@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "402450565313",
+    "project_id": "thesis-fitness-app-8c2a1",
+    "storage_bucket": "thesis-fitness-app-8c2a1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:402450565313:android:5e784b10fad32763e0ec40",
+        "android_client_info": {
+          "package_name": "gr.dipae.thesisfitnessapp.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "402450565313-2ihnfepe5j8ch2mtagn0l5tp6dcpre0p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "gr.dipae.thesisfitnessapp.dev",
+            "certificate_hash": "400b319666ee352d4a4ad796cfa1999e4b6578e8"
+          }
+        },
+        {
+          "client_id": "402450565313-sn7rat2belap2597utsfp8mf0pi0ti8r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDRpkSQApZxUMTqkJUYbOL5IY11-g0xLE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "402450565313-sn7rat2belap2597utsfp8mf0pi0ti8r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
