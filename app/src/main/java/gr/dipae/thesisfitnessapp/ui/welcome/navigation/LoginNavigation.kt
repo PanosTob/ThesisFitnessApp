@@ -1,29 +1,44 @@
 package gr.dipae.thesisfitnessapp.ui.welcome.navigation
 
+import android.content.IntentSender
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import gr.dipae.thesisfitnessapp.ui.welcome.composable.LoginContent
 import gr.dipae.thesisfitnessapp.ui.welcome.viewmodel.LoginViewModel
 import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 
 
 private const val LoginRoute = "welcome"
 
 @ExperimentalComposeUiApi
-fun NavGraphBuilder.loginScreen() {
+fun NavGraphBuilder.loginScreen(
+    onGoogleSignInClicked: (IntentSender) -> Unit
+) {
     composable(LoginRoute) {
         val viewModel: LoginViewModel = hiltViewModel()
 
+        val lifecycleOwner = LocalLifecycleOwner.current
+        LaunchedEffect(viewModel, lifecycleOwner.lifecycle) {
+            snapshotFlow { viewModel.initiateGoogleSignInWindow.value }.filterNotNull().flowWithLifecycle(lifecycleOwner.lifecycle).collectLatest {
+
+            }
+        }
         LaunchedEffect(key1 = Unit) {
             viewModel.init()
         }
 
         LoginContent(
-            uiState = viewModel.uiState.value
+            uiState = viewModel.uiState.value,
+            onGoogleSignInClicked = { viewModel.onGoogleSignInClicked(it) }
         )
     }
 }

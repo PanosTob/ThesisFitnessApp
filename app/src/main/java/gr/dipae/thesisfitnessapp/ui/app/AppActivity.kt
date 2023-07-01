@@ -2,6 +2,7 @@ package gr.dipae.thesisfitnessapp.ui.app
 
 import android.app.Activity
 import android.content.Intent
+import android.content.IntentSender
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -33,6 +34,7 @@ class AppActivity : BaseActivity() {
             restartApp.observe(this@AppActivity, Observer(this@AppActivity::restartApp))
             recreateApp.observe(this@AppActivity, Observer(this@AppActivity::recreateApp))
             submitLanguageChange.observe(this@AppActivity, Observer(::submitLanguageChange))
+            initiateGoogleSignInWindow.observe(this@AppActivity, Observer(::initiateGoogleSignInWindow))
         }
     }
 
@@ -48,7 +50,29 @@ class AppActivity : BaseActivity() {
         viewModel.recreateApp()
     }
 
+    private fun initiateGoogleSignInWindow(intent: IntentSender) {
+        startIntentSenderForResult(
+            intent, REQ_ONE_TAP,
+            null, 0, 0, 0, null
+        )
+        /*startActivityForResult(intent, REQ_ONE_TAP)
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            viewModel.signInUser(it.data)
+        }*/
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQ_ONE_TAP) {
+            viewModel.signInUser(data)
+        }
+    }
+
     companion object {
+
+        const val REQ_ONE_TAP = 1
+
         fun Activity.restartApp() {
             finishAffinity()
             val intent = Intent(this, AppActivity::class.java)

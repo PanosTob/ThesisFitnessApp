@@ -48,7 +48,8 @@ import gr.dipae.thesisfitnessapp.util.ext.pxToDp
 
 @Composable
 fun LoginContent(
-    uiState: LoginUiState
+    uiState: LoginUiState,
+    onGoogleSignInClicked: (String) -> Unit = {}
 ) {
     val screenHeightDp = LocalConfiguration.current.screenHeightDp
     var contentHeightDp by remember { mutableStateOf(IntSize.Zero) }
@@ -91,11 +92,13 @@ fun LoginContent(
             )
 
             VerticalSpacerDouble()
+
+            val googleWebClientId = stringResource(id = R.string.default_web_client_id)
             Row(
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
                     .border(BorderStroke(SpacingEighth_2dp, ColorSecondary), RoundedCornerShape(SpacingDefault_16dp))
-                    .clickable { }
+                    .clickable { onGoogleSignInClicked(googleWebClientId) }
                     .padding(SpacingCustom_12dp),
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically

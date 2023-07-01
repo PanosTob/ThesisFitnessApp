@@ -6,7 +6,7 @@ import javax.inject.Inject
 @ActivityRetainedScoped
 class SessionHandler @Inject constructor() {
 
-    var loggedInOnCurrentSession: Boolean = false
+    var guestCurrentSession: Boolean = false
 
     companion object {
 

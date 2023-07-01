@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.annotation.CallSuper
 import androidx.security.crypto.EncryptedSharedPreferences
-import gr.dipae.thesisfitnessapp.domain.profile.language.entity.LanguageResult
+import gr.dipae.thesisfitnessapp.domain.user.language.entity.LanguageResult
 import gr.dipae.thesisfitnessapp.util.PREFS_LANGUAGE
 import gr.dipae.thesisfitnessapp.util.THESIS_FITNESS_PREFS
 import gr.dipae.thesisfitnessapp.util.encryptor.Encryptor

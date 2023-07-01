@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import dagger.Lazy
 import dagger.hilt.android.HiltAndroidApp
 import gr.dipae.thesisfitnessapp.di.module.qualifier.GeneralSharedPrefs
-import gr.dipae.thesisfitnessapp.domain.profile.language.entity.LanguageResult
+import gr.dipae.thesisfitnessapp.domain.user.language.entity.LanguageResult
 import gr.dipae.thesisfitnessapp.util.PREFS_LANGUAGE
 import gr.dipae.thesisfitnessapp.util.ext.get
 import gr.dipae.thesisfitnessapp.util.ext.set

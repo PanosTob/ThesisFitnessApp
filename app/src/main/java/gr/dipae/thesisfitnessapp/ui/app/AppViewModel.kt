@@ -1,5 +1,7 @@
 package gr.dipae.thesisfitnessapp.ui.app
 
+import android.content.Intent
+import android.content.IntentSender
 import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,10 +9,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gr.dipae.thesisfitnessapp.domain.session.SessionHandler
+import gr.dipae.thesisfitnessapp.domain.user.login.SignInResult
 import gr.dipae.thesisfitnessapp.ui.app.model.PoDHelper
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.livedata.NetworkLiveData
 import gr.dipae.thesisfitnessapp.ui.livedata.SingleLiveEvent
+import gr.dipae.thesisfitnessapp.usecase.user.SignInUserUseCase
 import gr.dipae.thesisfitnessapp.util.SAVE_STATE_APP
 import gr.dipae.thesisfitnessapp.util.delegate.SaveStateDelegate
 import kotlinx.coroutines.delay
@@ -22,6 +26,7 @@ class AppViewModel @Inject constructor(
     val networkLiveData: NetworkLiveData,
     private val sessionHandler: SessionHandler,
     private val podHelper: PoDHelper,
+    private val signInUserUseCase: SignInUserUseCase
 ) : BaseViewModel() {
 
     private val _navigateId = SingleLiveEvent<Triple<Int, Bundle?, NavOptions?>>()
@@ -35,6 +40,12 @@ class AppViewModel @Inject constructor(
 
     private val _submitLanguageChange = MutableLiveData<Unit>()
     val submitLanguageChange: LiveData<Unit> = _submitLanguageChange
+
+    private val _initiateGoogleSignInWindow = SingleLiveEvent<IntentSender>()
+    val initiateGoogleSignInWindow: LiveData<IntentSender> = _initiateGoogleSignInWindow
+
+    private val _navigateToWizard = SingleLiveEvent<Unit>()
+    val navigateToWizard: LiveData<Unit> = _navigateToWizard
 
     private val _initApp = SingleLiveEvent<Boolean>()
 
@@ -53,6 +64,18 @@ class AppViewModel @Inject constructor(
         podHelper.initPoDHelper()
     }
 
+    fun onGoogleSignInClicked(intent: IntentSender) {
+        _initiateGoogleSignInWindow.value = intent
+    }
+
+    fun signInUser(googleSignInData: Intent?) {
+        launchWithProgress {
+            val signInResponse = signInUserUseCase(googleSignInData)
+            if (signInResponse is SignInResult.Success) {
+                _navigateToWizard.value = Unit
+            }
+        }
+    }
 
     fun recreateApp() {
         launch {
