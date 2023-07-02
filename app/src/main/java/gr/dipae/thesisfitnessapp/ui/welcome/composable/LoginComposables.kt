@@ -85,7 +85,7 @@ fun LoginContent(
             VerticalSpacerDefault()
             VerticalSpacerHalf()
             ThesisFitnessHLAutoSizeText(
-                text = stringResource(id = R.string.welcome_screen_title),
+                text = stringResource(id = R.string.login_title),
                 maxLines = 1,
                 color = Color.White,
                 maxFontSize = 28.sp
@@ -111,7 +111,7 @@ fun LoginContent(
                     contentDescription = ""
                 )
                 ThesisFitnessLLAutoSizeText(
-                    text = stringResource(id = R.string.welcome_screen_sign_in_btn),
+                    text = stringResource(id = R.string.login_sign_in_btn),
                     color = Color.White,
                     maxLines = 1,
                     maxFontSize = 22.sp
@@ -120,7 +120,7 @@ fun LoginContent(
         }
         ThesisFitnessLLAutoSizeText(
             modifier = Modifier.fillMaxWidth(),
-            text = stringResource(id = R.string.welcome_screen_guest_btn),
+            text = stringResource(id = R.string.login_guest_btn),
             color = Color.White,
             textAlign = TextAlign.Center,
             maxLines = 1,
