@@ -17,6 +17,7 @@ import gr.dipae.thesisfitnessapp.ui.livedata.SingleLiveEvent
 import gr.dipae.thesisfitnessapp.usecase.user.SignInUserUseCase
 import gr.dipae.thesisfitnessapp.util.SAVE_STATE_APP
 import gr.dipae.thesisfitnessapp.util.delegate.SaveStateDelegate
+import gr.dipae.thesisfitnessapp.util.ext.handleFirebaseException
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 
@@ -71,9 +72,15 @@ class AppViewModel @Inject constructor(
     fun signInUser(googleSignInData: Intent?) {
         launchWithProgress {
             val signInResponse = signInUserUseCase(googleSignInData)
-            if (signInResponse is SignInResult.Success) {
-                _navigateToWizard.value = Unit
+            if (signInResponse is SignInResult.FirebaseFailure) {
+                signInResponse.firebaseException.handleFirebaseException()
+                return@launchWithProgress
             }
+            if (signInResponse is SignInResult.Failure) {
+                return@launchWithProgress
+            }
+
+            _navigateToWizard.value = Unit
         }
     }
 

@@ -2,6 +2,8 @@ package gr.dipae.thesisfitnessapp.ui.welcome.navigation
 
 import android.content.IntentSender
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -26,12 +28,14 @@ fun NavGraphBuilder.loginScreen(
     composable(LoginRoute) {
         val viewModel: LoginViewModel = hiltViewModel()
 
+        val googleSignInIntent by viewModel.initiateGoogleSignInWindow.observeAsState()
         val lifecycleOwner = LocalLifecycleOwner.current
         LaunchedEffect(viewModel, lifecycleOwner.lifecycle) {
-            snapshotFlow { viewModel.initiateGoogleSignInWindow.value }.filterNotNull().flowWithLifecycle(lifecycleOwner.lifecycle).collectLatest {
-
+            snapshotFlow { googleSignInIntent }.filterNotNull().flowWithLifecycle(lifecycleOwner.lifecycle).collectLatest {
+                onGoogleSignInClicked(it)
             }
         }
+
         LaunchedEffect(key1 = Unit) {
             viewModel.init()
         }

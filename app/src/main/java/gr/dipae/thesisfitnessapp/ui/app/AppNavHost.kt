@@ -2,8 +2,12 @@ package gr.dipae.thesisfitnessapp.ui.app
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import gr.dipae.thesisfitnessapp.ui.activity.navigation.activityScreen
@@ -32,11 +36,14 @@ fun AppNavHost(
 
     val navController = rememberNavController()
 
-    LaunchedEffect(key1 = Unit) {
-        snapshotFlow { viewModel.navigateToWizard.value }.filterNotNull().collectLatest {
+    val navigateToWizard by viewModel.navigateToWizard.observeAsState()
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    LaunchedEffect(viewModel, lifecycle) {
+        snapshotFlow { navigateToWizard }.filterNotNull().flowWithLifecycle(lifecycle).collectLatest {
             navController.navigateToWizard()
         }
     }
+
     NavHost(navController = navController, startDestination = SplashRoute) {
         splashScreen {
             navController.navigateToLogin()

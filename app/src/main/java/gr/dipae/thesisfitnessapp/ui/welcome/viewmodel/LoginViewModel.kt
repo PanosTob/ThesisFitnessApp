@@ -27,7 +27,9 @@ class LoginViewModel @Inject constructor(
 
     fun onGoogleSignInClicked(webClientId: String) {
         launchWithProgress {
-            _initiateGoogleSignInWindow.value = getGoogleSignInIntentUseCase(webClientId).pendingIntent.intentSender
+            getGoogleSignInIntentUseCase(webClientId)?.pendingIntent?.intentSender?.let {
+                _initiateGoogleSignInWindow.value = it
+            }
         }
     }
 

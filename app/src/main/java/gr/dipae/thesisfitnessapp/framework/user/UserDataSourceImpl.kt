@@ -7,16 +7,17 @@ import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException
 import gr.dipae.thesisfitnessapp.data.user.UserDataSource
+import gr.dipae.thesisfitnessapp.data.user.login.model.RemoteUser
 import gr.dipae.thesisfitnessapp.di.module.qualifier.GeneralSharedPrefs
 import gr.dipae.thesisfitnessapp.util.USERS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.USER_EMAIL
 import gr.dipae.thesisfitnessapp.util.USER_NAME
 import gr.dipae.thesisfitnessapp.util.base.GoogleAuthenticationException
-import gr.dipae.thesisfitnessapp.util.ext.requireNotNull
+import gr.dipae.thesisfitnessapp.util.ext.documentToResponse
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class UserDataSourceImpl @Inject constructor(
@@ -34,11 +35,11 @@ class UserDataSourceImpl @Inject constructor(
                     // Google Console Auth 2.0 Web client key.
                     .setServerClientId(webClientId)
                     // Only show accounts previously used to sign in.
-                    .setFilterByAuthorizedAccounts(true)
+                    .setFilterByAuthorizedAccounts(false)
                     .build()
             )
             .build()
-        return oneTapClient.beginSignIn(signInRequest).requireNotNull()
+        return oneTapClient.beginSignIn(signInRequest).await()
     }
 
     private fun getGoogleUserId(googleSignInData: Intent): String {
@@ -59,16 +60,16 @@ class UserDataSourceImpl @Inject constructor(
                     USER_EMAIL to auth.currentUser?.email,
                     USER_NAME to auth.currentUser?.displayName
                 )
-            ).requireNotNull()
+            ).await()
     }
 
-    override suspend fun signInUser(googleSignInData: Intent): DocumentSnapshot? {
+    override suspend fun signInUser(googleSignInData: Intent): RemoteUser? {
         val firebaseCredential = GoogleAuthProvider.getCredential(getGoogleUserId(googleSignInData), null)
 
-        auth.signInWithCredential(firebaseCredential).requireNotNull()
+        auth.signInWithCredential(firebaseCredential).await()
         val firebaseUserId = getFirebaseUserId()
 
-        return fireStore.collection(USERS_COLLECTION).document(firebaseUserId).get().requireNotNull()
+        return fireStore.collection(USERS_COLLECTION).document(firebaseUserId).get().documentToResponse<RemoteUser>()
     }
 
     override suspend fun logout() {

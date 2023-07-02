@@ -12,27 +12,13 @@ import timber.log.Timber
 
 fun FirebaseException.handleFirebaseException() {
     Timber.tag(APP_NAME).e(this)
-    when (this) {
-        is FirebaseNetworkException -> { /* FirebaseResult.NoInternetException */
-        }
-
-        is FirebaseAuthInvalidUserException -> { /* FirebaseResult.NonExistingUserException*/
-        }
-
-        is FirebaseAuthInvalidCredentialsException -> { /* FirebaseResult.InvalidCredentialsException */
-        }
-
-        is FirebaseAuthUserCollisionException -> { /* FirebaseResult.UserAlreadyExistsException */
-        }
-
-        is FirebaseTooManyRequestsException -> { /* FirebaseResult.TooManyRequestsException */
-        }
-
-        is FirebaseNoSignedInUserException -> {
-
-        }
-
-        else -> { /*FirebaseResult.Failure*/
-        }
+    return when (this) {
+        is FirebaseNetworkException -> {}
+        is FirebaseAuthInvalidUserException -> {}
+        is FirebaseAuthInvalidCredentialsException -> {}
+        is FirebaseAuthUserCollisionException -> {}
+        is FirebaseTooManyRequestsException -> {}
+        is FirebaseNoSignedInUserException -> {}
+        else -> {}
     }
 }

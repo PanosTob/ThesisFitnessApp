@@ -14,6 +14,6 @@ const val PREFS_LANGUAGE = "PREFS_LANGUAGE"
 const val SAVE_STATE_APP = "SAVE_STATE_APP"
 
 //Firebase Tables
-const val USERS_COLLECTION = "User"
+const val USERS_COLLECTION = "users"
 const val USER_EMAIL = "email"
 const val USER_NAME = "name"

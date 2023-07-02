@@ -55,8 +55,7 @@ class AppActivity : BaseActivity() {
             intent, REQ_ONE_TAP,
             null, 0, 0, 0, null
         )
-        /*startActivityForResult(intent, REQ_ONE_TAP)
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        /*registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             viewModel.signInUser(it.data)
         }*/
     }
