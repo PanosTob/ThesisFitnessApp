@@ -37,6 +37,8 @@ import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessLLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerDefault
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerDouble
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerHalf
+import gr.dipae.thesisfitnessapp.ui.base.compose.ifable
+import gr.dipae.thesisfitnessapp.ui.theme.ColorDisabledButton
 import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondary
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_12dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
@@ -49,7 +51,7 @@ import gr.dipae.thesisfitnessapp.util.ext.pxToDp
 @Composable
 fun LoginContent(
     uiState: LoginUiState,
-    onGoogleSignInClicked: (String) -> Unit = {}
+    onGoogleSignInClicked: () -> Unit = {}
 ) {
     val screenHeightDp = LocalConfiguration.current.screenHeightDp
     var contentHeightDp by remember { mutableStateOf(IntSize.Zero) }
@@ -93,12 +95,19 @@ fun LoginContent(
 
             VerticalSpacerDouble()
 
-            val googleWebClientId = stringResource(id = R.string.default_web_client_id)
+            val googleSignInButtonTextColor by remember(uiState.googleSignInButtonEnabledState.value) {
+                mutableStateOf(if (uiState.googleSignInButtonEnabledState.value) Color.White else ColorDisabledButton)
+            }
+            val googleSignInButtonBorderColor by remember(uiState.googleSignInButtonEnabledState.value) {
+                mutableStateOf(if (uiState.googleSignInButtonEnabledState.value) ColorSecondary else ColorDisabledButton)
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
-                    .border(BorderStroke(SpacingEighth_2dp, ColorSecondary), RoundedCornerShape(SpacingDefault_16dp))
-                    .clickable { onGoogleSignInClicked(googleWebClientId) }
+                    .border(BorderStroke(SpacingEighth_2dp, googleSignInButtonBorderColor), RoundedCornerShape(SpacingDefault_16dp))
+                    .ifable(uiState.googleSignInButtonEnabledState.value) {
+                        clickable { onGoogleSignInClicked() }
+                    }
                     .padding(SpacingCustom_12dp),
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically
@@ -112,7 +121,7 @@ fun LoginContent(
                 )
                 ThesisFitnessLLAutoSizeText(
                     text = stringResource(id = R.string.login_sign_in_btn),
-                    color = Color.White,
+                    color = googleSignInButtonTextColor,
                     maxLines = 1,
                     maxFontSize = 22.sp
                 )
@@ -133,6 +142,6 @@ fun LoginContent(
 @Composable
 fun LoginContentPreview() {
     ThesisFitnessAppTheme {
-        LoginContent(LoginUiState())
+        LoginContent(LoginUiState(googleSignInButtonEnabledState = remember { mutableStateOf(true) }))
     }
 }

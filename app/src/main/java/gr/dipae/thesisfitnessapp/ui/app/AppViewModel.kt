@@ -14,8 +14,10 @@ import gr.dipae.thesisfitnessapp.ui.app.model.PoDHelper
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.livedata.NetworkLiveData
 import gr.dipae.thesisfitnessapp.ui.livedata.SingleLiveEvent
+import gr.dipae.thesisfitnessapp.usecase.user.DisableGoogleSignIfUserDenialsExceedsLimitUseCase
 import gr.dipae.thesisfitnessapp.usecase.user.SignInUserUseCase
 import gr.dipae.thesisfitnessapp.util.SAVE_STATE_APP
+import gr.dipae.thesisfitnessapp.util.base.UserDeclinedException
 import gr.dipae.thesisfitnessapp.util.delegate.SaveStateDelegate
 import gr.dipae.thesisfitnessapp.util.ext.handleFirebaseException
 import kotlinx.coroutines.delay
@@ -27,7 +29,8 @@ class AppViewModel @Inject constructor(
     val networkLiveData: NetworkLiveData,
     private val sessionHandler: SessionHandler,
     private val podHelper: PoDHelper,
-    private val signInUserUseCase: SignInUserUseCase
+    private val signInUserUseCase: SignInUserUseCase,
+    private val disableGoogleSignIfUserDenialsExceedsLimitUseCase: DisableGoogleSignIfUserDenialsExceedsLimitUseCase
 ) : BaseViewModel() {
 
     private val _navigateId = SingleLiveEvent<Triple<Int, Bundle?, NavOptions?>>()
@@ -69,14 +72,17 @@ class AppViewModel @Inject constructor(
         _initiateGoogleSignInWindow.value = intent
     }
 
-    fun signInUser(googleSignInData: Intent?) {
+    fun signInUser(googleSignInData: Intent?, resultCode: Int) {
         launchWithProgress {
-            val signInResponse = signInUserUseCase(googleSignInData)
+            val signInResponse = signInUserUseCase(googleSignInData, resultCode)
             if (signInResponse is SignInResult.FirebaseFailure) {
                 signInResponse.firebaseException.handleFirebaseException()
                 return@launchWithProgress
             }
             if (signInResponse is SignInResult.Failure) {
+                if (signInResponse.exception is UserDeclinedException) {
+                    disableGoogleSignIfUserDenialsExceedsLimitUseCase()
+                }
                 return@launchWithProgress
             }
 

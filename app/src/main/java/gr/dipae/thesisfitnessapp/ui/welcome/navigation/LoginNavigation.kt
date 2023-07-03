@@ -36,14 +36,12 @@ fun NavGraphBuilder.loginScreen(
             }
         }
 
-        LaunchedEffect(key1 = Unit) {
-            viewModel.init()
+        viewModel.uiState.value?.let {
+            LoginContent(
+                uiState = it,
+                onGoogleSignInClicked = { viewModel.onGoogleSignInClicked() }
+            )
         }
-
-        LoginContent(
-            uiState = viewModel.uiState.value,
-            onGoogleSignInClicked = { viewModel.onGoogleSignInClicked(it) }
-        )
     }
 }
 

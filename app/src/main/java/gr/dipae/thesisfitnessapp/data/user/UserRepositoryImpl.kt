@@ -1,7 +1,7 @@
 package gr.dipae.thesisfitnessapp.data.user
 
 import android.content.Intent
-import com.google.android.gms.auth.api.identity.BeginSignInResult
+import android.content.IntentSender
 import gr.dipae.thesisfitnessapp.data.user.login.mapper.UserMapper
 import gr.dipae.thesisfitnessapp.domain.user.UserRepository
 import gr.dipae.thesisfitnessapp.domain.user.entity.User
@@ -15,8 +15,8 @@ class UserRepositoryImpl @Inject constructor(
         return dataSource.isUserSignedIn()
     }
 
-    override suspend fun initializeGoogleSignIn(webClientId: String): BeginSignInResult {
-        return dataSource.initializeGoogleSignIn(webClientId)
+    override suspend fun initializeGoogleSignIn(): IntentSender {
+        return dataSource.initializeGoogleSignIn()
     }
 
     override suspend fun signInUser(googleSignInData: Intent): User? {
@@ -25,5 +25,25 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun registerUser() {
         dataSource.registerUser()
+    }
+
+    override fun getGoogleSignInDenialCount(): Int {
+        return dataSource.getUserDeclinedSignInCount()
+    }
+
+    override fun getGoogleSignInBlockedTime(): Long {
+        return dataSource.getGoogleSignInBlockedTime()
+    }
+
+    override fun setGoogleSignInBlockedTime() {
+        return dataSource.setGoogleSignInBlockedTime()
+    }
+
+    override fun setGoogleSignInDenialCount(count: Int) {
+        return dataSource.setGoogleSignInDenialCount(count)
+    }
+
+    override suspend fun resetGoogleSignInDenialCount() {
+        dataSource.resetGoogleSignInDenialCount()
     }
 }

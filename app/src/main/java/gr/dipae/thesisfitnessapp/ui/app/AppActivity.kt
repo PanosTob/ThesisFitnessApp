@@ -5,12 +5,18 @@ import android.content.Intent
 import android.content.IntentSender
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
+import gr.dipae.thesisfitnessapp.ui.activity.composable.ActivityProgressContainer
 import gr.dipae.thesisfitnessapp.ui.base.BaseActivity
+import gr.dipae.thesisfitnessapp.ui.livedata.LoadingLiveData
 import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
 
 @ExperimentalComposeUiApi
@@ -19,12 +25,17 @@ class AppActivity : BaseActivity() {
 
     private val viewModel: AppViewModel by viewModels()
 
+    private var googleSignInIntentListener: ActivityResultLauncher<IntentSenderRequest>? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupObservers()
+        registerGoogleSignInIntentListener()
         setContent {
             ThesisFitnessAppTheme(statusBarColor = Color.Black) {
-                AppNavHost(viewModel)
+                ActivityProgressContainer(progressDisplayed = LoadingLiveData.observeAsState(false).value) {
+                    AppNavHost(viewModel)
+                }
             }
         }
     }
@@ -50,28 +61,20 @@ class AppActivity : BaseActivity() {
         viewModel.recreateApp()
     }
 
-    private fun initiateGoogleSignInWindow(intent: IntentSender) {
-        startIntentSenderForResult(
-            intent, REQ_ONE_TAP,
-            null, 0, 0, 0, null
-        )
-        /*registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            viewModel.signInUser(it.data)
-        }*/
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == REQ_ONE_TAP) {
-            viewModel.signInUser(data)
+    private fun registerGoogleSignInIntentListener() {
+        googleSignInIntentListener = registerForActivityResult(
+            ActivityResultContracts.StartIntentSenderForResult()
+        ) {
+            viewModel.signInUser(it.data, it.resultCode)
         }
     }
 
+    private fun initiateGoogleSignInWindow(intentSender: IntentSender) {
+        val intent = IntentSenderRequest.Builder(intentSender).build()
+        googleSignInIntentListener?.launch(intent)
+    }
+
     companion object {
-
-        const val REQ_ONE_TAP = 1
-
         fun Activity.restartApp() {
             finishAffinity()
             val intent = Intent(this, AppActivity::class.java)
