@@ -19,8 +19,8 @@ import gr.dipae.thesisfitnessapp.util.USER_DECLINED_SIGN_IN_COUNTER
 import gr.dipae.thesisfitnessapp.util.USER_EMAIL
 import gr.dipae.thesisfitnessapp.util.USER_NAME
 import gr.dipae.thesisfitnessapp.util.base.GoogleAuthenticationException
-import gr.dipae.thesisfitnessapp.util.ext.documentToResponse
 import gr.dipae.thesisfitnessapp.util.ext.get
+import gr.dipae.thesisfitnessapp.util.ext.getDocumentResponse
 import gr.dipae.thesisfitnessapp.util.ext.set
 import kotlinx.coroutines.tasks.await
 import java.util.Calendar
@@ -66,7 +66,7 @@ class UserDataSourceImpl @Inject constructor(
         auth.signInWithCredential(firebaseCredential).await()
         val firebaseUserId = getFirebaseUserId()
 
-        return fireStore.collection(USERS_COLLECTION).document(firebaseUserId).get().documentToResponse<RemoteUser>()
+        return fireStore.collection(USERS_COLLECTION).document(firebaseUserId).getDocumentResponse<RemoteUser>()
     }
 
     override suspend fun logout() {

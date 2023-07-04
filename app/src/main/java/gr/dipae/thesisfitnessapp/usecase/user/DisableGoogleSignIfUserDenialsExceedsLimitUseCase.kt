@@ -9,8 +9,11 @@ class DisableGoogleSignIfUserDenialsExceedsLimitUseCase @Inject constructor(
 ) : UseCase {
 
     operator fun invoke(limit: Int = 3) {
-        if (repository.getGoogleSignInDenialCount() >= limit) {
+        val denialCountSoFar = repository.getGoogleSignInDenialCount()
+        if (denialCountSoFar >= limit) {
             repository.setGoogleSignInBlockedTime()
+        } else {
+            repository.setGoogleSignInDenialCount(denialCountSoFar + 1)
         }
     }
 }

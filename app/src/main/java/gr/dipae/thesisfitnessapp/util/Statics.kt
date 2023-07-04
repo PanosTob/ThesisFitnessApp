@@ -19,3 +19,5 @@ const val SAVE_STATE_APP = "SAVE_STATE_APP"
 const val USERS_COLLECTION = "users"
 const val USER_EMAIL = "email"
 const val USER_NAME = "name"
+
+const val SPORTS_COLLECTION = "activities"

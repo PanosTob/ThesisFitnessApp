@@ -1,6 +1,6 @@
 package gr.dipae.thesisfitnessapp.domain.history.entity
 
-import gr.dipae.thesisfitnessapp.domain.activity.entity.Sport
+import gr.dipae.thesisfitnessapp.domain.sport.entity.Sport
 import gr.dipae.thesisfitnessapp.domain.workout.entity.Workout
 import java.util.Date
 

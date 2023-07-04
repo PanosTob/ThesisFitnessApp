@@ -1,4 +1,4 @@
-package gr.dipae.thesisfitnessapp.ui.activity.composable
+package gr.dipae.thesisfitnessapp.ui.sport.composable
 
 import androidx.compose.runtime.Composable
 

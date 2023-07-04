@@ -1,4 +1,4 @@
-package gr.dipae.thesisfitnessapp.domain.activity.entity
+package gr.dipae.thesisfitnessapp.domain.sport.entity
 
 data class Sport(
     val name: String,

@@ -1,4 +1,4 @@
-package gr.dipae.thesisfitnessapp.ui.activity.viewmodel
+package gr.dipae.thesisfitnessapp.ui.sport.viewmodel
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
