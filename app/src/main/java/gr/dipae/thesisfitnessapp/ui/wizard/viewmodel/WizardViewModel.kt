@@ -26,4 +26,10 @@ class WizardViewModel @Inject constructor(
             _uiState.value = wizardUiMapper(getSportsUseCase())
         }
     }
+
+    fun saveWizardDetails() {
+        launchWithProgress {
+            setUserFitnessProfile()
+        }
+    }
 }

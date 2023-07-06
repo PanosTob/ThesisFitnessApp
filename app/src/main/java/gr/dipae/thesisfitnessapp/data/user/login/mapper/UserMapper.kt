@@ -35,10 +35,10 @@ class UserMapper @Inject constructor() : Mapper {
 
     private fun mapFitnessLevel(fitnessLevel: String): FitnessLevel {
         return when (fitnessLevel) {
-            "beginner", "BEGINNER" -> FitnessLevel.BEGINNER
-            "intermediate", "INTERMEDIATE" -> FitnessLevel.INTERMEDIATE
-            "advanced", "ADVANCED" -> FitnessLevel.ADVANCED
-            else -> FitnessLevel.UNKNOWN
+            "beginner", "BEGINNER" -> FitnessLevel.Beginner
+            "intermediate", "INTERMEDIATE" -> FitnessLevel.Intermediate
+            "advanced", "ADVANCED" -> FitnessLevel.Advanced
+            else -> FitnessLevel.Unknown
         }
     }
 }

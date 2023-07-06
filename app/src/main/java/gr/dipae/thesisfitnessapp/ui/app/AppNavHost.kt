@@ -1,5 +1,6 @@
 package gr.dipae.thesisfitnessapp.ui.app
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,6 +25,7 @@ import gr.dipae.thesisfitnessapp.ui.workout.navigation.workoutScreen
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 
+@ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @Composable
 fun AppNavHost(

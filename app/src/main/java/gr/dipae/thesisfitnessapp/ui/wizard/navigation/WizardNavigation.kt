@@ -1,5 +1,6 @@
 package gr.dipae.thesisfitnessapp.ui.wizard.navigation
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -12,6 +13,7 @@ import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
 
 private const val WizardRoute = "wizard"
 
+@ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.wizardScreen() {
     composable(WizardRoute) {
@@ -21,9 +23,11 @@ fun NavGraphBuilder.wizardScreen() {
             viewModel.init()
         }
 
-        WizardContent(
-//            uiState = viewModel.uiState.value
-        )
+        viewModel.uiState.value?.let {
+            WizardContent(
+                uiState = it
+            )
+        }
     }
 }
 

@@ -23,5 +23,5 @@ data class DietGoal(
 )
 
 enum class FitnessLevel {
-    BEGINNER, INTERMEDIATE, ADVANCED, UNKNOWN
+    Beginner, Intermediate, Advanced, Unknown
 }

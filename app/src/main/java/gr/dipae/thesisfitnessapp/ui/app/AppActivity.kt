@@ -9,6 +9,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
@@ -19,6 +20,7 @@ import gr.dipae.thesisfitnessapp.ui.livedata.LoadingLiveData
 import gr.dipae.thesisfitnessapp.ui.sport.composable.ActivityProgressContainer
 import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
 
+@ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @AndroidEntryPoint
 class AppActivity : BaseActivity() {
