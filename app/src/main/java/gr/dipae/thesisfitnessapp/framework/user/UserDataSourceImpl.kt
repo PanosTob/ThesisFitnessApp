@@ -13,11 +13,14 @@ import gr.dipae.thesisfitnessapp.data.user.UserDataSource
 import gr.dipae.thesisfitnessapp.data.user.login.broadcast.LoginBroadcast
 import gr.dipae.thesisfitnessapp.data.user.login.model.RemoteUser
 import gr.dipae.thesisfitnessapp.di.module.qualifier.GeneralSharedPrefs
+import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
+import gr.dipae.thesisfitnessapp.framework.datastore.ThesisFitnessPreferencesDataStore
 import gr.dipae.thesisfitnessapp.util.GOOGLE_SIGN_IN_BLOCKED_TIME
 import gr.dipae.thesisfitnessapp.util.USERS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.USER_DECLINED_SIGN_IN_COUNTER
 import gr.dipae.thesisfitnessapp.util.USER_EMAIL
 import gr.dipae.thesisfitnessapp.util.USER_NAME
+import gr.dipae.thesisfitnessapp.util.WIZARD_USER_DETAILS
 import gr.dipae.thesisfitnessapp.util.base.GoogleAuthenticationException
 import gr.dipae.thesisfitnessapp.util.ext.get
 import gr.dipae.thesisfitnessapp.util.ext.getDocumentResponse
@@ -31,6 +34,7 @@ class UserDataSourceImpl @Inject constructor(
     private val oneTapClient: SignInClient,
     private val auth: FirebaseAuth,
 //    private val db: AppDatabase,
+    private val dataStore: ThesisFitnessPreferencesDataStore,
     @GeneralSharedPrefs private val sharedPrefs: SharedPreferences,
     private val fireStore: FirebaseFirestore,
     private val loginBroadcast: LoginBroadcast
@@ -84,6 +88,18 @@ class UserDataSourceImpl @Inject constructor(
     override suspend fun resetGoogleSignInDenialCount() {
         sharedPrefs[USER_DECLINED_SIGN_IN_COUNTER] = 0
         loginBroadcast.refreshGoogleSignInEnabledState(true)
+    }
+
+    override suspend fun setUserWizardDetails(wizardDetails: UserWizardDetails) {
+        dataStore.set(WIZARD_USER_DETAILS, wizardDetails)
+    }
+
+    override suspend fun getUserWizardDetails(): UserWizardDetails? {
+        return dataStore.get(WIZARD_USER_DETAILS)
+    }
+
+    override suspend fun setUserFitnessProfile(wizardDetails: UserWizardDetails) {
+        fireStore.collection(USERS_COLLECTION).document(getFirebaseUserId()).set(wizardDetails)
     }
 
     override fun setGoogleSignInBlockedTime() {

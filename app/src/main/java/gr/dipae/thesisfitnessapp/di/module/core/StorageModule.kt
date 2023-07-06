@@ -3,6 +3,10 @@ package gr.dipae.thesisfitnessapp.di.module.core
 import android.content.Context
 import android.content.SharedPreferences
 import android.location.LocationManager
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.security.crypto.EncryptedSharedPreferences
 import dagger.Module
 import dagger.Provides
@@ -12,6 +16,7 @@ import dagger.hilt.components.SingletonComponent
 import gr.dipae.thesisfitnessapp.di.module.qualifier.CookieSharedPrefs
 import gr.dipae.thesisfitnessapp.di.module.qualifier.GeneralSharedPrefs
 import gr.dipae.thesisfitnessapp.util.COOKIE_PREFS
+import gr.dipae.thesisfitnessapp.util.THESIS_FITNESS_DATASTORE
 import gr.dipae.thesisfitnessapp.util.THESIS_FITNESS_PREFS
 import gr.dipae.thesisfitnessapp.util.encryptor.Encryptor
 
@@ -23,6 +28,13 @@ object StorageModule {
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
         return AppDatabase.getInstance(context)
     }*/
+
+    @Provides
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
+        return PreferenceDataStoreFactory.create {
+            context.preferencesDataStoreFile(THESIS_FITNESS_DATASTORE)
+        }
+    }
 
     @Provides
     @GeneralSharedPrefs

@@ -5,6 +5,7 @@ import android.content.IntentSender
 import gr.dipae.thesisfitnessapp.data.user.login.mapper.UserMapper
 import gr.dipae.thesisfitnessapp.domain.user.UserRepository
 import gr.dipae.thesisfitnessapp.domain.user.entity.User
+import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -45,5 +46,17 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun resetGoogleSignInDenialCount() {
         dataSource.resetGoogleSignInDenialCount()
+    }
+
+    override suspend fun getUserWizardDetails(): UserWizardDetails? {
+        return dataSource.getUserWizardDetails()
+    }
+
+    override suspend fun setUserWizardDetails(userWizardDetails: UserWizardDetails) {
+        dataSource.setUserWizardDetails(userWizardDetails)
+    }
+
+    override suspend fun setUserFitnessProfile(userWizardDetails: UserWizardDetails) {
+        dataSource.setUserFitnessProfile(userWizardDetails)
     }
 }

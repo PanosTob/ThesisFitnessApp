@@ -8,11 +8,13 @@ import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.wizard.mapper.WizardUiMapper
 import gr.dipae.thesisfitnessapp.ui.wizard.model.WizardUiState
 import gr.dipae.thesisfitnessapp.usecase.sports.GetSportsUseCase
+import gr.dipae.thesisfitnessapp.usecase.user.SetUserFitnessProfileUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class WizardViewModel @Inject constructor(
     private val getSportsUseCase: GetSportsUseCase,
+    private val setUserFitnessProfile: SetUserFitnessProfileUseCase,
     private val wizardUiMapper: WizardUiMapper
 ) : BaseViewModel() {
 

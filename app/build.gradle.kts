@@ -57,20 +57,20 @@ android {
         abortOnError = false
     }
 
-    /*signingConfigs {
+    signingConfigs {
         getByName("debug") {
             storeFile = file("keystore/debug.keystore")
             keyAlias = "androiddebugkey"
             storePassword = "android"
             keyPassword = "android"
         }
-        create("release") {
+        /*create("release") {
             storeFile = file("keystore/thesis_fitness.jks")
             keyAlias = "ThesisFitnessApp"
             keyPassword = "f5FW2HhkPGcgkt7"
             storePassword = "f5FW2HhkPGcgkt7"
-        }
-    }*/
+        }*/
+    }
 
     buildTypes {
         debug {
@@ -225,13 +225,16 @@ dependencies {
     // Google Maps in Compose
     implementation("com.google.maps.android:maps-compose:2.11.4")
 
+    //DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
     //Tests libs
-    testImplementation ("junit:junit:4.13.2")
-    androidTestImplementation ("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation ("androidx.compose:compose-bom:2023.06.01")
-    androidTestImplementation ("androidx.compose.ui:ui-test-junit4")
-    debugImplementation ("androidx.compose.ui:ui-tooling")
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.compose:compose-bom:2023.06.01")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 }
