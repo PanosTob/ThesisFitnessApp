@@ -16,4 +16,7 @@
     <string name="wizard_water_label">Water</string>
     <string name="wizard_next_btn">Next</string>
     <string name="wizard_finish_btn">Finish</string>
+
+    <!-- Lobby Screen -->
+    <string name="lobby_top_bar_title">Welcome %1$s</string>
 </resources>

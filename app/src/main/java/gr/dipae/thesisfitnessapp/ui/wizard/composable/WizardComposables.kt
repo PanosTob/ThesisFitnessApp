@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import gr.dipae.thesisfitnessapp.R
+import gr.dipae.thesisfitnessapp.domain.user.entity.FitnessLevel
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHMAutoSizeText
@@ -46,6 +47,7 @@ import gr.dipae.thesisfitnessapp.ui.theme.ColorPrimary
 import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondary
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDouble_32dp
+import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
 import gr.dipae.thesisfitnessapp.ui.wizard.model.DietGoalUiItem
 import gr.dipae.thesisfitnessapp.ui.wizard.model.FitnessLevelUiItem
 import gr.dipae.thesisfitnessapp.ui.wizard.model.SportUiItem
@@ -229,8 +231,18 @@ fun WizardDailyDietStep(dailyDietGoal: DietGoalUiItem) {
     }
 }
 
+@ExperimentalFoundationApi
 @Preview
 @Composable
 fun WizardContentPreview() {
-
+    ThesisFitnessAppTheme {
+        WizardContent(
+            uiState = WizardUiState(
+                wizardSteps = 4,
+                fitnessLevels = FitnessLevel.values().map { FitnessLevelUiItem(fitnessLevel = it) },
+                sports = listOf(SportUiItem(id = "1", name = "Swimming", imageUrl = "", parameters = listOf())),
+                dailyDietGoal = DietGoalUiItem()
+            )
+        )
+    }
 }

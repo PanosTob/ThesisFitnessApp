@@ -41,12 +41,7 @@ data class WizardUiState(
     fun isFinishButtonEnabled(): Boolean =
         if (wizardPageIndexState.value == wizardSteps - 1) {
             (usernameState.value.isNotBlank() && fitnessLevels.any { it.isSelectedState.value }) &&
-                    (sports.any { it.selected.value }) &&
-                    (dailyDietGoal.caloriesState.value.isNotBlank()) &&
-                    (dailyDietGoal.carbohydratesState.value.isNotBlank()) &&
-                    (dailyDietGoal.fatsState.value.isNotBlank()) &&
-                    (dailyDietGoal.proteinsState.value.isNotBlank()) &&
-                    (dailyDietGoal.waterMLState.value.isNotBlank())
+                    (sports.any { it.selected.value })
         } else {
             true
         }
