@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "402450565313-vcekmmpfuuaeg2nh7eb566vpku6qbopc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "gr.dipae.thesisfitnessapp.dev",
+            "certificate_hash": "400b319666ee352d4a4ad796cfa1999e4b6578e8"
+          }
+        },
+        {
           "client_id": "402450565313-4gm9epvh0gbp6752uojl4bpbffs1sfa4.apps.googleusercontent.com",
           "client_type": 3
         }

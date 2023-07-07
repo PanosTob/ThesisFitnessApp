@@ -11,6 +11,6 @@ class SportsDataSourceImpl @Inject constructor(
     private val fireStore: FirebaseFirestore
 ) : SportsDataSource {
     override suspend fun getSports(): List<RemoteSport> {
-        return fireStore.collection(SPORTS_COLLECTION).getDocumentsResponse<RemoteSport>()
+        return fireStore.collection(SPORTS_COLLECTION).getDocumentsResponse()
     }
 }

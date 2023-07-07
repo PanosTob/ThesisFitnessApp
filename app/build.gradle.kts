@@ -209,7 +209,7 @@ dependencies {
     implementation("com.squareup.moshi:moshi-kotlin:$moshi")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi")
 
-    implementation("com.jakewharton.timber:timber:4.7.1")
+    implementation("com.jakewharton.timber:timber:5.0.1")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
 
     //Hilt Libs | Dependency injection
@@ -221,6 +221,10 @@ dependencies {
     val glide by extra { "4.15.1" }
     implementation("com.github.bumptech.glide:glide:$glide")
     kapt("com.github.bumptech.glide:compiler:$glide")
+
+    //Coil async image loader
+    val coil by extra { "2.1.0" }
+    implementation("io.coil-kt:coil-compose:$coil")
 
     // Google Maps in Compose
     implementation("com.google.maps.android:maps-compose:2.11.4")

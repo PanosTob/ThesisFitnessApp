@@ -7,5 +7,13 @@
     <string name="login_guest_btn">Or continue as Guest</string>
 
     <!-- Wizard Screen -->
-    <string name="wizard_name_label">Enter Your Name :</string>
+    <string name="wizard_name_label">Name</string>
+    <string name="wizard_daily_diet_step_title">Enter values for your daily goal marcos diet</string>
+    <string name="wizard_calories_label">Calories</string>
+    <string name="wizard_proteins_label">Proteins</string>
+    <string name="wizard_carbs_label">Carbohydrates</string>
+    <string name="wizard_fats_label">Fats</string>
+    <string name="wizard_water_label">Water</string>
+    <string name="wizard_next_btn">Next</string>
+    <string name="wizard_finish_btn">Finish</string>
 </resources>

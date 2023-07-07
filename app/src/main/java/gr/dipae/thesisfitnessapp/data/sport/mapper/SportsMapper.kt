@@ -12,6 +12,7 @@ class SportsMapper @Inject constructor() : Mapper {
     operator fun invoke(remoteSports: List<RemoteSport>): List<Sport> {
         return remoteSports.map {
             Sport(
+                id = it.id,
                 name = it.name,
                 imageUrl = it.imageUrl,
                 parameters = it.parameters,

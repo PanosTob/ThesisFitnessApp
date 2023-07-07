@@ -12,14 +12,15 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import gr.dipae.thesisfitnessapp.ui.splash.navigation.SplashRoute
 import gr.dipae.thesisfitnessapp.ui.welcome.composable.LoginContent
 import gr.dipae.thesisfitnessapp.ui.welcome.viewmodel.LoginViewModel
-import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
+import gr.dipae.thesisfitnessapp.util.ext.singleNavigateWithPopInclusive
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 
 
-private const val LoginRoute = "welcome"
+internal const val LoginRoute = "welcome"
 
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.loginScreen(
@@ -46,5 +47,5 @@ fun NavGraphBuilder.loginScreen(
 }
 
 fun NavController.navigateToLogin() {
-    singleNavigate(LoginRoute)
+    singleNavigateWithPopInclusive(LoginRoute, SplashRoute)
 }

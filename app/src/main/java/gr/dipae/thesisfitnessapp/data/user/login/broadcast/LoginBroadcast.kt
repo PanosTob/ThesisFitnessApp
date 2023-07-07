@@ -10,7 +10,7 @@ class LoginBroadcast {
     val googleSignInEnabledState = _googleSignInEnabledState.asStateFlow()
 
     suspend fun refreshGoogleSignInEnabledState(state: Boolean) {
-        Timber.tag(LoginBroadcast::class.simpleName).e("Emitting google sign in enabled state $state")
+        Timber.tag(LoginBroadcast::class.simpleName.toString()).e("Emitting google sign in enabled state $state")
         _googleSignInEnabledState.emit(state)
     }
 

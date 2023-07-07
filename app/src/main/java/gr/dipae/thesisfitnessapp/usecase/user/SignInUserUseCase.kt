@@ -25,7 +25,7 @@ class SignInUserUseCase @Inject constructor(
             }
             return SignInResult.Success
         } catch (ex: Exception) {
-            Timber.tag(SignInUserUseCase::class.simpleName).e(ex)
+            Timber.tag(SignInUserUseCase::class.simpleName.toString()).e(ex)
             return handleException(ex)
         }
     }

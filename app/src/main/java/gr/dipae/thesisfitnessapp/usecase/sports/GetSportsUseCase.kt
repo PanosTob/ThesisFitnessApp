@@ -14,7 +14,7 @@ class GetSportsUseCase @Inject constructor(
         return try {
             repository.getSports()
         } catch (ex: Exception) {
-            Timber.tag(GetSportsUseCase::class.simpleName).e(ex)
+            Timber.tag(GetSportsUseCase::class.simpleName.toString()).e(ex)
             null
         }
     }

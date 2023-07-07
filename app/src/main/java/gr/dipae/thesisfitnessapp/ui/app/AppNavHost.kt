@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import gr.dipae.thesisfitnessapp.ui.diet.navigation.dietScreen
 import gr.dipae.thesisfitnessapp.ui.history.navigation.historyScreen
 import gr.dipae.thesisfitnessapp.ui.lobby.navigation.lobbyScreen
+import gr.dipae.thesisfitnessapp.ui.lobby.navigation.navigateToLobby
 import gr.dipae.thesisfitnessapp.ui.splash.navigation.SplashRoute
 import gr.dipae.thesisfitnessapp.ui.splash.navigation.splashScreen
 import gr.dipae.thesisfitnessapp.ui.sport.navigation.activityScreen
@@ -50,7 +51,9 @@ fun AppNavHost(
         splashScreen {
             navController.navigateToLogin()
         }
-        wizardScreen()
+        wizardScreen {
+            navController.navigateToLobby()
+        }
 
         lobbyScreen()
         workoutScreen()

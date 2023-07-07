@@ -7,11 +7,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import gr.dipae.thesisfitnessapp.ui.theme.ColorLoaderBackground
+import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondary
 
 @Composable
 fun ActivityProgressContainer(
@@ -31,7 +31,7 @@ fun ActivityProgressContainer(
                 horizontalArrangement = Arrangement.Center
             ) {
                 CircularProgressIndicator(
-                    color = MaterialTheme.colors.primary
+                    color = ColorSecondary
                 )
             }
         }

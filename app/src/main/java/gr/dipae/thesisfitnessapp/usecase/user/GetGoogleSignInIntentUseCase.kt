@@ -14,7 +14,7 @@ class GetGoogleSignInIntentUseCase @Inject constructor(
         return try {
             repository.initializeGoogleSignIn()
         } catch (e: Exception) {
-            Timber.tag(GetGoogleSignInIntentUseCase::class.simpleName).e(e)
+            Timber.tag(GetGoogleSignInIntentUseCase::class.simpleName.toString()).e(e)
             null
         }
     }

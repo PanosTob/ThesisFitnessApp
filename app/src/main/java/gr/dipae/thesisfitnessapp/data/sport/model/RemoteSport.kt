@@ -1,6 +1,10 @@
 package gr.dipae.thesisfitnessapp.data.sport.model
 
+import com.google.firebase.firestore.DocumentId
+
 data class RemoteSport(
+    @DocumentId
+    val id: String = "",
     val name: String = "",
     val imageUrl: String = "",
     val parameters: List<String> = emptyList(),
