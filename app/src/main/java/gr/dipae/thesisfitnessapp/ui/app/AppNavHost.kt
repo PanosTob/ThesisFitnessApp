@@ -20,10 +20,10 @@ import gr.dipae.thesisfitnessapp.ui.splash.navigation.SplashRoute
 import gr.dipae.thesisfitnessapp.ui.splash.navigation.splashScreen
 import gr.dipae.thesisfitnessapp.ui.sport.navigation.activityScreen
 import gr.dipae.thesisfitnessapp.ui.welcome.navigation.loginScreen
-import gr.dipae.thesisfitnessapp.ui.welcome.navigation.navigateToLogin
 import gr.dipae.thesisfitnessapp.ui.wizard.navigation.navigateToWizard
 import gr.dipae.thesisfitnessapp.ui.wizard.navigation.wizardScreen
 import gr.dipae.thesisfitnessapp.ui.workout.navigation.workoutScreen
+import gr.dipae.thesisfitnessapp.util.ext.singleNavigateWithPopInclusive
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 
@@ -51,7 +51,7 @@ fun AppNavHost(
 
     NavHost(navController = navController, startDestination = SplashRoute) {
         splashScreen {
-            navController.navigateToLogin()
+            navController.singleNavigateWithPopInclusive(it, SplashRoute)
         }
         wizardScreen {
             navController.navigateToLobby()

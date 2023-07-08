@@ -19,4 +19,20 @@
 
     <!-- Lobby Screen -->
     <string name="lobby_top_bar_title">Welcome %1$s</string>
+
+    <!-- Home Screen -->
+    <string name="home_title">Home</string>
+
+    <!-- Activities Screen -->
+    <string name="sport_title">Sport</string>
+
+    <!-- Workout Screen -->
+    <string name="workout_title">Workout</string>
+
+    <!-- Diet Screen -->
+    <string name="diet_title">Diet</string>
+
+    <!-- Profile Screen -->
+    <string name="profile_title">Profile</string>
+
 </resources>

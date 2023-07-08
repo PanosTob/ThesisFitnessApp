@@ -11,14 +11,13 @@ import androidx.navigation.compose.composable
 import gr.dipae.thesisfitnessapp.ui.splash.composable.SplashContent
 import gr.dipae.thesisfitnessapp.ui.splash.viewmodel.SplashViewModel
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 
 internal const val SplashRoute = "splash"
 
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.splashScreen(
-    navigateToWelcomeAction: () -> Unit
+    navigateToWelcomeAction: (String) -> Unit
 ) {
     composable(SplashRoute) {
         val viewModel: SplashViewModel = hiltViewModel()
@@ -29,12 +28,11 @@ fun NavGraphBuilder.splashScreen(
 
         val lifecycleOwner = LocalLifecycleOwner.current
         LaunchedEffect(viewModel, lifecycleOwner) {
-            snapshotFlow { viewModel.uiState.value.navigateToWelcome.value }
+            snapshotFlow { viewModel.uiState.value.navigateToRoute.value }
                 .filterNotNull()
-                .filter { it }
                 .flowWithLifecycle(lifecycleOwner.lifecycle)
                 .collectLatest {
-                    navigateToWelcomeAction()
+                    navigateToWelcomeAction(it)
                 }
         }
 

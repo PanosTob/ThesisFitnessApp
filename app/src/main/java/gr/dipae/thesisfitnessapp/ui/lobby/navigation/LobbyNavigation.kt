@@ -24,9 +24,11 @@ fun NavGraphBuilder.lobbyScreen() {
             viewModel.init()
         }
 
-        LobbyContent(
-//            uiState = viewModel.uiState.value
-        )
+        viewModel.uiState.value?.let {
+            LobbyContent(
+                uiState = it
+            )
+        }
     }
 }
 
