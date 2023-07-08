@@ -17,9 +17,15 @@ val lexendDecaFontFamily = FontFamily(
     Font(R.font.lexend_deca_medium, FontWeight.Medium)
 )
 
+val karantinaFontFamily = FontFamily(
+    Font(R.font.karantina_light, FontWeight.Light),
+    Font(R.font.karantina_regular, FontWeight.Normal),
+    Font(R.font.karantina_bold, FontWeight.Bold)
+)
+
 val thesisFitnessTypography = Typography(
     headlineLarge = TextStyle(
-        fontFamily = lexendDecaFontFamily,
+        fontFamily = karantinaFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 18.sp
     ),

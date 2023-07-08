@@ -9,6 +9,7 @@ class LobbyUiMapper @Inject constructor() : Mapper {
 
     operator fun invoke(): LobbyUiState {
         return LobbyUiState(
+            username = "Panagiotis Toumpas",
             bottomAppBarItems = bottomAppBarUiItems
         )
     }

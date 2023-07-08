@@ -9,6 +9,7 @@ import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondary
 
 data class LobbyUiState(
     val selectedBottomNavItemIndex: MutableState<Int> = mutableStateOf(0),
+    val username: String,
     val bottomAppBarItems: List<BottomAppBarUiItem>
 ) {
     fun onBottomAppBarItemSelection(item: BottomAppBarUiItem) {
