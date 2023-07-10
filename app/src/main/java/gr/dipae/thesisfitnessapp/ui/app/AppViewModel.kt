@@ -118,6 +118,10 @@ class AppViewModel @Inject constructor(
         _appUiState.value.topBarState.actionIcon.value = R.drawable.ic_calendar
     }
 
+    fun updateTopBarToBurgerIcon() {
+        _appUiState.value.topBarState.actionIcon.value = R.drawable.ic_top_burger_menu
+    }
+
     fun hideScafoldBars() {
         _appUiState.value.apply {
             colorScreen.value = Color.Black

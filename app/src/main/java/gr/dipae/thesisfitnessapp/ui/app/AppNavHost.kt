@@ -115,7 +115,10 @@ fun AppNavHost(
                     }
 
                     lobbyScreen(
-                        onLobbyShown = { viewModel.showLoggedInUi() }
+                        onLobbyShown = {
+                            viewModel.showLoggedInUi()
+                            viewModel.updateTopBarToBurgerIcon()
+                        }
                     )
                     workoutScreen()
                     sportsScreen()
