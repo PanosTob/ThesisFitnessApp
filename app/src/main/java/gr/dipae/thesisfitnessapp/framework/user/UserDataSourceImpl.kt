@@ -73,6 +73,10 @@ class UserDataSourceImpl @Inject constructor(
         return fireStore.collection(USERS_COLLECTION).document(firebaseUserId).getDocumentResponse<RemoteUser>()
     }
 
+    override suspend fun logoutUser() {
+        auth.signOut()
+    }
+
     override suspend fun logout() {
         auth.signOut()
     }

@@ -26,10 +26,10 @@ class UserMapper @Inject constructor() : Mapper {
 
     private fun mapDietGoal(remoteDietGoal: RemoteDietGoal): DietGoal {
         return DietGoal(
-            carbohydrates = remoteDietGoal.carbonhydrateGrams,
-            fats = remoteDietGoal.fatGrams,
-            protein = remoteDietGoal.proteinGrams,
-            waterML = remoteDietGoal.waterML
+            carbohydrates = remoteDietGoal.carbonhydrateGrams ?: 0.0,
+            fats = remoteDietGoal.fatGrams ?: 0.0,
+            protein = remoteDietGoal.proteinGrams ?: 0.0,
+            waterML = remoteDietGoal.waterML ?: 0.0
         )
     }
 

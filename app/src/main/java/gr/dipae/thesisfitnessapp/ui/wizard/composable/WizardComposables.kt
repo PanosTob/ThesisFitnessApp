@@ -33,6 +33,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import gr.dipae.thesisfitnessapp.R
@@ -153,7 +154,12 @@ fun WizardFitnessLevelStep(fitnessLevels: List<FitnessLevelUiItem>, onSelectFitn
         verticalArrangement = Arrangement.spacedBy(SpacingDefault_16dp)
     ) {
         fitnessLevels.forEach {
-            ThesisFitnessHMAutoSizeText(modifier = Modifier.clickable { onSelectFitnessLevel(it) }, text = it.fitnessLevel.name, color = it.textColor)
+            ThesisFitnessHMAutoSizeText(
+                modifier = Modifier.clickable { onSelectFitnessLevel(it) },
+                text = it.fitnessLevel.name,
+                color = it.textColor,
+                maxFontSize = 26.sp
+            )
         }
     }
 }
@@ -179,7 +185,7 @@ fun WizardFavoriteActivitiesStep(sports: List<SportUiItem>) {
                     contentScale = ContentScale.Fit,
                     colorFilter = ColorFilter.tint(item.color)
                 )
-                ThesisFitnessBLAutoSizeText(text = item.name, color = item.color)
+                ThesisFitnessBLAutoSizeText(text = item.name, color = item.color, maxFontSize = 26.sp)
             }
         }
     }
@@ -192,7 +198,7 @@ fun WizardDailyDietStep(dailyDietGoal: DietGoalUiItem) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState()), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(SpacingDefault_16dp)
     ) {
-        ThesisFitnessHLAutoSizeText(text = stringResource(id = R.string.wizard_daily_diet_step_title))
+        ThesisFitnessHLAutoSizeText(text = stringResource(id = R.string.wizard_daily_diet_step_title), color = Color.White, maxFontSize = 26.sp)
         TextField(
             value = dailyDietGoal.caloriesState.value,
             onValueChange = { dailyDietGoal.caloriesState.value = it },

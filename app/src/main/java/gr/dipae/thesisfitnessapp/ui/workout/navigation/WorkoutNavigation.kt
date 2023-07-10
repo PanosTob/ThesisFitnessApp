@@ -10,7 +10,7 @@ import gr.dipae.thesisfitnessapp.ui.workout.composable.WorkoutContent
 import gr.dipae.thesisfitnessapp.ui.workout.viewmodel.WorkoutViewModel
 import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
 
-private const val WorkoutRoute = "workout"
+internal const val WorkoutRoute = "workout"
 
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.workoutScreen() {

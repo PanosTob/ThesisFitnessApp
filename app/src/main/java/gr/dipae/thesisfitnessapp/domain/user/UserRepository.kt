@@ -11,6 +11,7 @@ interface UserRepository {
     suspend fun isUserSignedIn(): Boolean
     suspend fun initializeGoogleSignIn(): IntentSender
     suspend fun signInUser(googleSignInData: Intent): User?
+    suspend fun logoutUser()
     suspend fun registerUser()
     fun getGoogleSignInDenialCount(): Int
     fun getGoogleSignInBlockedTime(): Long

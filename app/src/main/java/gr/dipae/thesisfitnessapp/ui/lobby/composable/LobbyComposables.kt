@@ -11,14 +11,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,12 +25,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import gr.dipae.thesisfitnessapp.R
+import gr.dipae.thesisfitnessapp.ui.app.model.BottomAppBarUiItem
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBMText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
-import gr.dipae.thesisfitnessapp.ui.lobby.model.BottomAppBarUiItem
 import gr.dipae.thesisfitnessapp.ui.lobby.model.LobbyUiState
-import gr.dipae.thesisfitnessapp.ui.lobby.viewmodel.LobbyViewModel
 import gr.dipae.thesisfitnessapp.ui.theme.ColorPrimary
 import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondary
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
@@ -48,66 +43,37 @@ import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
 fun LobbyContent(
     uiState: LobbyUiState
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = ColorPrimary,
-                    navigationIconContentColor = ColorSecondary
-                ),
-                title = {
-//                    ThesisFitnessBMText(text = stringResource(id = R.string.lobby_top_bar_title), color = Color.White, fontSize = 22.sp)
-                },
-                actions = {
-                    Icon(modifier = Modifier.padding(end = SpacingDefault_16dp), painter = painterResource(id = R.drawable.ic_top_burger_menu), contentDescription = "", tint = ColorSecondary)
-                }
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(color = ColorPrimary)
+            .padding(horizontal = SpacingCustom_24dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(3f), horizontalArrangement = Arrangement.spacedBy(SpacingDefault_16dp), verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                modifier = Modifier
+                    .weight(0.4f)
+                    .fillMaxHeight(), painter = painterResource(id = R.drawable.img_generic_face), contentDescription = ""
             )
-        },
-        content = {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .background(color = ColorPrimary)
-                    .padding(top = it.calculateTopPadding() + SpacingDefault_16dp, start = SpacingCustom_24dp, end = SpacingCustom_24dp)
-            ) {
-                Row(
+            Column(modifier = Modifier.weight(0.6f), verticalArrangement = Arrangement.spacedBy(SpacingHalf_8dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                ThesisFitnessHLAutoSizeText(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(3f), horizontalArrangement = Arrangement.spacedBy(SpacingDefault_16dp), verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        modifier = Modifier
-                            .weight(0.4f)
-                            .fillMaxHeight(), painter = painterResource(id = R.drawable.img_generic_face), contentDescription = ""
-                    )
-                    Column(modifier = Modifier.weight(0.6f), verticalArrangement = Arrangement.spacedBy(SpacingHalf_8dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                        ThesisFitnessHLAutoSizeText(
-                            modifier = Modifier
-                                .weight(0.5f)
-                                .fillMaxWidth(), text = uiState.username, maxFontSize = 38.sp, color = Color.White, textAlign = TextAlign.Center
-                        )
-                        Row(modifier = Modifier.weight(0.5f), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
-                            LobbyUserDetailItem("64kg", R.drawable.ic_scale)
-                            LobbyUserDetailItem("35%", R.drawable.ic_muscle)
-                            LobbyUserDetailItem("12%", R.drawable.ic_weight)
-                        }
-                    }
-                }
-
-            }
-        },
-        bottomBar = {
-            BottomAppBar(
-                containerColor = Color.Black
-            ) {
-                uiState.bottomAppBarItems.forEach {
-                    LobbyBottomNabItem(item = it) {
-                        uiState.onBottomAppBarItemSelection(it)
-                    }
+                        .weight(0.5f)
+                        .fillMaxWidth(), text = uiState.username, maxFontSize = 38.sp, color = Color.White, textAlign = TextAlign.Center
+                )
+                Row(modifier = Modifier.weight(0.5f), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
+                    LobbyUserDetailItem("64kg", R.drawable.ic_scale)
+                    LobbyUserDetailItem("35%", R.drawable.ic_muscle)
+                    LobbyUserDetailItem("12%", R.drawable.ic_weight)
                 }
             }
         }
-    )
+
+    }
 }
 
 @Composable
@@ -166,6 +132,6 @@ fun RowScope.LobbyUserDetailItem(
 @Composable
 fun LobbyContentPreview() {
     ThesisFitnessAppTheme {
-        LobbyContent(LobbyUiState(username = "Panagiotis Toumpas", bottomAppBarItems = LobbyViewModel.bottomAppBarUiItems))
+        LobbyContent(LobbyUiState(username = "Panagiotis Toumpas"))
     }
 }

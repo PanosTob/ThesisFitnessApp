@@ -57,7 +57,7 @@ data class SportUiItem(
     val selected: MutableState<Boolean> = mutableStateOf(false)
 ) {
     val color: Color
-        get() = if (selected.value) ColorSecondary else Color.Black
+        get() = if (selected.value) ColorSecondary else Color.White
 }
 
 data class DietGoalUiItem(
@@ -73,5 +73,5 @@ data class FitnessLevelUiItem(
     val isSelectedState: MutableState<Boolean> = mutableStateOf(false)
 ) {
     val textColor: Color
-        get() = if (isSelectedState.value) ColorSecondary else Color.Black
+        get() = if (isSelectedState.value) ColorSecondary else Color.White
 }

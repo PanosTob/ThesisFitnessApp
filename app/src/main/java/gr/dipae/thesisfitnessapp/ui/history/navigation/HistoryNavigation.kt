@@ -10,7 +10,7 @@ import gr.dipae.thesisfitnessapp.ui.history.composable.HistoryContent
 import gr.dipae.thesisfitnessapp.ui.history.viewmodel.HistoryViewModel
 import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
 
-private const val HistoryRoute = "history"
+internal const val HistoryRoute = "history"
 
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.historyScreen() {

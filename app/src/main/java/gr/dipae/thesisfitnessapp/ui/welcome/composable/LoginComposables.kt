@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gr.dipae.thesisfitnessapp.R
-import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
+import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHMAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessLLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerDefault
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerDouble
@@ -86,11 +86,11 @@ fun LoginContent(
             )
             VerticalSpacerDefault()
             VerticalSpacerHalf()
-            ThesisFitnessHLAutoSizeText(
+            ThesisFitnessHMAutoSizeText(
                 text = stringResource(id = R.string.login_title),
                 maxLines = 1,
                 color = Color.White,
-                maxFontSize = 28.sp
+                maxFontSize = 28.sp,
             )
 
             VerticalSpacerDouble()

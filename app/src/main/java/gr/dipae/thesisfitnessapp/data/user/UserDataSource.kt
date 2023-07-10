@@ -9,6 +9,7 @@ interface UserDataSource {
     suspend fun isUserSignedIn(): Boolean
     suspend fun initializeGoogleSignIn(): IntentSender
     suspend fun signInUser(googleSignInData: Intent): RemoteUser?
+    suspend fun logoutUser()
     suspend fun registerUser()
     suspend fun logout()
     fun getUserDeclinedSignInCount(): Int

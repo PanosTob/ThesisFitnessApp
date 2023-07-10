@@ -16,12 +16,15 @@ internal const val LobbyRoute = "lobby"
 
 @ExperimentalMaterial3Api
 @ExperimentalComposeUiApi
-fun NavGraphBuilder.lobbyScreen() {
+fun NavGraphBuilder.lobbyScreen(
+    onLobbyShown: () -> Unit
+) {
     composable(LobbyRoute) {
         val viewModel: LobbyViewModel = hiltViewModel()
 
         LaunchedEffect(key1 = Unit) {
             viewModel.init()
+            onLobbyShown()
         }
 
         viewModel.uiState.value?.let {

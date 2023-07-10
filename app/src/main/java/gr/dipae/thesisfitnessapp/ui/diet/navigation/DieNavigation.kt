@@ -10,7 +10,7 @@ import gr.dipae.thesisfitnessapp.ui.diet.composable.DietContent
 import gr.dipae.thesisfitnessapp.ui.diet.viewmodel.DietViewModel
 import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
 
-private const val DietRoute = "diet"
+internal const val DietRoute = "diet"
 
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.dietScreen() {

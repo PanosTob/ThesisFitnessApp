@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">ThesisFitnessApp</string>
 
+    <string name="empty" translatable="false" />
     <!-- Login Screen -->
     <string name="login_title">Welcome</string>
     <string name="login_sign_in_btn">Sign in with Google</string>
@@ -34,5 +35,6 @@
 
     <!-- Profile Screen -->
     <string name="profile_title">Profile</string>
+    <string name="profile_logout_btn">Logout</string>
 
 </resources>
