@@ -24,8 +24,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.flowWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBMText
 import gr.dipae.thesisfitnessapp.ui.diet.navigation.dietScreen
 import gr.dipae.thesisfitnessapp.ui.history.navigation.historyScreen
@@ -33,6 +36,7 @@ import gr.dipae.thesisfitnessapp.ui.lobby.composable.LobbyBottomNabItem
 import gr.dipae.thesisfitnessapp.ui.lobby.navigation.LobbyRoute
 import gr.dipae.thesisfitnessapp.ui.lobby.navigation.lobbyScreen
 import gr.dipae.thesisfitnessapp.ui.lobby.navigation.navigateToLobby
+import gr.dipae.thesisfitnessapp.ui.profile.navigation.ProfileRoute
 import gr.dipae.thesisfitnessapp.ui.profile.navigation.profileScreen
 import gr.dipae.thesisfitnessapp.ui.splash.navigation.SplashRoute
 import gr.dipae.thesisfitnessapp.ui.splash.navigation.splashScreen
@@ -45,7 +49,6 @@ import gr.dipae.thesisfitnessapp.ui.welcome.navigation.loginScreen
 import gr.dipae.thesisfitnessapp.ui.wizard.navigation.navigateToWizard
 import gr.dipae.thesisfitnessapp.ui.wizard.navigation.wizardScreen
 import gr.dipae.thesisfitnessapp.ui.workout.navigation.workoutScreen
-import gr.dipae.thesisfitnessapp.util.ext.navigateBackToRoute
 import gr.dipae.thesisfitnessapp.util.ext.singleNavigateWithPopInclusive
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
@@ -74,7 +77,7 @@ fun AppNavHost(
         }
         LaunchedEffect(viewModel, lifecycle) {
             snapshotFlow { navigateBackToLogin.value }.filterNotNull().filter { it }.flowWithLifecycle(lifecycle).collectLatest {
-                navController.navigateBackToRoute(LoginRoute, LobbyRoute)
+                navController.navigateBackToLogin()
             }
         }
 
@@ -148,5 +151,12 @@ fun AppNavHost(
                 }
             }
         )
+    }
+}
+
+fun NavController.navigateBackToLogin() {
+    if (currentDestination?.route != LoginRoute) {
+        val navOptions = NavOptions.Builder().setPopUpTo(ProfileRoute, true).setEnterAnim(R.anim.slide_in_left).build()
+        navigate(LoginRoute, navOptions)
     }
 }

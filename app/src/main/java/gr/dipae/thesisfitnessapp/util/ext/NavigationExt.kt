@@ -22,13 +22,6 @@ fun NavController.singleNavigateWithPopInclusive(destinationRoute: String, popRo
     }
 }
 
-fun NavController.navigateBackToRoute(route: String, popRoute: String) {
-    if (currentDestination?.route != route) {
-        val navOptions = NavOptions.Builder().setPopUpTo(popRoute, true).setEnterAnim(R.anim.slide_in_left).build()
-        navigate(route, navOptions)
-    }
-}
-
 fun NavOptions.Builder.slideNavOptions(): NavOptions.Builder {
     return setEnterAnim(R.anim.slide_in_right)
         .setExitAnim(R.anim.slide_out_left)
