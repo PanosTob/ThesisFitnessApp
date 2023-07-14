@@ -3,10 +3,13 @@ package gr.dipae.thesisfitnessapp.ui.app
 import android.content.Intent
 import android.content.IntentSender
 import android.os.Bundle
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -119,11 +122,11 @@ class AppViewModel @Inject constructor(
     }
 
     fun updateToCalenderIcon() {
-        _appUiState.value.topBarState.actionIcon.value = R.drawable.ic_calendar
+        _appUiState.value.topBarState.actionIcons.value = listOf(R.drawable.ic_calendar)
     }
 
     fun updateTopBarToBurgerIcon() {
-        _appUiState.value.topBarState.actionIcon.value = R.drawable.ic_top_burger_menu
+        _appUiState.value.topBarState.actionIcons.value = listOf(R.drawable.ic_top_burger_menu)
     }
 
     fun hideScafoldBars() {
@@ -132,6 +135,21 @@ class AppViewModel @Inject constructor(
             topBarState.isVisible.value = false
             bottomAppBarItems.value = emptyList()
         }
+    }
+
+    fun showInnerLoginTopBar() {
+        _appUiState.value.apply {
+            colorScreen.value = ColorPrimary
+            updateTopBarNavigationIcon(Icons.Filled.ArrowBack)
+            topBarState.isVisible.value = true
+            topBarState.titleRes.value = R.string.empty
+            topBarState.actionIcons.value = emptyList()
+            bottomAppBarItems.value = emptyList()
+        }
+    }
+
+    private fun updateTopBarNavigationIcon(icon: ImageVector) {
+        _appUiState.value.topBarState.navigationIcon.value = icon
     }
 
     fun updateTopBarTitle(route: String) {

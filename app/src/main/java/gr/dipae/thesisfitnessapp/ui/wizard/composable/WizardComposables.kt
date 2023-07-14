@@ -51,7 +51,7 @@ import gr.dipae.thesisfitnessapp.ui.theme.SpacingDouble_32dp
 import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
 import gr.dipae.thesisfitnessapp.ui.wizard.model.DietGoalUiItem
 import gr.dipae.thesisfitnessapp.ui.wizard.model.FitnessLevelUiItem
-import gr.dipae.thesisfitnessapp.ui.wizard.model.SportUiItem
+import gr.dipae.thesisfitnessapp.ui.wizard.model.WizardSportUiItem
 import gr.dipae.thesisfitnessapp.ui.wizard.model.WizardUiState
 import gr.dipae.thesisfitnessapp.util.ext.loadImageWithCrossfade
 import kotlinx.coroutines.flow.collectLatest
@@ -168,7 +168,7 @@ fun WizardFitnessLevelStep(fitnessLevels: List<FitnessLevelUiItem>, onSelectFitn
 }
 
 @Composable
-fun WizardFavoriteActivitiesStep(sports: List<SportUiItem>) {
+fun WizardFavoriteActivitiesStep(sports: List<WizardSportUiItem>) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(items = sports, key = { item -> item.id }) { item ->
             Row(
@@ -249,7 +249,7 @@ fun WizardContentPreview() {
             uiState = WizardUiState(
                 wizardSteps = 4,
                 fitnessLevels = FitnessLevel.values().map { FitnessLevelUiItem(fitnessLevel = it) },
-                sports = listOf(SportUiItem(id = "1", name = "Swimming", imageUrl = "", parameters = listOf())),
+                sports = listOf(WizardSportUiItem(id = "1", name = "Swimming", imageUrl = "", parameters = listOf())),
                 dailyDietGoal = DietGoalUiItem()
             )
         )

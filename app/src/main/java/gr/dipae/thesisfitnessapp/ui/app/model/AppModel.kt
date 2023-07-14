@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondary
 import javax.inject.Inject
@@ -26,7 +27,8 @@ data class AppUiState(
 
 data class TopBarUiState(
     val titleRes: MutableState<Int> = mutableStateOf(R.string.empty),
-    val actionIcon: MutableState<Int> = mutableStateOf(R.drawable.ic_top_burger_menu),
+    val navigationIcon: MutableState<ImageVector?> = mutableStateOf(null),
+    val actionIcons: MutableState<List<Int>> = mutableStateOf(listOf(R.drawable.ic_top_burger_menu)),
     val isVisible: MutableState<Boolean> = mutableStateOf(false)
 )
 

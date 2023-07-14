@@ -21,6 +21,18 @@ class SportsMapper @Inject constructor() : Mapper {
         }
     }
 
+    operator fun invoke(remoteSport: RemoteSport?): Sport? {
+        return remoteSport?.let {
+            Sport(
+                id = remoteSport.id,
+                name = remoteSport.name,
+                imageUrl = remoteSport.imageUrl,
+                parameters = remoteSport.parameters,
+                details = mapSportDetails(remoteSport.details)
+            )
+        }
+    }
+
     private fun mapSportDetails(details: RemoteSportDetails): SportDetails {
         return SportDetails(
             distanceMeters = details.distanceMeters,

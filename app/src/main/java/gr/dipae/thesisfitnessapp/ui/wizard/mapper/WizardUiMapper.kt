@@ -6,7 +6,7 @@ import gr.dipae.thesisfitnessapp.domain.sport.entity.Sport
 import gr.dipae.thesisfitnessapp.domain.user.entity.FitnessLevel
 import gr.dipae.thesisfitnessapp.ui.wizard.model.DietGoalUiItem
 import gr.dipae.thesisfitnessapp.ui.wizard.model.FitnessLevelUiItem
-import gr.dipae.thesisfitnessapp.ui.wizard.model.SportUiItem
+import gr.dipae.thesisfitnessapp.ui.wizard.model.WizardSportUiItem
 import gr.dipae.thesisfitnessapp.ui.wizard.model.WizardUiState
 import javax.inject.Inject
 
@@ -20,11 +20,12 @@ class WizardUiMapper @Inject constructor() : Mapper {
             dailyDietGoal = DietGoalUiItem()
         )
     }
-    private fun mapWizardSports(sports: List<Sport>?): List<SportUiItem> {
+
+    private fun mapWizardSports(sports: List<Sport>?): List<WizardSportUiItem> {
         if (sports == null) return emptyList()
 
         return sports.map {
-            SportUiItem(
+            WizardSportUiItem(
                 id = it.id,
                 name = it.name,
                 imageUrl = it.imageUrl,

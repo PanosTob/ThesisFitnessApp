@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -40,6 +41,8 @@ import gr.dipae.thesisfitnessapp.ui.profile.navigation.ProfileRoute
 import gr.dipae.thesisfitnessapp.ui.profile.navigation.profileScreen
 import gr.dipae.thesisfitnessapp.ui.splash.navigation.SplashRoute
 import gr.dipae.thesisfitnessapp.ui.splash.navigation.splashScreen
+import gr.dipae.thesisfitnessapp.ui.sport.customize.navigation.navigateToSportCustomize
+import gr.dipae.thesisfitnessapp.ui.sport.customize.navigation.sportCustomizeScreen
 import gr.dipae.thesisfitnessapp.ui.sport.navigation.sportsScreen
 import gr.dipae.thesisfitnessapp.ui.theme.ColorPrimary
 import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondary
@@ -88,17 +91,35 @@ fun AppNavHost(
 
         Scaffold(
             topBar = {
-                if (viewModel.appUiState.value.topBarState.isVisible.value) {
+                if (topBarState.isVisible.value) {
                     TopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(
                             containerColor = ColorPrimary,
                             navigationIconContentColor = ColorSecondary
                         ),
+                        navigationIcon = {
+                            topBarState.navigationIcon.value?.let {
+                                IconButton(onClick = { navController.navigateUp() }) {
+                                    Icon(
+                                        imageVector = it,
+                                        contentDescription = "Back"
+                                    )
+                                }
+                            }
+                        },
                         title = {
                             ThesisFitnessBMText(text = stringResource(id = topBarState.titleRes.value), color = Color.White, fontSize = 22.sp)
                         },
                         actions = {
-                            Icon(modifier = Modifier.padding(end = SpacingDefault_16dp), painter = painterResource(id = topBarState.actionIcon.value), contentDescription = "", tint = ColorSecondary)
+
+                            topBarState.actionIcons.value.forEach {
+                                Icon(
+                                    modifier = Modifier.padding(end = SpacingDefault_16dp),
+                                    painter = painterResource(id = it),
+                                    contentDescription = "",
+                                    tint = ColorSecondary
+                                )
+                            }
                         }
                     )
                 }
@@ -132,7 +153,11 @@ fun AppNavHost(
                         onWorkoutShown = { viewModel.updateToCalenderIcon() }
                     )
                     sportsScreen(
-                        onSportsShown = { viewModel.updateToCalenderIcon() }
+                        onSportsShown = { viewModel.updateToCalenderIcon() },
+                        onSportSelected = { navController.navigateToSportCustomize(it) }
+                    )
+                    sportCustomizeScreen(
+                        onSportCustomizeShown = { viewModel.showInnerLoginTopBar() }
                     )
                     dietScreen(
                         onDietShown = { viewModel.updateToCalenderIcon() }

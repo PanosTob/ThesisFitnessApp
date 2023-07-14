@@ -25,6 +25,7 @@ import coil.compose.AsyncImage
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.sport.model.SportsUiState
+import gr.dipae.thesisfitnessapp.ui.sport.navigation.OnSportSelected
 import gr.dipae.thesisfitnessapp.ui.theme.ColorPrimary
 import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondaryDark
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
@@ -33,7 +34,8 @@ import gr.dipae.thesisfitnessapp.util.ext.loadImageWithCrossfade
 
 @Composable
 fun SportsContent(
-    uiState: SportsUiState
+    uiState: SportsUiState,
+    onSportSelected: OnSportSelected = {}
 ) {
     LazyColumn(
         modifier = Modifier
@@ -49,7 +51,7 @@ fun SportsContent(
                     .aspectRatio(5f)
                     .background(ColorSecondaryDark, RoundedCornerShape(SpacingDefault_16dp))
                     .clip(RoundedCornerShape(SpacingDefault_16dp))
-                    .clickable { item.selected.value = !item.selected.value },
+                    .clickable { onSportSelected(item.id) },
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -60,7 +62,7 @@ fun SportsContent(
                     model = item.imageUrl.loadImageWithCrossfade(R.drawable.img_general_sport),
                     contentDescription = ""
                 )
-                ThesisFitnessBLAutoSizeText(text = item.name, color = item.color, maxFontSize = 22.sp)
+                ThesisFitnessBLAutoSizeText(text = item.name, maxFontSize = 22.sp)
                 Icon(
                     modifier = Modifier
                         .size(25.dp)

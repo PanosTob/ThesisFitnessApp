@@ -28,3 +28,7 @@ fun NavOptions.Builder.slideNavOptions(): NavOptions.Builder {
         .setPopEnterAnim(R.anim.slide_in_left)
         .setPopExitAnim(R.anim.slide_out_right)
 }
+
+fun List<String>.getComposeNavigationArgs(): String {
+    return joinToString(separator = "/", prefix = "/") { "{$it}" }
+}

@@ -22,7 +22,7 @@ data class WizardUiState(
     val wizardSteps: Int,
     val usernameState: MutableState<String> = mutableStateOf(""),
     val fitnessLevels: List<FitnessLevelUiItem>,
-    val sports: List<SportUiItem>,
+    val sports: List<WizardSportUiItem>,
     val dailyDietGoal: DietGoalUiItem,
     val wizardPageIndexState: MutableState<Int> = mutableStateOf(0),
     val finishButtonEnabled: MutableState<Boolean> = mutableStateOf(false),
@@ -74,7 +74,7 @@ data class WizardUiState(
     }
 }
 
-data class SportUiItem(
+data class WizardSportUiItem(
     val id: String,
     val name: String,
     val imageUrl: String,

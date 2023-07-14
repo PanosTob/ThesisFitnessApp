@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.TextUnit
 fun ThesisFitnessHLText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.background,
     fontSize: TextUnit = MaterialTheme.typography.headlineLarge.fontSize,
     letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
@@ -244,7 +244,7 @@ fun ThesisFitnessBLText(
 fun ThesisFitnessBLAutoSizeText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.background,
     maxFontSize: TextUnit = MaterialTheme.typography.bodyLarge.fontSize,
     letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,

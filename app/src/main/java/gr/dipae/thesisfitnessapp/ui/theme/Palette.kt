@@ -2,15 +2,17 @@ package gr.dipae.thesisfitnessapp.ui.theme
 
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.ui.graphics.Color
 
 val darkColorsPalette = darkColorScheme(
     primary = ColorPrimary,
     secondary = ColorSecondary,
+    background = Color.Black,
     /*primary = primaryColor,
     primaryVariant = primaryDarkColor,
     secondary = secondaryColor,
     secondaryVariant = secondaryDarkColor,
-    background = backgroundColor,
+
     surface = surfaceColor,
     error = errorColor,
     onPrimary = onPrimaryColor,
@@ -23,6 +25,7 @@ val darkColorsPalette = darkColorScheme(
 val lightColorsPalette = lightColorScheme(
     primary = ColorPrimary,
     secondary = ColorSecondary,
+    background = Color.White,
     /*primary = primaryColor,
     primaryVariant = primaryDarkColor,
     secondary = secondaryColor,

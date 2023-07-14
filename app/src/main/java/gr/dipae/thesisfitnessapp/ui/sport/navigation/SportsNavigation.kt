@@ -11,10 +11,12 @@ import gr.dipae.thesisfitnessapp.ui.sport.viewmodel.SportsViewModel
 import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
 
 internal const val SportsRoute = "sports"
+typealias OnSportSelected = (String) -> Unit
 
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.sportsScreen(
-    onSportsShown: () -> Unit
+    onSportsShown: () -> Unit,
+    onSportSelected: OnSportSelected
 ) {
     composable(SportsRoute) {
         val viewModel: SportsViewModel = hiltViewModel()
@@ -24,9 +26,10 @@ fun NavGraphBuilder.sportsScreen(
             onSportsShown()
         }
 
-        viewModel.uiState.value?.let {
+        viewModel.uiState.value?.let { uiState ->
             SportsContent(
-                uiState = it
+                uiState = uiState,
+                onSportSelected = { onSportSelected(it) }
             )
         }
     }

@@ -12,4 +12,8 @@ class SportsRepositoryImpl @Inject constructor(
     override suspend fun getSports(): List<Sport> {
         return sportsMapper(dataSource.getSports())
     }
+
+    override suspend fun getSportById(sportId: String): Sport? {
+        return sportsMapper(dataSource.getSportById(sportId))
+    }
 }
