@@ -13,12 +13,15 @@ import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
 internal const val DietRoute = "diet"
 
 @ExperimentalComposeUiApi
-fun NavGraphBuilder.dietScreen() {
+fun NavGraphBuilder.dietScreen(
+    onDietShown: () -> Unit
+) {
     composable(DietRoute) {
         val viewModel: DietViewModel = hiltViewModel()
 
         LaunchedEffect(key1 = Unit) {
             viewModel.init()
+            onDietShown
         }
 
         DietContent(

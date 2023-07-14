@@ -38,14 +38,14 @@ class LoginViewModel @Inject constructor(
 
     init {
         launch {
-            val googleSignInBtnEnabled = !isGoogleSignInBlockedUseCase()
+            val googleSignInBtnEnabled = true
             _uiState.value = loginUiMapper(googleSignInBtnEnabled)
         }
         launch {
             loginBroadcast.googleSignInEnabledState.collectLatest { enabled ->
                 enabled?.let {
                     if (it) {
-                        cancelCheckGoogleSignInBlockageJob()
+//                        cancelCheckGoogleSignInBlockageJob()
                     }
                     _uiState.value?.googleSignInButtonEnabledState?.value = it
                 }

@@ -9,7 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import gr.dipae.thesisfitnessapp.ui.lobby.composable.LobbyContent
 import gr.dipae.thesisfitnessapp.ui.lobby.viewmodel.LobbyViewModel
-import gr.dipae.thesisfitnessapp.ui.wizard.navigation.WizardRoute
+import gr.dipae.thesisfitnessapp.ui.welcome.navigation.LoginRoute
 import gr.dipae.thesisfitnessapp.util.ext.singleNavigateWithPopInclusive
 
 internal const val LobbyRoute = "lobby"
@@ -36,5 +36,5 @@ fun NavGraphBuilder.lobbyScreen(
 }
 
 fun NavController.navigateToLobby() {
-    singleNavigateWithPopInclusive(LobbyRoute, WizardRoute)
+    singleNavigateWithPopInclusive(LobbyRoute, LoginRoute)
 }

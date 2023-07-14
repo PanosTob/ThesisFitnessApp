@@ -5,5 +5,4 @@ data class UserWizardDetails(
     val fitnessLevel: String,
     val favoriteActivities: List<String>,
     val dietGoal: Map<String, Long?>
-) {
-}
+)

@@ -13,12 +13,15 @@ import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
 internal const val WorkoutRoute = "workout"
 
 @ExperimentalComposeUiApi
-fun NavGraphBuilder.workoutScreen() {
+fun NavGraphBuilder.workoutScreen(
+    onWorkoutShown: () -> Unit
+) {
     composable(WorkoutRoute) {
         val viewModel: WorkoutViewModel = hiltViewModel()
 
         LaunchedEffect(key1 = Unit) {
             viewModel.init()
+            onWorkoutShown()
         }
 
         WorkoutContent(

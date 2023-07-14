@@ -76,6 +76,11 @@ fun AppNavHost(
             }
         }
         LaunchedEffect(viewModel, lifecycle) {
+            snapshotFlow { navigateToLobby.value }.filterNotNull().filter { it }.flowWithLifecycle(lifecycle).collectLatest {
+                navController.navigateToLobby()
+            }
+        }
+        LaunchedEffect(viewModel, lifecycle) {
             snapshotFlow { navigateBackToLogin.value }.filterNotNull().filter { it }.flowWithLifecycle(lifecycle).collectLatest {
                 navController.navigateBackToLogin()
             }
@@ -123,9 +128,15 @@ fun AppNavHost(
                             viewModel.updateTopBarToBurgerIcon()
                         }
                     )
-                    workoutScreen()
-                    sportsScreen()
-                    dietScreen()
+                    workoutScreen(
+                        onWorkoutShown = { viewModel.updateToCalenderIcon() }
+                    )
+                    sportsScreen(
+                        onSportsShown = { viewModel.updateToCalenderIcon() }
+                    )
+                    dietScreen(
+                        onDietShown = { viewModel.updateToCalenderIcon() }
+                    )
                     profileScreen(
                         onProfileShown = { viewModel.updateToCalenderIcon() },
                         onLogout = { viewModel.logoutUser() }

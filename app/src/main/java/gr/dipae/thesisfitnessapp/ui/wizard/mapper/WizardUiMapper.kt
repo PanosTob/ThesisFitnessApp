@@ -20,7 +20,6 @@ class WizardUiMapper @Inject constructor() : Mapper {
             dailyDietGoal = DietGoalUiItem()
         )
     }
-
     private fun mapWizardSports(sports: List<Sport>?): List<SportUiItem> {
         if (sports == null) return emptyList()
 

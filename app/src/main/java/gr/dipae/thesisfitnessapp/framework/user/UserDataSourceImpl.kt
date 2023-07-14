@@ -14,7 +14,7 @@ import gr.dipae.thesisfitnessapp.data.user.login.broadcast.LoginBroadcast
 import gr.dipae.thesisfitnessapp.data.user.login.model.RemoteUser
 import gr.dipae.thesisfitnessapp.di.module.qualifier.GeneralSharedPrefs
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
-import gr.dipae.thesisfitnessapp.framework.datastore.ThesisFitnessPreferencesDataStore
+import gr.dipae.thesisfitnessapp.framework.datastore.CustomPreferencesDataStore
 import gr.dipae.thesisfitnessapp.util.GOOGLE_SIGN_IN_BLOCKED_TIME
 import gr.dipae.thesisfitnessapp.util.USERS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.USER_DECLINED_SIGN_IN_COUNTER
@@ -34,7 +34,7 @@ class UserDataSourceImpl @Inject constructor(
     private val oneTapClient: SignInClient,
     private val auth: FirebaseAuth,
 //    private val db: AppDatabase,
-    private val dataStore: ThesisFitnessPreferencesDataStore,
+    private val dataStore: CustomPreferencesDataStore,
     @GeneralSharedPrefs private val sharedPrefs: SharedPreferences,
     private val fireStore: FirebaseFirestore,
     private val loginBroadcast: LoginBroadcast

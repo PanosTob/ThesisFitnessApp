@@ -12,12 +12,12 @@ import kotlinx.coroutines.flow.singleOrNull
 import javax.inject.Inject
 
 //Data store available Keys
-/*object PreferencesKey {
-    val WIZARD_USER_DETAILS = Preferences.Key("WIZARD_USER_DETAILS")
-}*/
+object PreferencesKey {
+}
 
-class ThesisFitnessPreferencesDataStore @Inject constructor(
-    val dataStore: DataStore<Preferences>, val moshi: Moshi
+class CustomPreferencesDataStore @Inject constructor(
+    val dataStore: DataStore<Preferences>,
+    val moshi: Moshi
 ) {
 
     suspend fun clearAll() {

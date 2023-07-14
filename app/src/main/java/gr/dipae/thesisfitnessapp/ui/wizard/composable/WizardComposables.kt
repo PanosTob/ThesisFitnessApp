@@ -58,11 +58,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 typealias OnFinishWizard = () -> Unit
+typealias OnNextStep = () -> Unit
 
 @ExperimentalFoundationApi
 @Composable
 fun WizardContent(
     uiState: WizardUiState,
+    onNextStep: OnNextStep = {},
     onFinishWizard: OnFinishWizard = {}
 ) {
     Column(
@@ -121,6 +123,7 @@ fun WizardContent(
             pageCount = uiState.wizardSteps
         ) { page ->
             uiState.WizardPageContent(page)
+            onNextStep()
         }
         HorizontalPagerIndicator(
             modifier = Modifier

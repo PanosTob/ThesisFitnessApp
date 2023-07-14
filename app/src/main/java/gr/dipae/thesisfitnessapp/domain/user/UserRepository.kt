@@ -2,7 +2,6 @@ package gr.dipae.thesisfitnessapp.domain.user
 
 import android.content.Intent
 import android.content.IntentSender
-import gr.dipae.thesisfitnessapp.domain.user.entity.FitnessLevel
 import gr.dipae.thesisfitnessapp.domain.user.entity.User
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
 
@@ -20,14 +19,5 @@ interface UserRepository {
     suspend fun resetGoogleSignInDenialCount()
     suspend fun getUserWizardDetails(): UserWizardDetails?
     suspend fun setUserWizardDetails(userWizardDetails: UserWizardDetails)
-    suspend fun setUserFitnessProfile(
-        userName: String,
-        fitnessLevel: FitnessLevel,
-        favoriteSports: List<String>,
-        calories: String,
-        carbs: String,
-        fats: String,
-        proteins: String,
-        waterML: String
-    )
+    suspend fun setUserFitnessProfile(userWizardDetails: UserWizardDetails)
 }

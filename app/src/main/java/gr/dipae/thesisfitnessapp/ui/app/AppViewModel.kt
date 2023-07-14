@@ -102,6 +102,10 @@ class AppViewModel @Inject constructor(
                 return@launchWithProgress
             }
 
+            if (signInResponse is SignInResult.AlreadyRegistered) {
+                _appUiState.value.navigateToLobby.value = true
+                return@launchWithProgress
+            }
             _appUiState.value.navigateToWizard.value = true
         }
     }

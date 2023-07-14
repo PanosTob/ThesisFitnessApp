@@ -7,23 +7,28 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import gr.dipae.thesisfitnessapp.ui.sport.composable.SportsContent
-import gr.dipae.thesisfitnessapp.ui.sport.viewmodel.ActivityViewModel
+import gr.dipae.thesisfitnessapp.ui.sport.viewmodel.SportsViewModel
 import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
 
 internal const val SportsRoute = "sports"
 
 @ExperimentalComposeUiApi
-fun NavGraphBuilder.sportsScreen() {
+fun NavGraphBuilder.sportsScreen(
+    onSportsShown: () -> Unit
+) {
     composable(SportsRoute) {
-        val viewModel: ActivityViewModel = hiltViewModel()
+        val viewModel: SportsViewModel = hiltViewModel()
 
         LaunchedEffect(key1 = Unit) {
             viewModel.init()
+            onSportsShown()
         }
 
-        SportsContent(
-//            uiState = viewModel.uiState.value
-        )
+        viewModel.uiState.value?.let {
+            SportsContent(
+                uiState = it
+            )
+        }
     }
 }
 

@@ -20,10 +20,12 @@ class SignInUserUseCase @Inject constructor(
             if (resultCode != Activity.RESULT_OK) return SignInResult.Failure(exception = UserDeclinedException())
 
             val existingUser = repository.signInUser(googleSignInData)
-            if (existingUser == null) {
-                repository.registerUser()
+            if (existingUser != null) {
+                return SignInResult.AlreadyRegistered
             }
-            return SignInResult.Success
+
+            repository.registerUser()
+            return SignInResult.SuccessRegister
         } catch (ex: Exception) {
             Timber.tag(SignInUserUseCase::class.simpleName.toString()).e(ex)
             return handleException(ex)
