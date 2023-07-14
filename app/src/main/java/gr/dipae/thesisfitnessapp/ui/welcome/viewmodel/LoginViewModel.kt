@@ -13,6 +13,7 @@ import gr.dipae.thesisfitnessapp.ui.livedata.SingleLiveEvent
 import gr.dipae.thesisfitnessapp.ui.welcome.mapper.LoginUiMapper
 import gr.dipae.thesisfitnessapp.ui.welcome.model.LoginUiState
 import gr.dipae.thesisfitnessapp.usecase.user.GetGoogleSignInIntentUseCase
+import gr.dipae.thesisfitnessapp.usecase.user.ResetGoogleSignInDenialCountUseCase
 import gr.dipae.thesisfitnessapp.usecase.user.isGoogleSignInBlockedUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -25,7 +26,8 @@ class LoginViewModel @Inject constructor(
     private val loginUiMapper: LoginUiMapper,
     private val loginBroadcast: LoginBroadcast,
     private val getGoogleSignInIntentUseCase: GetGoogleSignInIntentUseCase,
-    private val isGoogleSignInBlockedUseCase: isGoogleSignInBlockedUseCase
+    private val isGoogleSignInBlockedUseCase: isGoogleSignInBlockedUseCase,
+    private val resetGoogleSignInDenialCountUseCase: ResetGoogleSignInDenialCountUseCase
 ) : BaseViewModel() {
 
     private val _uiState: MutableState<LoginUiState?> = mutableStateOf(null)
@@ -36,16 +38,21 @@ class LoginViewModel @Inject constructor(
 
     private var googleSignInBlockageJob: Job? = null
 
+    override fun onCleared() {
+        resetGoogleSignInDenialCountUseCase()
+        super.onCleared()
+    }
+
     init {
         launch {
-            val googleSignInBtnEnabled = true
+            val googleSignInBtnEnabled = !isGoogleSignInBlockedUseCase()
             _uiState.value = loginUiMapper(googleSignInBtnEnabled)
         }
         launch {
             loginBroadcast.googleSignInEnabledState.collectLatest { enabled ->
                 enabled?.let {
                     if (it) {
-//                        cancelCheckGoogleSignInBlockageJob()
+                        cancelCheckGoogleSignInBlockageJob()
                     }
                     _uiState.value?.googleSignInButtonEnabledState?.value = it
                 }
