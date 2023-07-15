@@ -40,7 +40,6 @@ import gr.dipae.thesisfitnessapp.ui.lobby.navigation.navigateToLobby
 import gr.dipae.thesisfitnessapp.ui.profile.navigation.ProfileRoute
 import gr.dipae.thesisfitnessapp.ui.profile.navigation.profileScreen
 import gr.dipae.thesisfitnessapp.ui.splash.navigation.SplashRoute
-import gr.dipae.thesisfitnessapp.ui.splash.navigation.splashScreen
 import gr.dipae.thesisfitnessapp.ui.sport.customize.navigation.navigateToSportCustomize
 import gr.dipae.thesisfitnessapp.ui.sport.customize.navigation.sportCustomizeScreen
 import gr.dipae.thesisfitnessapp.ui.sport.navigation.sportsScreen
@@ -48,9 +47,7 @@ import gr.dipae.thesisfitnessapp.ui.theme.ColorPrimary
 import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondary
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.welcome.navigation.LoginRoute
-import gr.dipae.thesisfitnessapp.ui.welcome.navigation.loginScreen
 import gr.dipae.thesisfitnessapp.ui.wizard.navigation.navigateToWizard
-import gr.dipae.thesisfitnessapp.ui.wizard.navigation.wizardScreen
 import gr.dipae.thesisfitnessapp.ui.workout.navigation.workoutScreen
 import gr.dipae.thesisfitnessapp.util.ext.singleNavigateWithPopInclusive
 import kotlinx.coroutines.flow.collectLatest
@@ -133,15 +130,6 @@ fun AppNavHost(
                     navController = navController,
                     startDestination = SplashRoute
                 ) {
-                    splashScreen {
-                        navController.singleNavigateWithPopInclusive(it, SplashRoute)
-                    }
-                    loginScreen(
-                        onGoogleSignInClicked = { viewModel.onGoogleSignInClicked(it) }
-                    )
-                    wizardScreen {
-                        navController.navigateToLobby()
-                    }
 
                     lobbyScreen(
                         onLobbyShown = {
