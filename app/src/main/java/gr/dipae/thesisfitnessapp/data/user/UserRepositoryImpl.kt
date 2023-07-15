@@ -20,8 +20,12 @@ class UserRepositoryImpl @Inject constructor(
         return dataSource.initializeGoogleSignIn()
     }
 
-    override suspend fun signInUser(googleSignInData: Intent): User? {
-        return userMapper(dataSource.signInUser(googleSignInData))
+    override suspend fun signInUser(googleSignInData: Intent) {
+        return dataSource.signInUser(googleSignInData)
+    }
+
+    override suspend fun getUser(): User? {
+        return userMapper(dataSource.getUser())
     }
 
     override suspend fun logoutUser() {

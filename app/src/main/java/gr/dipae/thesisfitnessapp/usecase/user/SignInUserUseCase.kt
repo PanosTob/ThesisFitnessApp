@@ -11,7 +11,8 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class SignInUserUseCase @Inject constructor(
-    private val repository: UserRepository
+    private val repository: UserRepository,
+    private val getUserDetailsUseCase: GetUserDetailsUseCase
 ) : UseCase {
 
     suspend operator fun invoke(googleSignInData: Intent?, resultCode: Int): SignInResult {
@@ -19,7 +20,9 @@ class SignInUserUseCase @Inject constructor(
             if (googleSignInData == null) return SignInResult.Failure()
             if (resultCode != Activity.RESULT_OK) return SignInResult.Failure(exception = UserDeclinedException())
 
-            val existingUser = repository.signInUser(googleSignInData)
+            repository.signInUser(googleSignInData)
+
+            val existingUser = getUserDetailsUseCase()
             if (existingUser != null) {
                 return SignInResult.AlreadyRegistered
             }

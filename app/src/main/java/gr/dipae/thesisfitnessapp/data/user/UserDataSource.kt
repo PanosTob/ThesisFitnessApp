@@ -8,7 +8,8 @@ import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
 interface UserDataSource {
     suspend fun isUserSignedIn(): Boolean
     suspend fun initializeGoogleSignIn(): IntentSender
-    suspend fun signInUser(googleSignInData: Intent): RemoteUser?
+    suspend fun signInUser(googleSignInData: Intent)
+    suspend fun getUser(): RemoteUser?
     suspend fun logoutUser()
     suspend fun registerUser()
     suspend fun logout()

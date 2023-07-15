@@ -64,12 +64,13 @@ class UserDataSourceImpl @Inject constructor(
             ).await()
     }
 
-    override suspend fun signInUser(googleSignInData: Intent): RemoteUser? {
+    override suspend fun signInUser(googleSignInData: Intent) {
         val firebaseCredential = GoogleAuthProvider.getCredential(getGoogleUserId(googleSignInData), null)
-
         auth.signInWithCredential(firebaseCredential).await()
-        val firebaseUserId = getFirebaseUserId()
+    }
 
+    override suspend fun getUser(): RemoteUser? {
+        val firebaseUserId = getFirebaseUserId()
         return fireStore.collection(USERS_COLLECTION).document(firebaseUserId).getDocumentResponse<RemoteUser>()
     }
 

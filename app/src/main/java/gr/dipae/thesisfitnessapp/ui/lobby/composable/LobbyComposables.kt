@@ -30,6 +30,7 @@ import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBMText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.lobby.model.LobbyUiState
+import gr.dipae.thesisfitnessapp.ui.lobby.model.UserDetailsUiItem
 import gr.dipae.thesisfitnessapp.ui.theme.ColorPrimary
 import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondary
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
@@ -63,7 +64,7 @@ fun LobbyContent(
                 ThesisFitnessHLAutoSizeText(
                     modifier = Modifier
                         .weight(0.5f)
-                        .fillMaxWidth(), text = uiState.username, maxFontSize = 38.sp, color = Color.White, textAlign = TextAlign.Center
+                        .fillMaxWidth(), text = uiState.userDetails.username, maxFontSize = 38.sp, color = Color.White, textAlign = TextAlign.Center
                 )
                 Row(modifier = Modifier.weight(0.5f), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
                     LobbyUserDetailItem("64kg", R.drawable.ic_scale)
@@ -132,6 +133,10 @@ fun RowScope.LobbyUserDetailItem(
 @Composable
 fun LobbyContentPreview() {
     ThesisFitnessAppTheme {
-        LobbyContent(LobbyUiState(username = "Panagiotis Toumpas"))
+        LobbyContent(
+            LobbyUiState(
+                userDetails = UserDetailsUiItem(username = "Panagiotis Toumpas")
+            )
+        )
     }
 }

@@ -14,10 +14,12 @@ import gr.dipae.thesisfitnessapp.ui.lobby.navigation.LobbyRoute
 import gr.dipae.thesisfitnessapp.ui.profile.navigation.ProfileRoute
 import gr.dipae.thesisfitnessapp.ui.sport.navigation.SportsRoute
 import gr.dipae.thesisfitnessapp.ui.workout.navigation.WorkoutRoute
+import gr.dipae.thesisfitnessapp.usecase.user.GetUserDetailsUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class LobbyViewModel @Inject constructor(
+    private val getUserDetailsUseCase: GetUserDetailsUseCase,
     private val lobbyUiMapper: LobbyUiMapper
 ) : BaseViewModel() {
 
@@ -25,7 +27,9 @@ class LobbyViewModel @Inject constructor(
     val uiState: State<LobbyUiState?> = _uiState
 
     fun init() {
-        _uiState.value = lobbyUiMapper()
+        launchWithProgress {
+            _uiState.value = lobbyUiMapper(getUserDetailsUseCase())
+        }
     }
 
     companion object {
