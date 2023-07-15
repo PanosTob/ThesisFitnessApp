@@ -11,7 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException
 import gr.dipae.thesisfitnessapp.data.user.UserDataSource
 import gr.dipae.thesisfitnessapp.data.user.login.broadcast.LoginBroadcast
-import gr.dipae.thesisfitnessapp.data.user.login.model.RemoteUser
+import gr.dipae.thesisfitnessapp.data.user.model.RemoteUser
 import gr.dipae.thesisfitnessapp.di.module.qualifier.GeneralSharedPrefs
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
 import gr.dipae.thesisfitnessapp.framework.datastore.CustomPreferencesDataStore

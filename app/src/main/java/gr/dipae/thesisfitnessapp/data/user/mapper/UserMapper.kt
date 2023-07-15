@@ -1,8 +1,8 @@
-package gr.dipae.thesisfitnessapp.data.user.login.mapper
+package gr.dipae.thesisfitnessapp.data.user.mapper
 
 import gr.dipae.thesisfitnessapp.data.Mapper
-import gr.dipae.thesisfitnessapp.data.user.login.model.RemoteDietGoal
-import gr.dipae.thesisfitnessapp.data.user.login.model.RemoteUser
+import gr.dipae.thesisfitnessapp.data.user.model.RemoteDietGoal
+import gr.dipae.thesisfitnessapp.data.user.model.RemoteUser
 import gr.dipae.thesisfitnessapp.domain.user.entity.DietGoal
 import gr.dipae.thesisfitnessapp.domain.user.entity.FitnessLevel
 import gr.dipae.thesisfitnessapp.domain.user.entity.User

@@ -24,7 +24,8 @@ internal const val LoginRoute = "welcome"
 
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.loginScreen(
-    onGoogleSignInClicked: (IntentSender) -> Unit
+    onGoogleSignInClicked: (IntentSender) -> Unit,
+    onLogoutPressed: () -> Unit
 ) {
     composable(LoginRoute) {
         val viewModel: LoginViewModel = hiltViewModel()

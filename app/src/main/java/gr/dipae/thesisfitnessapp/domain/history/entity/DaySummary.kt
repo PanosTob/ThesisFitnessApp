@@ -9,7 +9,7 @@ data class DaySummary(
     val date: Date,
     val dailyDiet: DailyDiet,
     val sportActionsDone: List<Sport>,
-    val workoutSDone: List<Workout>
+    val workoutsDone: List<Workout>
 )
 
 data class DailyDiet(

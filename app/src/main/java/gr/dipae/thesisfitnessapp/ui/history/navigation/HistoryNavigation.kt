@@ -8,9 +8,13 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import gr.dipae.thesisfitnessapp.ui.history.composable.HistoryContent
 import gr.dipae.thesisfitnessapp.ui.history.viewmodel.HistoryViewModel
+import gr.dipae.thesisfitnessapp.util.ext.getComposeNavigationArgs
+import gr.dipae.thesisfitnessapp.util.ext.replaceRouteStringWithArgumentPlaceholders
 import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
 
-internal const val HistoryRoute = "history"
+
+internal val HistoryRouteArgs = listOf("userId")
+internal val HistoryRoute = "history${HistoryRouteArgs.getComposeNavigationArgs()}"
 
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.historyScreen() {
@@ -27,6 +31,6 @@ fun NavGraphBuilder.historyScreen() {
     }
 }
 
-fun NavController.navigateToHistory() {
-    singleNavigate(HistoryRoute)
+fun NavController.navigateToHistory(userId: String) {
+    singleNavigate(String.format(HistoryRoute.replaceRouteStringWithArgumentPlaceholders(HistoryRouteArgs)))
 }

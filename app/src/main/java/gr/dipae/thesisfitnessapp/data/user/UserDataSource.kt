@@ -2,7 +2,7 @@ package gr.dipae.thesisfitnessapp.data.user
 
 import android.content.Intent
 import android.content.IntentSender
-import gr.dipae.thesisfitnessapp.data.user.login.model.RemoteUser
+import gr.dipae.thesisfitnessapp.data.user.model.RemoteUser
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
 
 interface UserDataSource {

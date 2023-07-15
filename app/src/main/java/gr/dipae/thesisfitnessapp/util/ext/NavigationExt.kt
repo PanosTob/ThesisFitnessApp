@@ -32,3 +32,9 @@ fun NavOptions.Builder.slideNavOptions(): NavOptions.Builder {
 fun List<String>.getComposeNavigationArgs(): String {
     return joinToString(separator = "/", prefix = "/") { "{$it}" }
 }
+
+fun String.replaceRouteStringWithArgumentPlaceholders(keys: List<String>): String {
+    var convertedString = this
+    keys.forEachIndexed { index, key -> convertedString = replaceFirst("{$key}", "%${index + 1}\$s") }
+    return convertedString
+}

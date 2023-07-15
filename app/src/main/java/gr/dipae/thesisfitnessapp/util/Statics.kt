@@ -35,3 +35,6 @@ const val USER_DIET_GOAL_PROTEIN = "proteinGrams"
 const val USER_DIET_GOAL_WATER = "waterML"
 
 const val SPORTS_COLLECTION = "activities"
+
+const val DAY_SUMMARY_COLLECTION = "daySummaries"
+const val DAY_SUMMARY_DATE = "date"

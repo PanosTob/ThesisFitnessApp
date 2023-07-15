@@ -12,14 +12,14 @@ import gr.dipae.thesisfitnessapp.framework.sports.SportsDataSourceImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
-object ActivityModule
+object SportModule
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
-interface ActivityBindsModule {
+interface SportBindsModule {
     @Binds
-    fun bindActivityRepository(repository: SportsRepositoryImpl): SportsRepository
+    fun bindSportRepository(repository: SportsRepositoryImpl): SportsRepository
 
     @Binds
-    fun bindActivityDataSource(dataSource: SportsDataSourceImpl): SportsDataSource
+    fun bindSportDataSource(dataSource: SportsDataSourceImpl): SportsDataSource
 }

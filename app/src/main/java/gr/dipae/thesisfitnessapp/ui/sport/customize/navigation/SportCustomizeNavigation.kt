@@ -12,6 +12,7 @@ import androidx.navigation.navArgument
 import gr.dipae.thesisfitnessapp.ui.sport.customize.composable.SportCustomizeContent
 import gr.dipae.thesisfitnessapp.ui.sport.customize.viemodel.SportCustomizeViewModel
 import gr.dipae.thesisfitnessapp.util.ext.getComposeNavigationArgs
+import gr.dipae.thesisfitnessapp.util.ext.replaceRouteStringWithArgumentPlaceholders
 import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
 
 internal val SportCustomizeArgumentKeys = listOf("sportId")
@@ -43,10 +44,4 @@ fun NavController.navigateToSportCustomize(sportId: String) {
 
 private fun sportCustomizeArguments(): List<NamedNavArgument> {
     return SportCustomizeArgumentKeys.map { (navArgument(it) { type = NavType.StringType }) }
-}
-
-private fun String.replaceRouteStringWithArgumentPlaceholders(keys: List<String>): String {
-    var convertedString = this
-    keys.forEachIndexed { index, key -> convertedString = replaceFirst("{$key}", "%${index + 1}\$s") }
-    return convertedString
 }

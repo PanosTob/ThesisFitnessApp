@@ -2,7 +2,7 @@ package gr.dipae.thesisfitnessapp.data.user
 
 import android.content.Intent
 import android.content.IntentSender
-import gr.dipae.thesisfitnessapp.data.user.login.mapper.UserMapper
+import gr.dipae.thesisfitnessapp.data.user.mapper.UserMapper
 import gr.dipae.thesisfitnessapp.domain.user.UserRepository
 import gr.dipae.thesisfitnessapp.domain.user.entity.User
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails

@@ -1,6 +1,10 @@
-package gr.dipae.thesisfitnessapp.data.user.login.model
+package gr.dipae.thesisfitnessapp.data.user.model
+
+import com.google.firebase.firestore.DocumentId
 
 data class RemoteUser(
+    @DocumentId
+    val id: String = "",
     val name: String = "unknown name",
     val email: String = "unknown email",
     val fitnessLevel: String = "",
