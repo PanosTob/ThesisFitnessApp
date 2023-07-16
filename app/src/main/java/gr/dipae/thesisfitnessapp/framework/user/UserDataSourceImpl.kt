@@ -9,14 +9,27 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException
+import gr.dipae.thesisfitnessapp.data.history.model.RemoteDaySummary
+import gr.dipae.thesisfitnessapp.data.history.model.RemoteSportDone
+import gr.dipae.thesisfitnessapp.data.history.model.RemoteWorkoutDone
+import gr.dipae.thesisfitnessapp.data.history.model.RemoteWorkoutExerciseDone
 import gr.dipae.thesisfitnessapp.data.user.UserDataSource
+import gr.dipae.thesisfitnessapp.data.user.diet.model.RemoteUserScannedFood
 import gr.dipae.thesisfitnessapp.data.user.login.broadcast.LoginBroadcast
 import gr.dipae.thesisfitnessapp.data.user.model.RemoteUser
 import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkout
+import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkoutExercise
 import gr.dipae.thesisfitnessapp.di.module.qualifier.GeneralSharedPrefs
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
 import gr.dipae.thesisfitnessapp.framework.datastore.CustomPreferencesDataStore
+import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_COLLECTION
+import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_DATE
+import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_SPORTS_DONE_COLLECTION
+import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_WORKOUTS_DONE_COLLECTION
+import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_WORKOUT_EXERCISES_DONE_COLLECTION
+import gr.dipae.thesisfitnessapp.util.EXERCISES_COLLECTION
 import gr.dipae.thesisfitnessapp.util.GOOGLE_SIGN_IN_BLOCKED_TIME
+import gr.dipae.thesisfitnessapp.util.SCANNED_FOODS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.USERS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.USER_DECLINED_SIGN_IN_COUNTER
 import gr.dipae.thesisfitnessapp.util.USER_EMAIL
@@ -27,6 +40,7 @@ import gr.dipae.thesisfitnessapp.util.base.GoogleAuthenticationException
 import gr.dipae.thesisfitnessapp.util.ext.get
 import gr.dipae.thesisfitnessapp.util.ext.getDocumentResponse
 import gr.dipae.thesisfitnessapp.util.ext.getDocumentsResponse
+import gr.dipae.thesisfitnessapp.util.ext.getMatchingDocument
 import gr.dipae.thesisfitnessapp.util.ext.set
 import kotlinx.coroutines.tasks.await
 import java.util.Calendar
@@ -126,5 +140,84 @@ class UserDataSourceImpl @Inject constructor(
     override suspend fun getUserWorkouts(): List<RemoteUserWorkout> {
         val userId = getFirebaseUserId()
         return fireStore.collection(USERS_COLLECTION).document(userId).collection(WORKOUTS_COLLECTION).getDocumentsResponse()
+    }
+
+    override suspend fun getUserWorkoutExercises(workoutId: String): List<RemoteUserWorkoutExercise> {
+        val userId = getFirebaseUserId()
+        return fireStore
+            .collection(USERS_COLLECTION).document(userId)
+            .collection(WORKOUTS_COLLECTION).document(workoutId)
+            .collection(EXERCISES_COLLECTION).getDocumentsResponse()
+    }
+
+    override suspend fun getDaySummary(): RemoteDaySummary? {
+        val userId = getFirebaseUserId()
+        val startOfDayTime = getStartTimestampOfThisDay()
+        val endOfDayTime = getEndTimeStampOfThisDay()
+
+        return fireStore
+            .collection(USERS_COLLECTION)
+            .document(userId)
+            .collection(DAY_SUMMARY_COLLECTION)
+            .whereGreaterThanOrEqualTo(DAY_SUMMARY_DATE, startOfDayTime)
+            .whereLessThanOrEqualTo(DAY_SUMMARY_DATE, endOfDayTime)
+            .getMatchingDocument<RemoteDaySummary>()
+    }
+
+    override suspend fun getDaySummarySportsDone(daySummaryId: String): List<RemoteSportDone> {
+        return fireStore
+            .collection(USERS_COLLECTION)
+            .document(getFirebaseUserId())
+            .collection(DAY_SUMMARY_COLLECTION)
+            .document(daySummaryId)
+            .collection(DAY_SUMMARY_SPORTS_DONE_COLLECTION)
+            .getDocumentsResponse()
+    }
+
+    override suspend fun getDaySummaryWorkoutsDone(daySummaryId: String): List<RemoteWorkoutDone> {
+        return fireStore
+            .collection(USERS_COLLECTION)
+            .document(getFirebaseUserId())
+            .collection(DAY_SUMMARY_COLLECTION)
+            .document(daySummaryId)
+            .collection(DAY_SUMMARY_WORKOUTS_DONE_COLLECTION)
+            .getDocumentsResponse()
+    }
+
+    override suspend fun getDaySummaryWorkoutExercisesDone(daySummaryId: String, workoutId: String): List<RemoteWorkoutExerciseDone> {
+        return fireStore
+            .collection(USERS_COLLECTION)
+            .document(getFirebaseUserId())
+            .collection(DAY_SUMMARY_COLLECTION)
+            .document(daySummaryId)
+            .collection(DAY_SUMMARY_WORKOUTS_DONE_COLLECTION)
+            .document(workoutId)
+            .collection(DAY_SUMMARY_WORKOUT_EXERCISES_DONE_COLLECTION)
+            .getDocumentsResponse()
+    }
+
+    override suspend fun getUserScannedFoods(): List<RemoteUserScannedFood> {
+        val userId = getFirebaseUserId()
+        return fireStore
+            .collection(USERS_COLLECTION)
+            .document(userId)
+            .collection(SCANNED_FOODS_COLLECTION)
+            .getDocumentsResponse()
+    }
+
+    private fun getStartTimestampOfThisDay(): Long {
+        return Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+        }.timeInMillis
+    }
+
+    private fun getEndTimeStampOfThisDay(): Long {
+        return Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 24)
+            set(Calendar.MINUTE, 59)
+            set(Calendar.SECOND, 59)
+        }.timeInMillis
     }
 }

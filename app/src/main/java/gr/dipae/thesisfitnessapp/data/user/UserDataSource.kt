@@ -2,8 +2,14 @@ package gr.dipae.thesisfitnessapp.data.user
 
 import android.content.Intent
 import android.content.IntentSender
+import gr.dipae.thesisfitnessapp.data.history.model.RemoteDaySummary
+import gr.dipae.thesisfitnessapp.data.history.model.RemoteSportDone
+import gr.dipae.thesisfitnessapp.data.history.model.RemoteWorkoutDone
+import gr.dipae.thesisfitnessapp.data.history.model.RemoteWorkoutExerciseDone
+import gr.dipae.thesisfitnessapp.data.user.diet.model.RemoteUserScannedFood
 import gr.dipae.thesisfitnessapp.data.user.model.RemoteUser
 import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkout
+import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkoutExercise
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
 
 interface UserDataSource {
@@ -24,4 +30,10 @@ interface UserDataSource {
     suspend fun setUserWizardDetails(wizardDetails: UserWizardDetails)
     suspend fun setUserFitnessProfile(wizardDetails: UserWizardDetails)
     suspend fun getUserWorkouts(): List<RemoteUserWorkout>
+    suspend fun getUserWorkoutExercises(workoutId: String): List<RemoteUserWorkoutExercise>
+    suspend fun getUserScannedFoods(): List<RemoteUserScannedFood>
+    suspend fun getDaySummary(): RemoteDaySummary?
+    suspend fun getDaySummarySportsDone(daySummaryId: String): List<RemoteSportDone>
+    suspend fun getDaySummaryWorkoutsDone(daySummaryId: String): List<RemoteWorkoutDone>
+    suspend fun getDaySummaryWorkoutExercisesDone(daySummaryId: String, workoutId: String): List<RemoteWorkoutExerciseDone>
 }

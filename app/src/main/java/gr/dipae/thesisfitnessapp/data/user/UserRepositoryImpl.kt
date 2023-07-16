@@ -3,9 +3,15 @@ package gr.dipae.thesisfitnessapp.data.user
 import android.content.Intent
 import android.content.IntentSender
 import gr.dipae.thesisfitnessapp.data.user.mapper.UserMapper
+import gr.dipae.thesisfitnessapp.domain.history.entity.DaySummary
+import gr.dipae.thesisfitnessapp.domain.history.entity.SportDone
+import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutDone
+import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutExerciseDone
 import gr.dipae.thesisfitnessapp.domain.user.UserRepository
+import gr.dipae.thesisfitnessapp.domain.user.diet.entity.UserScannedFood
 import gr.dipae.thesisfitnessapp.domain.user.entity.User
 import gr.dipae.thesisfitnessapp.domain.user.workout.entity.UserWorkout
+import gr.dipae.thesisfitnessapp.domain.user.workout.entity.UserWorkoutExercise
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
 import javax.inject.Inject
 
@@ -75,5 +81,29 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getUserWorkouts(): List<UserWorkout> {
         return userMapper(dataSource.getUserWorkouts())
+    }
+
+    override suspend fun getUserWorkoutExercises(workoutId: String): List<UserWorkoutExercise> {
+        return userMapper(dataSource.getUserWorkoutExercises(workoutId))
+    }
+
+    override suspend fun getDaySummary(): DaySummary? {
+        return userMapper(dataSource.getDaySummary())
+    }
+
+    override suspend fun getDaySummarySportsDone(daySummaryId: String): List<SportDone> {
+        return userMapper(dataSource.getDaySummarySportsDone(daySummaryId))
+    }
+
+    override suspend fun getDaySummaryWorkoutsDone(daySummaryId: String): List<WorkoutDone> {
+        return userMapper(dataSource.getDaySummaryWorkoutsDone(daySummaryId))
+    }
+
+    override suspend fun getDaySummaryWorkoutExercisesDone(daySummaryId: String, workoutId: String): List<WorkoutExerciseDone> {
+        return userMapper(dataSource.getDaySummaryWorkoutExercisesDone(daySummaryId, workoutId))
+    }
+
+    override suspend fun getUserScannedFoods(): List<UserScannedFood> {
+        return userMapper(dataSource.getUserScannedFoods())
     }
 }

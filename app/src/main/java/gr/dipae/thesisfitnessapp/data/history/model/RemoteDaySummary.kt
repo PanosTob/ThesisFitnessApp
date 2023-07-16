@@ -1,10 +1,12 @@
 package gr.dipae.thesisfitnessapp.data.history.model
 
 import com.google.firebase.firestore.DocumentId
-import gr.dipae.thesisfitnessapp.data.sport.model.RemoteSport
-import gr.dipae.thesisfitnessapp.data.workout.model.RemoteWorkout
 import gr.dipae.thesisfitnessapp.domain.history.entity.DailyDiet
 import gr.dipae.thesisfitnessapp.domain.history.entity.DaySummary
+import gr.dipae.thesisfitnessapp.domain.history.entity.SportDone
+import gr.dipae.thesisfitnessapp.domain.history.entity.SportDoneDetails
+import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutDone
+import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutExerciseDone
 import gr.dipae.thesisfitnessapp.util.ext.toDate
 
 data class RemoteDaySummary(
@@ -13,8 +15,8 @@ data class RemoteDaySummary(
     val steps: Long = 0,
     val dateTime: Long = 0,
     val dailyDiet: RemoteDailyDiet = RemoteDailyDiet(),
-    val sportActionsDone: List<RemoteSport> = emptyList(),
-    val workoutsDone: List<RemoteWorkout> = emptyList()
+    val sportsDone: List<RemoteSportDone> = emptyList(),
+    val workoutsDone: List<RemoteWorkoutDone> = emptyList()
 ) {
     fun toDaySummary(): DaySummary =
         DaySummary(
@@ -22,8 +24,8 @@ data class RemoteDaySummary(
             steps = steps,
             dateTime = dateTime.toDate(),
             dailyDiet = dailyDiet.toDailyDiet(),
-            sportActionsDone = sportActionsDone.map { it.toSport() },
-            workoutsDone = workoutsDone.map { it.toWorkout() }
+            sportsDone = sportsDone.map { it.toSportDone() },
+            workoutsDone = workoutsDone.map { it.toWorkoutDone() }
         )
 }
 
@@ -41,5 +43,70 @@ data class RemoteDailyDiet(
             fats = fats,
             proteins = proteins,
             waterML = waterML
+        )
+}
+
+data class RemoteSportDone(
+    @DocumentId
+    val id: String = "",
+    val name: String = "",
+    val details: RemoteSportDoneDetails = RemoteSportDoneDetails()
+) {
+    fun toSportDone() =
+        SportDone(
+            id = id,
+            name = name,
+            details = details.toSportDoneDetails()
+        )
+}
+
+data class RemoteSportDoneDetails(
+    val distanceMeters: Long = 0,
+    val durationSeconds: Long = 0
+) {
+    fun toSportDoneDetails() =
+        SportDoneDetails(
+            distanceMeters = distanceMeters,
+            durationSeconds = durationSeconds
+        )
+}
+
+data class RemoteWorkoutDone(
+    @DocumentId
+    val id: String = "",
+    val name: String = "",
+    val durationSeconds: Long = 0,
+    val breakSeconds: Long = 0,
+    val exercisesDone: List<RemoteWorkoutExerciseDone> = emptyList()
+) {
+    fun toWorkoutDone() =
+        WorkoutDone(
+            id = id,
+            name = name,
+            durationSeconds = durationSeconds,
+            breakSeconds = breakSeconds,
+            exercisesDone = exercisesDone.map { it.toWorkoutExerciseDone() }
+        )
+}
+
+data class RemoteWorkoutExerciseDone(
+    @DocumentId
+    val id: String = "",
+    val name: String = "",
+    val description: String = "",
+    val repetitions: Long = 0,
+    val sets: Long = 0,
+    val videoUrl: String = "",
+    val completed: Boolean = false
+) {
+    fun toWorkoutExerciseDone() =
+        WorkoutExerciseDone(
+            id = id,
+            name = name,
+            description = description,
+            repetitions = repetitions,
+            sets = sets,
+            videoUrl = videoUrl,
+            completed = completed
         )
 }

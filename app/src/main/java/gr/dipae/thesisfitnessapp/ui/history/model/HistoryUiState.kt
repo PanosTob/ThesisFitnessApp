@@ -1,9 +1,5 @@
 package gr.dipae.thesisfitnessapp.ui.history.model
 
-import gr.dipae.thesisfitnessapp.domain.history.entity.DailyDiet
-import gr.dipae.thesisfitnessapp.ui.sport.model.SportUiItem
-import gr.dipae.thesisfitnessapp.ui.workout.model.WorkoutUiItem
-
 data class HistoryUiState(
     val daySummary: DaySummaryUiItem?
 )
@@ -12,8 +8,8 @@ data class DaySummaryUiItem(
     val steps: String,
     val date: String,
     val dailyDiet: DailyDietUiItem,
-    val sportActionsDone: List<SportUiItem>,
-    val workoutsDone: List<WorkoutUiItem>
+    val sportsDone: List<SportDoneUiItem>,
+    val workoutsDone: List<WorkoutDoneUiItem>
 )
 
 data class DailyDietUiItem(
@@ -24,11 +20,31 @@ data class DailyDietUiItem(
     val waterML: String
 )
 
-fun DailyDiet.toDailyDietUiItem(): DailyDietUiItem =
-    DailyDietUiItem(
-        calories = calories.toString(),
-        carbohydrates = carbohydrates.toString(),
-        fats = fats.toString(),
-        proteins = proteins.toString(),
-        waterML = waterML.toString()
-    )
+data class SportDoneUiItem(
+    val id: String,
+    val name: String,
+    val details: SportDoneDetailsUiItem
+)
+
+data class SportDoneDetailsUiItem(
+    val distanceMeters: Long,
+    val durationSeconds: Long
+)
+
+data class WorkoutDoneUiItem(
+    val id: String,
+    val name: String,
+    val durationSeconds: Long,
+    val breakSeconds: Long,
+    val exercisesDone: List<WorkoutExerciseDoneUiItem>
+)
+
+data class WorkoutExerciseDoneUiItem(
+    val id: String,
+    val name: String,
+    val description: String,
+    val repetitions: Long,
+    val sets: Long,
+    val videoUrl: String,
+    val completed: Boolean
+)
