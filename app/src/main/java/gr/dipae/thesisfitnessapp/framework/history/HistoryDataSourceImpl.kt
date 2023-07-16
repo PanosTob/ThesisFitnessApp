@@ -6,6 +6,7 @@ import gr.dipae.thesisfitnessapp.data.history.model.RemoteDaySummary
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_COLLECTION
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_DATE
 import gr.dipae.thesisfitnessapp.util.USERS_COLLECTION
+import gr.dipae.thesisfitnessapp.util.ext.getMatchingDocument
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -29,6 +30,6 @@ class HistoryDataSourceImpl @Inject constructor(
             .collection(DAY_SUMMARY_COLLECTION)
             .whereGreaterThanOrEqualTo(DAY_SUMMARY_DATE, startOfDayTime)
             .whereLessThanOrEqualTo(DAY_SUMMARY_DATE, endOfDayTime)
-            .get()
+            .getMatchingDocument<RemoteDaySummary>()
     }
 }

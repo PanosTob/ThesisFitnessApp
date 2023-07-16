@@ -5,6 +5,7 @@ import android.content.IntentSender
 import gr.dipae.thesisfitnessapp.data.user.mapper.UserMapper
 import gr.dipae.thesisfitnessapp.domain.user.UserRepository
 import gr.dipae.thesisfitnessapp.domain.user.entity.User
+import gr.dipae.thesisfitnessapp.domain.user.workout.entity.UserWorkout
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
 import javax.inject.Inject
 
@@ -26,6 +27,10 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getUser(): User? {
         return userMapper(dataSource.getUser())
+    }
+
+    override suspend fun getUserDetailsLocally(): User? {
+        return userMapper(dataSource.getUserDetailsLocally())
     }
 
     override suspend fun logoutUser() {
@@ -66,5 +71,9 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun setUserFitnessProfile(userWizardDetails: UserWizardDetails) {
         dataSource.setUserFitnessProfile(userWizardDetails)
+    }
+
+    override suspend fun getUserWorkouts(): List<UserWorkout> {
+        return userMapper(dataSource.getUserWorkouts())
     }
 }

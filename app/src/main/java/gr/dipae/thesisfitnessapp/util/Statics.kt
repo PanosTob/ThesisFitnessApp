@@ -18,6 +18,29 @@ const val PREFS_LANGUAGE = "PREFS_LANGUAGE"
 const val USER_DECLINED_SIGN_IN_COUNTER = "USER_DECLINED_SIGN_IN_COUNTER"
 const val GOOGLE_SIGN_IN_BLOCKED_TIME = "GOOGLE_SIGN_IN_BLOCKED_TIME"
 
+/*
+ * date format
+ */
+const val DATE_TIME_SEC_FULL = "dd/MM/yyyy, HH:mm:ss"
+const val DATE_TIME_FULL = "dd/MM/yyyy, HH:mm"
+const val DATE_MONTH_YEAR_TIME_SHORT = "dd MMM yyyy, HH:mm"
+const val DATE_MONTH_YEAR_TIME_FULL = "dd MMMM yyyy, HH:mm"
+const val DATE_MONTH_YEAR_FULL_SHORT = "dd MMM yyyy"
+const val DATE_MONTH_YEAR_FULL = "dd MMMM yyyy"
+const val DATE_MONTH_TIME_FULL = "dd MMMM, HH:mm"
+const val DATE_MONTH_TIME_PARTIAL = "dd/MM, HH:mm"
+const val DATE_MONTH_FULL = "dd MMMM"
+const val DATE = "dd/MM/yyyy"
+const val DATE_MONTH_SMALL = "dd/MMM/yyyy"
+const val DRAWS_DATE = "yyyy-MM-dd"
+const val DAY_DATE = "EEEE dd/MM/yyyy"
+const val TIME = "HH:mm"
+const val MONTH = "MMMM"
+const val MONTH_2 = "LLLL"
+const val DAY_MONTH = "dd/MM"
+const val TIME_FULL = "HH:mm:ss"
+const val DAY_TIME_FULL = "dd:HH:mm:ss"
+
 // saved state
 const val SAVE_STATE_APP = "SAVE_STATE_APP"
 
@@ -35,6 +58,8 @@ const val USER_DIET_GOAL_PROTEIN = "proteinGrams"
 const val USER_DIET_GOAL_WATER = "waterML"
 
 const val SPORTS_COLLECTION = "activities"
+
+const val WORKOUTS_COLLECTION = "workouts"
 
 const val DAY_SUMMARY_COLLECTION = "daySummaries"
 const val DAY_SUMMARY_DATE = "date"

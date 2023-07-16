@@ -3,9 +3,11 @@ package gr.dipae.thesisfitnessapp.data.user.mapper
 import gr.dipae.thesisfitnessapp.data.Mapper
 import gr.dipae.thesisfitnessapp.data.user.model.RemoteDietGoal
 import gr.dipae.thesisfitnessapp.data.user.model.RemoteUser
+import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkout
 import gr.dipae.thesisfitnessapp.domain.user.entity.DietGoal
 import gr.dipae.thesisfitnessapp.domain.user.entity.FitnessLevel
 import gr.dipae.thesisfitnessapp.domain.user.entity.User
+import gr.dipae.thesisfitnessapp.domain.user.workout.entity.UserWorkout
 import javax.inject.Inject
 
 class UserMapper @Inject constructor() : Mapper {
@@ -22,6 +24,10 @@ class UserMapper @Inject constructor() : Mapper {
             scannedFoods = emptyList(),
             workouts = emptyList()
         )
+    }
+
+    operator fun invoke(userWorkouts: List<RemoteUserWorkout>): List<UserWorkout> {
+        return userWorkouts.map { it.toUserWorkout() }
     }
 
     private fun mapDietGoal(remoteDietGoal: RemoteDietGoal): DietGoal {

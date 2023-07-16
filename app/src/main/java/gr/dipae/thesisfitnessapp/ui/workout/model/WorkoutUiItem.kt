@@ -3,6 +3,10 @@ package gr.dipae.thesisfitnessapp.ui.workout.model
 import gr.dipae.thesisfitnessapp.domain.workout.entity.Exercise
 import gr.dipae.thesisfitnessapp.domain.workout.entity.Workout
 
+data class WorkoutsUiState(
+    val workoutList: List<WorkoutUiItem>
+)
+
 data class WorkoutUiItem(
     val name: String,
     val durationSeconds: String,

@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class HistoryUiMapper @Inject constructor() : Mapper {
 
-    operator fun invoke(daySummary: DaySummary): HistoryUiState {
+    operator fun invoke(daySummary: DaySummary?): HistoryUiState {
         return HistoryUiState(
             daySummary = mapDaySummaryUiItem(daySummary)
         )
@@ -21,7 +21,7 @@ class HistoryUiMapper @Inject constructor() : Mapper {
         return daySummary?.let {
             DaySummaryUiItem(
                 steps = it.steps.toString(),
-                date = it.date.toString(),
+                date = it.dateTime.toString(),
                 dailyDiet = it.dailyDiet.toDailyDietUiItem(),
                 sportActionsDone = it.sportActionsDone.map { it.toSportUiItem() },
                 workoutsDone = it.workoutsDone.map { it.toWorkoutUiItem() }

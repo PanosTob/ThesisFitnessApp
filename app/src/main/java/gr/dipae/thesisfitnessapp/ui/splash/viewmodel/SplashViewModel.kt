@@ -7,7 +7,7 @@ import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.lobby.navigation.LobbyRoute
 import gr.dipae.thesisfitnessapp.ui.splash.model.SplashUiState
 import gr.dipae.thesisfitnessapp.ui.welcome.navigation.LoginRoute
-import gr.dipae.thesisfitnessapp.usecase.user.isUserSignedInUseCase
+import gr.dipae.thesisfitnessapp.usecase.login.isUserSignedInUseCase
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 

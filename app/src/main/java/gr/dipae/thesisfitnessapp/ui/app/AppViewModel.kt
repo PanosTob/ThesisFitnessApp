@@ -31,9 +31,9 @@ import gr.dipae.thesisfitnessapp.ui.profile.navigation.ProfileRoute
 import gr.dipae.thesisfitnessapp.ui.sport.navigation.SportsRoute
 import gr.dipae.thesisfitnessapp.ui.theme.ColorPrimary
 import gr.dipae.thesisfitnessapp.ui.workout.navigation.WorkoutRoute
-import gr.dipae.thesisfitnessapp.usecase.user.DisableGoogleSignIfUserDenialsExceedsLimitUseCase
-import gr.dipae.thesisfitnessapp.usecase.user.LogoutUserUseCase
-import gr.dipae.thesisfitnessapp.usecase.user.SignInUserUseCase
+import gr.dipae.thesisfitnessapp.usecase.login.DisableGoogleSignIfUserDenialsExceedsLimitUseCase
+import gr.dipae.thesisfitnessapp.usecase.login.LogoutUserUseCase
+import gr.dipae.thesisfitnessapp.usecase.login.SignInUserUseCase
 import gr.dipae.thesisfitnessapp.util.SAVE_STATE_APP
 import gr.dipae.thesisfitnessapp.util.base.UserDeclinedException
 import gr.dipae.thesisfitnessapp.util.delegate.SaveStateDelegate

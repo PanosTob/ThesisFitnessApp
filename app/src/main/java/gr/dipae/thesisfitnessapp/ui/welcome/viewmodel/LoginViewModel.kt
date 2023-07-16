@@ -12,9 +12,9 @@ import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.livedata.SingleLiveEvent
 import gr.dipae.thesisfitnessapp.ui.welcome.mapper.LoginUiMapper
 import gr.dipae.thesisfitnessapp.ui.welcome.model.LoginUiState
-import gr.dipae.thesisfitnessapp.usecase.user.GetGoogleSignInIntentUseCase
-import gr.dipae.thesisfitnessapp.usecase.user.ResetGoogleSignInDenialCountUseCase
-import gr.dipae.thesisfitnessapp.usecase.user.isGoogleSignInBlockedUseCase
+import gr.dipae.thesisfitnessapp.usecase.login.GetGoogleSignInIntentUseCase
+import gr.dipae.thesisfitnessapp.usecase.login.ResetGoogleSignInDenialCountUseCase
+import gr.dipae.thesisfitnessapp.usecase.login.isGoogleSignInBlockedUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest

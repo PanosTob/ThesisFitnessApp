@@ -3,14 +3,15 @@ package gr.dipae.thesisfitnessapp.domain.user
 import android.content.Intent
 import android.content.IntentSender
 import gr.dipae.thesisfitnessapp.domain.user.entity.User
+import gr.dipae.thesisfitnessapp.domain.user.workout.entity.UserWorkout
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
 
 interface UserRepository {
-
     suspend fun isUserSignedIn(): Boolean
     suspend fun initializeGoogleSignIn(): IntentSender
     suspend fun signInUser(googleSignInData: Intent)
     suspend fun getUser(): User?
+    suspend fun getUserDetailsLocally(): User?
     suspend fun logoutUser()
     suspend fun registerUser()
     fun getGoogleSignInDenialCount(): Int
@@ -21,4 +22,5 @@ interface UserRepository {
     suspend fun getUserWizardDetails(): UserWizardDetails?
     suspend fun setUserWizardDetails(userWizardDetails: UserWizardDetails)
     suspend fun setUserFitnessProfile(userWizardDetails: UserWizardDetails)
+    suspend fun getUserWorkouts(): List<UserWorkout>
 }

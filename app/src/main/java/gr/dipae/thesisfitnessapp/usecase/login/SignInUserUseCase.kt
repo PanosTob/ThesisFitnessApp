@@ -1,4 +1,4 @@
-package gr.dipae.thesisfitnessapp.usecase.user
+package gr.dipae.thesisfitnessapp.usecase.login
 
 import android.app.Activity
 import android.content.Intent
@@ -6,6 +6,7 @@ import com.google.firebase.FirebaseException
 import gr.dipae.thesisfitnessapp.domain.user.UserRepository
 import gr.dipae.thesisfitnessapp.domain.user.login.SignInResult
 import gr.dipae.thesisfitnessapp.usecase.UseCase
+import gr.dipae.thesisfitnessapp.usecase.user.GetUserDetailsUseCase
 import gr.dipae.thesisfitnessapp.util.base.UserDeclinedException
 import timber.log.Timber
 import javax.inject.Inject

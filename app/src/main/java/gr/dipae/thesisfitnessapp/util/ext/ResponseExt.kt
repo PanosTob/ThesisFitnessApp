@@ -2,6 +2,7 @@ package gr.dipae.thesisfitnessapp.util.ext
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -12,7 +13,15 @@ suspend inline fun <reified T> DocumentReference.getDocumentResponse(): T? {
     return get().await().toObject<T>()
 }
 
+suspend inline fun <reified T> Query.getMatchingDocument(): T? {
+    return get().await().toObjects(T::class.java).firstOrNull()
+}
+
 suspend inline fun <reified T> CollectionReference.getDocumentsResponse(): List<T> {
+    return get().await().toObjects(T::class.java)
+}
+
+suspend inline fun <reified T> Query.getMatchingDocuments(): List<T> {
     return get().await().toObjects(T::class.java)
 }
 

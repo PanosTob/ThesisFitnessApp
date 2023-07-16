@@ -1,4 +1,4 @@
-package gr.dipae.thesisfitnessapp.usecase.user
+package gr.dipae.thesisfitnessapp.usecase.login
 
 import gr.dipae.thesisfitnessapp.domain.user.UserRepository
 import gr.dipae.thesisfitnessapp.domain.user.logout.LogoutResult

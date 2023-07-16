@@ -12,6 +12,7 @@ import com.google.firebase.internal.api.FirebaseNoSignedInUserException
 import gr.dipae.thesisfitnessapp.data.user.UserDataSource
 import gr.dipae.thesisfitnessapp.data.user.login.broadcast.LoginBroadcast
 import gr.dipae.thesisfitnessapp.data.user.model.RemoteUser
+import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkout
 import gr.dipae.thesisfitnessapp.di.module.qualifier.GeneralSharedPrefs
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
 import gr.dipae.thesisfitnessapp.framework.datastore.CustomPreferencesDataStore
@@ -21,9 +22,11 @@ import gr.dipae.thesisfitnessapp.util.USER_DECLINED_SIGN_IN_COUNTER
 import gr.dipae.thesisfitnessapp.util.USER_EMAIL
 import gr.dipae.thesisfitnessapp.util.USER_NAME
 import gr.dipae.thesisfitnessapp.util.WIZARD_USER_DETAILS
+import gr.dipae.thesisfitnessapp.util.WORKOUTS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.base.GoogleAuthenticationException
 import gr.dipae.thesisfitnessapp.util.ext.get
 import gr.dipae.thesisfitnessapp.util.ext.getDocumentResponse
+import gr.dipae.thesisfitnessapp.util.ext.getDocumentsResponse
 import gr.dipae.thesisfitnessapp.util.ext.set
 import kotlinx.coroutines.tasks.await
 import java.util.Calendar
@@ -74,6 +77,11 @@ class UserDataSourceImpl @Inject constructor(
         return fireStore.collection(USERS_COLLECTION).document(firebaseUserId).getDocumentResponse<RemoteUser>()
     }
 
+    override suspend fun getUserDetailsLocally(): RemoteUser? {
+        //TODO IMPLEMENT WITH REMOTEUSER ENTITY FOR DATADASE
+        return null
+    }
+
     override suspend fun logoutUser() {
         auth.signOut()
     }
@@ -113,5 +121,10 @@ class UserDataSourceImpl @Inject constructor(
 
     override fun getGoogleSignInBlockedTime(): Long {
         return sharedPrefs[GOOGLE_SIGN_IN_BLOCKED_TIME, 0] ?: 0
+    }
+
+    override suspend fun getUserWorkouts(): List<RemoteUserWorkout> {
+        val userId = getFirebaseUserId()
+        return fireStore.collection(USERS_COLLECTION).document(userId).collection(WORKOUTS_COLLECTION).getDocumentsResponse()
     }
 }
