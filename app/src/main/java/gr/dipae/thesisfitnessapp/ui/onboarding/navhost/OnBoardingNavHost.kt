@@ -6,9 +6,9 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import gr.dipae.thesisfitnessapp.ui.lobby.navigation.navigateToLobby
-import gr.dipae.thesisfitnessapp.ui.login.navigation.loginScreen
 import gr.dipae.thesisfitnessapp.ui.splash.navigation.SplashRoute
 import gr.dipae.thesisfitnessapp.ui.splash.navigation.splashScreen
+import gr.dipae.thesisfitnessapp.ui.welcome.navigation.loginScreen
 import gr.dipae.thesisfitnessapp.ui.wizard.navigation.wizardScreen
 import gr.dipae.thesisfitnessapp.util.ext.singleNavigateWithPopInclusive
 
@@ -25,7 +25,8 @@ fun OnBoardingNavHost(
             navController.singleNavigateWithPopInclusive(it, SplashRoute)
         }
         loginScreen(
-            onGoogleSignInClicked = { viewModel.onGoogleSignInClicked(it) }
+            onGoogleSignInClicked = { /*viewModel.onGoogleSignInClicked(it)*/ },
+            onLogoutPressed = {}
         )
         wizardScreen {
             navController.navigateToLobby()
