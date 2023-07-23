@@ -16,9 +16,9 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
+import gr.dipae.thesisfitnessapp.ui.app.composable.ActivityProgressContainer
 import gr.dipae.thesisfitnessapp.ui.base.BaseActivity
 import gr.dipae.thesisfitnessapp.ui.livedata.LoadingLiveData
-import gr.dipae.thesisfitnessapp.ui.sport.composable.ActivityProgressContainer
 import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
 
 @ExperimentalMaterial3Api

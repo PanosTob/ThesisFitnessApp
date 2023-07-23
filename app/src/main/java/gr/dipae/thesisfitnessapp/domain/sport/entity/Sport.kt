@@ -5,7 +5,8 @@ data class Sport(
     val name: String,
     val imageUrl: String,
     val parameters: List<String>,
-    val details: SportDetails
+    val details: SportDetails,
+    val favorite: Boolean
 )
 
 data class SportDetails(

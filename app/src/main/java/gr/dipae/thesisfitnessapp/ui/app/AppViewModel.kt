@@ -21,6 +21,7 @@ import gr.dipae.thesisfitnessapp.domain.user.login.SignInResult
 import gr.dipae.thesisfitnessapp.domain.user.logout.LogoutResult
 import gr.dipae.thesisfitnessapp.ui.app.model.AppUiState
 import gr.dipae.thesisfitnessapp.ui.app.model.PoDHelper
+import gr.dipae.thesisfitnessapp.ui.app.model.TopBarActionUiItem
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.diet.navigation.DietRoute
 import gr.dipae.thesisfitnessapp.ui.livedata.NetworkLiveData
@@ -121,12 +122,24 @@ class AppViewModel @Inject constructor(
         }
     }
 
-    fun updateToCalenderIcon() {
-        _appUiState.value.topBarState.actionIcons.value = listOf(R.drawable.ic_calendar)
+    fun showLobbyTopBar() {
+        _appUiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_top_burger_menu))
     }
 
-    fun updateTopBarToBurgerIcon() {
-        _appUiState.value.topBarState.actionIcons.value = listOf(R.drawable.ic_top_burger_menu)
+    fun showSportsTopBar() {
+        _appUiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_edit_sport, {}), TopBarActionUiItem(R.drawable.ic_calendar))
+    }
+
+    fun showWorkoutTopBar() {
+        _appUiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_calendar))
+    }
+
+    fun showDietTopBar() {
+        _appUiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_calendar))
+    }
+
+    fun showProfileTopBar() {
+        _appUiState.value.topBarState.actionIcons.value = listOf()
     }
 
     fun hideScafoldBars() {

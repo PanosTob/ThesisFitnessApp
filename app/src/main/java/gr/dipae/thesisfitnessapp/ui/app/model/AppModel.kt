@@ -28,8 +28,13 @@ data class AppUiState(
 data class TopBarUiState(
     val titleRes: MutableState<Int> = mutableStateOf(R.string.empty),
     val navigationIcon: MutableState<ImageVector?> = mutableStateOf(null),
-    val actionIcons: MutableState<List<Int>> = mutableStateOf(listOf(R.drawable.ic_top_burger_menu)),
+    val actionIcons: MutableState<List<TopBarActionUiItem>> = mutableStateOf(listOf(TopBarActionUiItem(R.drawable.ic_top_burger_menu))),
     val isVisible: MutableState<Boolean> = mutableStateOf(false)
+)
+
+data class TopBarActionUiItem(
+    val icon: Int,
+    val clickAction: () -> Unit = {}
 )
 
 data class BottomAppBarUiItem(

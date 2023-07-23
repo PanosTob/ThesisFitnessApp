@@ -1,5 +1,6 @@
 package gr.dipae.thesisfitnessapp.ui.onboarding.navhost
 
+import android.content.IntentSender
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -10,22 +11,25 @@ import gr.dipae.thesisfitnessapp.ui.splash.navigation.SplashRoute
 import gr.dipae.thesisfitnessapp.ui.splash.navigation.splashScreen
 import gr.dipae.thesisfitnessapp.ui.welcome.navigation.loginScreen
 import gr.dipae.thesisfitnessapp.ui.wizard.navigation.wizardScreen
-import gr.dipae.thesisfitnessapp.util.ext.singleNavigateWithPopInclusive
+
+internal typealias OnGoogleSignInClicked = (IntentSender) -> Unit
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun OnBoardingNavHost(
-    navController: NavHostController
+    navController: NavHostController,
+    onGoogleSignInClicked: OnGoogleSignInClicked,
+    onUserAlreadySignIn: () -> Unit
 ) {
     NavHost(
         navController = navController,
         startDestination = SplashRoute
     ) {
         splashScreen {
-            navController.singleNavigateWithPopInclusive(it, SplashRoute)
+            onUserAlreadySignIn()
         }
         loginScreen(
-            onGoogleSignInClicked = { /*viewModel.onGoogleSignInClicked(it)*/ },
+            onGoogleSignInClicked = { onGoogleSignInClicked(it) },
             onLogoutPressed = {}
         )
         wizardScreen {

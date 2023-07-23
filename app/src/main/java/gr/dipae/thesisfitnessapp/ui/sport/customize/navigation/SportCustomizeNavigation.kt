@@ -17,10 +17,12 @@ import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
 
 internal val SportCustomizeArgumentKeys = listOf("sportId")
 internal val SportCustomizeRoute = "sports_customize${SportCustomizeArgumentKeys.getComposeNavigationArgs()}"
+internal typealias OnStartClicked = (String) -> Unit
 
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.sportCustomizeScreen(
-    onSportCustomizeShown: () -> Unit
+    onSportCustomizeShown: () -> Unit,
+    onStartClicked: OnStartClicked
 ) {
     composable(route = SportCustomizeRoute, arguments = sportCustomizeArguments()) {
         val viewModel: SportCustomizeViewModel = hiltViewModel()
@@ -32,7 +34,8 @@ fun NavGraphBuilder.sportCustomizeScreen(
 
         viewModel.uiState.value?.let { uiState ->
             SportCustomizeContent(
-                uiState = uiState
+                uiState = uiState,
+                onStartClicked = { onStartClicked(it) }
             )
         }
     }

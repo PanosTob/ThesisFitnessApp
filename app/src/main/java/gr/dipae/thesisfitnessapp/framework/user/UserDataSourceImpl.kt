@@ -196,6 +196,13 @@ class UserDataSourceImpl @Inject constructor(
             .getDocumentsResponse()
     }
 
+    override suspend fun getFavoriteSportIds(): List<String> {
+        return fireStore
+            .collection(USERS_COLLECTION)
+            .document(getFirebaseUserId())
+            .getDocumentResponse<RemoteUser>()?.favoriteActivities?.map { it.removePrefix("/activities/") } ?: emptyList()
+    }
+
     override suspend fun getUserScannedFoods(): List<RemoteUserScannedFood> {
         val userId = getFirebaseUserId()
         return fireStore

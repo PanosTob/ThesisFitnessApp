@@ -24,8 +24,9 @@
     <!-- Home Screen -->
     <string name="home_title">Home</string>
 
-    <!-- Activities Screen -->
+    <!-- Sports Screen -->
     <string name="sport_title">Sport</string>
+    <string name="sport_start_button">Start</string>
 
     <!-- Workout Screen -->
     <string name="workout_title">Workout</string>

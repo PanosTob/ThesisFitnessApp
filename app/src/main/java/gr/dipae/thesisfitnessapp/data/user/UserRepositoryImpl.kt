@@ -106,4 +106,8 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getUserScannedFoods(): List<UserScannedFood> {
         return userMapper(dataSource.getUserScannedFoods())
     }
+
+    override suspend fun getFavoriteSportIds(): List<String> {
+        return dataSource.getFavoriteSportIds()
+    }
 }

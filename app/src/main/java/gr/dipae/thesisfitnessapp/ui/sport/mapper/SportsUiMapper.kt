@@ -1,10 +1,11 @@
 package gr.dipae.thesisfitnessapp.ui.sport.mapper
 
+import androidx.compose.runtime.mutableStateOf
 import gr.dipae.thesisfitnessapp.data.Mapper
 import gr.dipae.thesisfitnessapp.domain.sport.entity.Sport
+import gr.dipae.thesisfitnessapp.ui.sport.model.SportParameterUiItem
 import gr.dipae.thesisfitnessapp.ui.sport.model.SportUiItem
 import gr.dipae.thesisfitnessapp.ui.sport.model.SportsUiState
-import gr.dipae.thesisfitnessapp.ui.sport.model.toSportUiItem
 import javax.inject.Inject
 
 class SportsUiMapper @Inject constructor() : Mapper {
@@ -18,6 +19,14 @@ class SportsUiMapper @Inject constructor() : Mapper {
     private fun mapSports(sports: List<Sport>?): List<SportUiItem> {
         sports ?: return emptyList()
 
-        return sports.map { it.toSportUiItem() }
+        return sports.map { sport ->
+            SportUiItem(
+                id = sport.id,
+                name = sport.name,
+                imageUrl = sport.imageUrl,
+                parameters = sport.parameters.map { SportParameterUiItem(it) },
+                favorite = mutableStateOf(sport.favorite)
+            )
+        }
     }
 }

@@ -2,6 +2,7 @@ package gr.dipae.thesisfitnessapp.ui.app
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
@@ -37,12 +38,15 @@ import gr.dipae.thesisfitnessapp.ui.lobby.composable.LobbyBottomNabItem
 import gr.dipae.thesisfitnessapp.ui.lobby.navigation.LobbyRoute
 import gr.dipae.thesisfitnessapp.ui.lobby.navigation.lobbyScreen
 import gr.dipae.thesisfitnessapp.ui.lobby.navigation.navigateToLobby
+import gr.dipae.thesisfitnessapp.ui.onboarding.navigation.OnBoardingNavHostRoute
+import gr.dipae.thesisfitnessapp.ui.onboarding.navigation.onBoardingNavHost
 import gr.dipae.thesisfitnessapp.ui.profile.navigation.ProfileRoute
 import gr.dipae.thesisfitnessapp.ui.profile.navigation.profileScreen
-import gr.dipae.thesisfitnessapp.ui.splash.navigation.SplashRoute
 import gr.dipae.thesisfitnessapp.ui.sport.customize.navigation.navigateToSportCustomize
 import gr.dipae.thesisfitnessapp.ui.sport.customize.navigation.sportCustomizeScreen
 import gr.dipae.thesisfitnessapp.ui.sport.navigation.sportsScreen
+import gr.dipae.thesisfitnessapp.ui.sport.session.navigation.navigateToSportSession
+import gr.dipae.thesisfitnessapp.ui.sport.session.navigation.sportSessionScreen
 import gr.dipae.thesisfitnessapp.ui.theme.ColorPrimary
 import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondary
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
@@ -108,11 +112,12 @@ fun AppNavHost(
                             ThesisFitnessBMText(text = stringResource(id = topBarState.titleRes.value), color = Color.White, fontSize = 22.sp)
                         },
                         actions = {
-
                             topBarState.actionIcons.value.forEach {
                                 Icon(
-                                    modifier = Modifier.padding(end = SpacingDefault_16dp),
-                                    painter = painterResource(id = it),
+                                    modifier = Modifier
+                                        .padding(end = SpacingDefault_16dp)
+                                        .clickable { it.clickAction() },
+                                    painter = painterResource(id = it.icon),
                                     contentDescription = "",
                                     tint = ColorSecondary
                                 )
@@ -128,30 +133,38 @@ fun AppNavHost(
                         .background(colorScreen.value)
                         .padding(top = paddingValues.calculateTopPadding() + SpacingDefault_16dp),
                     navController = navController,
-                    startDestination = SplashRoute
+                    startDestination = OnBoardingNavHostRoute
                 ) {
+                    onBoardingNavHost(
+                        onGoogleSignInClicked = { viewModel.onGoogleSignInClicked(it) },
+                        onUserAlreadySignIn = { navController.navigateToLobby() }
+                    )
 
                     lobbyScreen(
                         onLobbyShown = {
                             viewModel.showLoggedInUi()
-                            viewModel.updateTopBarToBurgerIcon()
+                            viewModel.showLobbyTopBar()
                         }
                     )
                     workoutScreen(
-                        onWorkoutShown = { viewModel.updateToCalenderIcon() }
+                        onWorkoutShown = { viewModel.showWorkoutTopBar() }
                     )
                     sportsScreen(
-                        onSportsShown = { viewModel.updateToCalenderIcon() },
+                        onSportsShown = { viewModel.showSportsTopBar() },
                         onSportSelected = { navController.navigateToSportCustomize(it) }
                     )
                     sportCustomizeScreen(
-                        onSportCustomizeShown = { viewModel.showInnerLoginTopBar() }
+                        onSportCustomizeShown = { viewModel.showInnerLoginTopBar() },
+                        onStartClicked = { navController.navigateToSportSession(it) }
                     )
+                    sportSessionScreen {
+
+                    }
                     dietScreen(
-                        onDietShown = { viewModel.updateToCalenderIcon() }
+                        onDietShown = { viewModel.showDietTopBar() }
                     )
                     profileScreen(
-                        onProfileShown = { viewModel.updateToCalenderIcon() },
+                        onProfileShown = { viewModel.showProfileTopBar() },
                         onLogout = { viewModel.logoutUser() }
                     )
 

@@ -4,18 +4,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import gr.dipae.thesisfitnessapp.ui.onboarding.navhost.OnBoardingNavHost
+import gr.dipae.thesisfitnessapp.ui.onboarding.navhost.OnGoogleSignInClicked
 import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
 
 @Composable
-fun OnBoardingScreen() {
-    OnBoardingContent()
+fun OnBoardingScreen(
+    onGoogleSignInClicked: OnGoogleSignInClicked,
+    onUserAlreadySignIn: () -> Unit
+) {
+    OnBoardingContent(
+        onGoogleSignInClicked = { onGoogleSignInClicked(it) },
+        onUserAlreadySignIn = { onUserAlreadySignIn() }
+    )
 }
 
 @Composable
-fun OnBoardingContent() {
+fun OnBoardingContent(
+    onGoogleSignInClicked: OnGoogleSignInClicked = {},
+    onUserAlreadySignIn: () -> Unit = {}
+) {
     val navController = rememberNavController()
     OnBoardingNavHost(
-        navController = navController
+        navController = navController,
+        onGoogleSignInClicked = { onGoogleSignInClicked(it) },
+        onUserAlreadySignIn = { onUserAlreadySignIn() }
     )
 }
 

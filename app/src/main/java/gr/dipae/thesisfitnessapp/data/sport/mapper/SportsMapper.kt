@@ -9,28 +9,20 @@ import javax.inject.Inject
 
 class SportsMapper @Inject constructor() : Mapper {
 
-    operator fun invoke(remoteSports: List<RemoteSport>): List<Sport> {
-        return remoteSports.map {
-            Sport(
-                id = it.id,
-                name = it.name,
-                imageUrl = it.imageUrl,
-                parameters = it.parameters,
-                details = mapSportDetails(it.details)
-            )
-        }
+    operator fun invoke(remoteSports: List<RemoteSport>, favoriteSportIds: List<String>): List<Sport> {
+        return remoteSports.mapNotNull { mapSport(it, favoriteSportIds) }
     }
 
-    operator fun invoke(remoteSport: RemoteSport?): Sport? {
-        return remoteSport?.let {
-            Sport(
-                id = remoteSport.id,
-                name = remoteSport.name,
-                imageUrl = remoteSport.imageUrl,
-                parameters = remoteSport.parameters,
-                details = mapSportDetails(remoteSport.details)
-            )
-        }
+    fun mapSport(remoteSport: RemoteSport?, favoriteSportIds: List<String>): Sport? {
+        remoteSport ?: return null
+        return Sport(
+            id = remoteSport.id,
+            name = remoteSport.name,
+            imageUrl = remoteSport.imageUrl,
+            parameters = remoteSport.parameters,
+            details = mapSportDetails(remoteSport.details),
+            favorite = favoriteSportIds.contains(remoteSport.id)
+        )
     }
 
     private fun mapSportDetails(details: RemoteSportDetails): SportDetails {

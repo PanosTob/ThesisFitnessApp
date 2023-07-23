@@ -1,4 +1,4 @@
-package gr.dipae.thesisfitnessapp.ui.sport.composable
+package gr.dipae.thesisfitnessapp.ui.app.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
