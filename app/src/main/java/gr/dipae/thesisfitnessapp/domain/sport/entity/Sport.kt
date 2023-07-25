@@ -13,3 +13,8 @@ data class SportDetails(
     val distanceMeters: Long,
     val durationSeconds: Long
 )
+
+data class SportParameter(
+    val name: String,
+    val value: Long
+)

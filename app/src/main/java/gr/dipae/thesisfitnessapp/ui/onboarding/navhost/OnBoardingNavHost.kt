@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import gr.dipae.thesisfitnessapp.ui.lobby.navigation.LobbyRoute
 import gr.dipae.thesisfitnessapp.ui.lobby.navigation.navigateToLobby
 import gr.dipae.thesisfitnessapp.ui.splash.navigation.SplashRoute
 import gr.dipae.thesisfitnessapp.ui.splash.navigation.splashScreen
@@ -19,14 +20,19 @@ internal typealias OnGoogleSignInClicked = (IntentSender) -> Unit
 fun OnBoardingNavHost(
     navController: NavHostController,
     onGoogleSignInClicked: OnGoogleSignInClicked,
-    onUserAlreadySignIn: () -> Unit
+    onUserAlreadySignIn: () -> Unit,
+    onUserNotSignedIn: () -> Unit
 ) {
     NavHost(
         navController = navController,
         startDestination = SplashRoute
     ) {
         splashScreen {
-            onUserAlreadySignIn()
+            if (it == LobbyRoute) {
+                onUserAlreadySignIn()
+            } else {
+                onUserNotSignedIn()
+            }
         }
         loginScreen(
             onGoogleSignInClicked = { onGoogleSignInClicked(it) },

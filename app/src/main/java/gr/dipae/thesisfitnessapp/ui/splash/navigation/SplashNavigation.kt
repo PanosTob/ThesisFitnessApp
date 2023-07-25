@@ -17,7 +17,7 @@ internal const val SplashRoute = "splash"
 
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.splashScreen(
-    navigateToWelcomeAction: (String) -> Unit
+    onSplashNavigateAction: (String) -> Unit
 ) {
     composable(SplashRoute) {
         val viewModel: SplashViewModel = hiltViewModel()
@@ -32,7 +32,7 @@ fun NavGraphBuilder.splashScreen(
                 .filterNotNull()
                 .flowWithLifecycle(lifecycleOwner.lifecycle)
                 .collectLatest {
-                    navigateToWelcomeAction(it)
+                    onSplashNavigateAction(it)
                 }
         }
 

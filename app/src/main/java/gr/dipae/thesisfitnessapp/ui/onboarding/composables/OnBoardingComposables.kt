@@ -6,6 +6,7 @@ import androidx.navigation.compose.rememberNavController
 import gr.dipae.thesisfitnessapp.ui.onboarding.navhost.OnBoardingNavHost
 import gr.dipae.thesisfitnessapp.ui.onboarding.navhost.OnGoogleSignInClicked
 import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
+import gr.dipae.thesisfitnessapp.ui.welcome.navigation.navigateToLogin
 
 @Composable
 fun OnBoardingScreen(
@@ -27,7 +28,8 @@ fun OnBoardingContent(
     OnBoardingNavHost(
         navController = navController,
         onGoogleSignInClicked = { onGoogleSignInClicked(it) },
-        onUserAlreadySignIn = { onUserAlreadySignIn() }
+        onUserAlreadySignIn = { onUserAlreadySignIn() },
+        onUserNotSignedIn = { navController.navigateToLogin() }
     )
 }
 

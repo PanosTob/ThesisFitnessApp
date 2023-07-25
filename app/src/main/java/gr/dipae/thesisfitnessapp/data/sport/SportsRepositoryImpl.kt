@@ -3,6 +3,7 @@ package gr.dipae.thesisfitnessapp.data.sport
 import gr.dipae.thesisfitnessapp.data.sport.mapper.SportsMapper
 import gr.dipae.thesisfitnessapp.domain.sport.SportsRepository
 import gr.dipae.thesisfitnessapp.domain.sport.entity.Sport
+import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
 import javax.inject.Inject
 
 class SportsRepositoryImpl @Inject constructor(
@@ -15,5 +16,9 @@ class SportsRepositoryImpl @Inject constructor(
 
     override suspend fun getSportById(sportId: String): Sport? {
         return sportsMapper.mapSport(dataSource.getSportById(sportId), emptyList())
+    }
+
+    override suspend fun initializeSportSession(sportId: String, parameter: SportParameter) {
+        return dataSource.initializeSportSession(sportId, parameter)
     }
 }

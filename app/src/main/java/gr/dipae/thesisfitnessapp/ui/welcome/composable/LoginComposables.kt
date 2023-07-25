@@ -63,7 +63,7 @@ fun LoginContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color.Black)
+            .background(color = MaterialTheme.colorScheme.background)
             .padding(horizontal = SpacingDefault_16dp, vertical = SpacingDouble_32dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
