@@ -9,6 +9,7 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -20,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -34,7 +34,7 @@ import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBMText
 import gr.dipae.thesisfitnessapp.ui.diet.navigation.dietScreen
 import gr.dipae.thesisfitnessapp.ui.history.navigation.historyScreen
-import gr.dipae.thesisfitnessapp.ui.lobby.composable.LobbyBottomNabItem
+import gr.dipae.thesisfitnessapp.ui.lobby.composable.LobbyBottomNavItem
 import gr.dipae.thesisfitnessapp.ui.lobby.navigation.LobbyRoute
 import gr.dipae.thesisfitnessapp.ui.lobby.navigation.lobbyScreen
 import gr.dipae.thesisfitnessapp.ui.lobby.navigation.navigateToLobby
@@ -47,8 +47,7 @@ import gr.dipae.thesisfitnessapp.ui.sport.customize.navigation.sportCustomizeScr
 import gr.dipae.thesisfitnessapp.ui.sport.navigation.sportsScreen
 import gr.dipae.thesisfitnessapp.ui.sport.session.navigation.navigateToSportSession
 import gr.dipae.thesisfitnessapp.ui.sport.session.navigation.sportSessionScreen
-import gr.dipae.thesisfitnessapp.ui.theme.ColorPrimary
-import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondary
+import gr.dipae.thesisfitnessapp.ui.theme.ColorBottomNavBar
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.welcome.navigation.LoginRoute
 import gr.dipae.thesisfitnessapp.ui.wizard.navigation.navigateToWizard
@@ -95,8 +94,8 @@ fun AppNavHost(
                 if (topBarState.isVisible.value) {
                     TopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = ColorPrimary,
-                            navigationIconContentColor = ColorSecondary
+                            containerColor = MaterialTheme.colorScheme.background,
+                            navigationIconContentColor = MaterialTheme.colorScheme.primary
                         ),
                         navigationIcon = {
                             topBarState.navigationIcon.value?.let {
@@ -109,7 +108,7 @@ fun AppNavHost(
                             }
                         },
                         title = {
-                            ThesisFitnessBMText(text = stringResource(id = topBarState.titleRes.value), color = Color.White, fontSize = 22.sp)
+                            ThesisFitnessBMText(text = stringResource(id = topBarState.titleRes.value), color = MaterialTheme.colorScheme.primary, fontSize = 22.sp)
                         },
                         actions = {
                             topBarState.actionIcons.value.forEach {
@@ -119,7 +118,7 @@ fun AppNavHost(
                                         .clickable { it.clickAction() },
                                     painter = painterResource(id = it.icon),
                                     contentDescription = "",
-                                    tint = ColorSecondary
+                                    tint = MaterialTheme.colorScheme.primary
                                 )
                             }
                         }
@@ -130,7 +129,7 @@ fun AppNavHost(
                 NavHost(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(colorScreen.value)
+                        .background(MaterialTheme.colorScheme.background)
                         .padding(top = paddingValues.calculateTopPadding() + SpacingDefault_16dp),
                     navController = navController,
                     startDestination = OnBoardingNavHostRoute
@@ -175,10 +174,10 @@ fun AppNavHost(
                 val bottomNavItems by remember(viewModel.appUiState.value.bottomAppBarItems.value) { mutableStateOf(viewModel.appUiState.value.bottomAppBarItems.value) }
                 if (bottomNavItems.isNotEmpty()) {
                     BottomAppBar(
-                        containerColor = Color.Black
+                        containerColor = ColorBottomNavBar
                     ) {
                         bottomNavItems.forEach {
-                            LobbyBottomNabItem(item = it) {
+                            LobbyBottomNavItem(item = it) {
                                 navController.singleNavigateWithPopInclusive(it.route, LobbyRoute)
                                 viewModel.appUiState.value.onBottomAppBarItemSelection(it)
                                 viewModel.updateTopBarTitle(it.route)

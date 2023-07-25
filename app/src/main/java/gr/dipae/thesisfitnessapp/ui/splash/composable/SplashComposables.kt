@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import gr.dipae.thesisfitnessapp.R
@@ -17,7 +17,7 @@ import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
 @Composable
 fun SplashContent(
 ) {
-    Surface(color = Color.Black) {
+    Surface(color = MaterialTheme.colorScheme.background) {
         Image(
             modifier = Modifier
                 .fillMaxSize()

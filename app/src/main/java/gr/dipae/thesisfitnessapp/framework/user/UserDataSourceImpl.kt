@@ -100,10 +100,6 @@ class UserDataSourceImpl @Inject constructor(
         auth.signOut()
     }
 
-    override suspend fun logout() {
-        auth.signOut()
-    }
-
     override fun getUserDeclinedSignInCount(): Int {
         return sharedPrefs[USER_DECLINED_SIGN_IN_COUNTER, 0] ?: 0
     }

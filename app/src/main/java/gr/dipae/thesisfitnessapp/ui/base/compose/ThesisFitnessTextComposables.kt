@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.TextUnit
 fun ThesisFitnessHLText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = MaterialTheme.colorScheme.background,
+    color: Color = MaterialTheme.colorScheme.primary,
     fontSize: TextUnit = MaterialTheme.typography.headlineLarge.fontSize,
     letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
@@ -56,7 +56,7 @@ fun ThesisFitnessHLText(
 fun ThesisFitnessHLAutoSizeText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.primary,
     maxFontSize: TextUnit = MaterialTheme.typography.headlineLarge.fontSize,
     letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
@@ -87,7 +87,7 @@ fun ThesisFitnessHLAutoSizeText(
 fun ThesisFitnessHMText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.primary,
     fontSize: TextUnit = MaterialTheme.typography.headlineMedium.fontSize,
     letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
@@ -120,7 +120,7 @@ fun ThesisFitnessHMText(
 fun ThesisFitnessHMAutoSizeText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.primary,
     maxFontSize: TextUnit = MaterialTheme.typography.headlineMedium.fontSize,
     letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
@@ -151,7 +151,7 @@ fun ThesisFitnessHMAutoSizeText(
 fun ThesisFitnessHSText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.primary,
     fontSize: TextUnit = MaterialTheme.typography.headlineSmall.fontSize,
     letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
@@ -182,7 +182,7 @@ fun ThesisFitnessHSText(
 fun ThesisFitnessHSAutoSizeText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.primary,
     maxFontSize: TextUnit = MaterialTheme.typography.headlineSmall.fontSize,
     letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
@@ -213,7 +213,7 @@ fun ThesisFitnessHSAutoSizeText(
 fun ThesisFitnessBLText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.primary,
     fontSize: TextUnit = MaterialTheme.typography.headlineLarge.fontSize,
     letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
@@ -244,7 +244,7 @@ fun ThesisFitnessBLText(
 fun ThesisFitnessBLAutoSizeText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = MaterialTheme.colorScheme.background,
+    color: Color = MaterialTheme.colorScheme.primary,
     maxFontSize: TextUnit = MaterialTheme.typography.bodyLarge.fontSize,
     letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
@@ -275,7 +275,7 @@ fun ThesisFitnessBLAutoSizeText(
 fun ThesisFitnessBMText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.primary,
     fontSize: TextUnit = MaterialTheme.typography.bodyMedium.fontSize,
     letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
@@ -306,7 +306,7 @@ fun ThesisFitnessBMText(
 fun ThesisFitnessBMAutoSizeText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.primary,
     maxFontSize: TextUnit = MaterialTheme.typography.bodyMedium.fontSize,
     letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
@@ -337,7 +337,7 @@ fun ThesisFitnessBMAutoSizeText(
 fun ThesisFitnessLLText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.primary,
     fontSize: TextUnit = MaterialTheme.typography.labelLarge.fontSize,
     letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
@@ -368,7 +368,7 @@ fun ThesisFitnessLLText(
 fun ThesisFitnessLLAutoSizeText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.primary,
     maxFontSize: TextUnit = MaterialTheme.typography.labelLarge.fontSize,
     letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
@@ -401,7 +401,7 @@ fun AutoSizeText(
     modifier: Modifier = Modifier,
     text: String,
     maxFontSize: TextUnit,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.primary,
     fontStyle: FontStyle? = null,
     fontWeight: FontWeight? = null,
     fontFamily: FontFamily? = null,

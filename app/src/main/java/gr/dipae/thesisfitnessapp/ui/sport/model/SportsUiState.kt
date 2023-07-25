@@ -13,7 +13,6 @@ data class SportUiItem(
     val id: String,
     val name: String,
     val imageUrl: String,
-    val parameters: List<SportParameterUiItem>,
     val favorite: MutableState<Boolean> = mutableStateOf(false),
     val editable: MutableState<Boolean> = mutableStateOf(false),
 ) {
@@ -21,9 +20,3 @@ data class SportUiItem(
 
     fun determineClickAction(callback: (String) -> Unit) = if (editable.value) favorite.value = !favorite.value else callback(id)
 }
-
-data class SportParameterUiItem(
-    val name: String,
-    val parameterValue: MutableState<String> = mutableStateOf(""),
-    val selected: MutableState<Boolean> = mutableStateOf(false)
-)

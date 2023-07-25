@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -89,7 +90,7 @@ fun LoginContent(
             ThesisFitnessHMAutoSizeText(
                 text = stringResource(id = R.string.login_title),
                 maxLines = 1,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.primary,
                 maxFontSize = 28.sp,
             )
 
@@ -130,7 +131,7 @@ fun LoginContent(
         ThesisFitnessLLAutoSizeText(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(id = R.string.login_guest_btn),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
             maxLines = 1,
             maxFontSize = 22.sp

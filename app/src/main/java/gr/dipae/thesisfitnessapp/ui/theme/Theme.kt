@@ -6,7 +6,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material.ripple.RippleAlpha
 import androidx.compose.material.ripple.RippleTheme
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -60,8 +59,7 @@ fun ThesisFitnessAppTheme(
         shapes = shapes,
         content = {
             CompositionLocalProvider(
-                LocalRippleTheme provides rippleCustomTheme,
-                LocalContentColor provides Color.White
+                LocalRippleTheme provides rippleCustomTheme
             ) { content() }
         }
     )

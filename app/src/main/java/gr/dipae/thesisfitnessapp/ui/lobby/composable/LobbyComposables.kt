@@ -15,10 +15,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -31,8 +31,7 @@ import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBMText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.lobby.model.LobbyUiState
 import gr.dipae.thesisfitnessapp.ui.lobby.model.UserDetailsUiItem
-import gr.dipae.thesisfitnessapp.ui.theme.ColorPrimary
-import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondary
+import gr.dipae.thesisfitnessapp.ui.theme.ColorBottomNavBar
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
@@ -47,7 +46,7 @@ fun LobbyContent(
     Column(
         Modifier
             .fillMaxSize()
-            .background(color = ColorPrimary)
+            .background(color = MaterialTheme.colorScheme.background)
             .padding(horizontal = SpacingCustom_24dp)
     ) {
         Row(
@@ -64,7 +63,7 @@ fun LobbyContent(
                 ThesisFitnessHLAutoSizeText(
                     modifier = Modifier
                         .weight(0.5f)
-                        .fillMaxWidth(), text = uiState.userDetails.username, maxFontSize = 38.sp, color = Color.White, textAlign = TextAlign.Center
+                        .fillMaxWidth(), text = uiState.userDetails.username, maxFontSize = 38.sp, color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center
                 )
                 Row(modifier = Modifier.weight(0.5f), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
                     LobbyUserDetailItem("64kg", R.drawable.ic_scale)
@@ -78,7 +77,7 @@ fun LobbyContent(
 }
 
 @Composable
-fun RowScope.LobbyBottomNabItem(
+fun RowScope.LobbyBottomNavItem(
     item: BottomAppBarUiItem,
     onClick: () -> Unit
 ) {
@@ -88,7 +87,7 @@ fun RowScope.LobbyBottomNabItem(
             .fillMaxHeight(),
         colors = IconButtonDefaults.filledIconButtonColors(
             contentColor = item.getColor(),
-            containerColor = Color.Black
+            containerColor = ColorBottomNavBar
         ),
         onClick = { onClick() }) {
         Column(
@@ -119,11 +118,14 @@ fun RowScope.LobbyUserDetailItem(
     iconRes: Int
 ) {
     Column(modifier = Modifier.weight(0.33f), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(SpacingQuarter_4dp)) {
-        ThesisFitnessBLAutoSizeText(modifier = Modifier.fillMaxWidth(), text = text, maxFontSize = 24.sp, color = Color.White, textAlign = TextAlign.Center)
+        ThesisFitnessBLAutoSizeText(modifier = Modifier.fillMaxWidth(), text = text, maxFontSize = 24.sp, color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center)
         Icon(
             modifier = Modifier
                 .fillMaxWidth(0.4f)
-                .aspectRatio(1f), painter = painterResource(id = iconRes), contentDescription = "", tint = ColorSecondary
+                .aspectRatio(1f),
+            painter = painterResource(id = iconRes),
+            contentDescription = "",
+            tint = MaterialTheme.colorScheme.primary
         )
     }
 }

@@ -14,7 +14,6 @@ import javax.inject.Singleton
 data class AppUiState(
     val topBarState: TopBarUiState = TopBarUiState(),
     val bottomAppBarItems: MutableState<List<BottomAppBarUiItem>> = mutableStateOf(emptyList()),
-    val colorScreen: MutableState<Color> = mutableStateOf(Color.Black),
     val navigateToWizard: MutableState<Boolean> = mutableStateOf(false),
     val navigateToLobby: MutableState<Boolean> = mutableStateOf(false),
     val navigateBackToLogin: MutableState<Boolean> = mutableStateOf(false)

@@ -19,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -100,7 +101,7 @@ fun WizardContent(
                     containerColor = ColorSecondary,
                     contentColor = Color.Black,
                     disabledContainerColor = ColorDisabledButton,
-                    disabledContentColor = Color.White
+                    disabledContentColor = MaterialTheme.colorScheme.primary
                 ),
                 onClick = {
                     if (uiState.wizardPageIndexState.value == uiState.wizardSteps - 1) {
@@ -131,7 +132,7 @@ fun WizardContent(
             pagerState = pagerState,
             pageCount = uiState.wizardSteps,
             activeColor = ColorSecondary,
-            inactiveColor = Color.White
+            inactiveColor = MaterialTheme.colorScheme.primary
         )
     }
 }
@@ -201,7 +202,7 @@ fun WizardDailyDietStep(dailyDietGoal: DietGoalUiItem) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState()), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(SpacingDefault_16dp)
     ) {
-        ThesisFitnessHLAutoSizeText(text = stringResource(id = R.string.wizard_daily_diet_step_title), color = Color.White, maxFontSize = 26.sp)
+        ThesisFitnessHLAutoSizeText(text = stringResource(id = R.string.wizard_daily_diet_step_title), color = MaterialTheme.colorScheme.primary, maxFontSize = 26.sp)
         TextField(
             value = dailyDietGoal.caloriesState.value,
             onValueChange = { dailyDietGoal.caloriesState.value = it },

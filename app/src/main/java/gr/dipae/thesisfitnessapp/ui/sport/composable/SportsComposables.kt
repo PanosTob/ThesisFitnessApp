@@ -8,11 +8,11 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import gr.dipae.thesisfitnessapp.ui.sport.model.SportsUiState
 import gr.dipae.thesisfitnessapp.ui.sport.navigation.OnSportSelected
-import gr.dipae.thesisfitnessapp.ui.theme.ColorPrimary
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
@@ -26,7 +26,7 @@ fun SportsContent(
         columns = GridCells.Fixed(2),
         modifier = Modifier
             .fillMaxSize()
-            .background(color = ColorPrimary)
+            .background(color = MaterialTheme.colorScheme.background)
             .padding(horizontal = SpacingCustom_24dp),
         state = rememberLazyGridState(),
         verticalArrangement = Arrangement.spacedBy(SpacingDefault_16dp),

@@ -20,7 +20,6 @@ interface UserDataSource {
     suspend fun getUserDetailsLocally(): RemoteUser?
     suspend fun logoutUser()
     suspend fun registerUser()
-    suspend fun logout()
     fun getUserDeclinedSignInCount(): Int
     fun getGoogleSignInBlockedTime(): Long
     fun setGoogleSignInBlockedTime()

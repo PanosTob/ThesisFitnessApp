@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,6 +48,6 @@ fun SportItem(
             model = item.imageUrl.loadImageWithCrossfade(R.drawable.img_general_sport),
             contentDescription = ""
         )
-        ThesisFitnessBLAutoSizeText(text = item.name, maxFontSize = 22.sp)
+        ThesisFitnessBLAutoSizeText(text = item.name, maxFontSize = 22.sp, color = Color.Black)
     }
 }

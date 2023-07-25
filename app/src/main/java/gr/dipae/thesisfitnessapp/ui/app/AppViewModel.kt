@@ -8,7 +8,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -30,7 +29,6 @@ import gr.dipae.thesisfitnessapp.ui.lobby.navigation.LobbyRoute
 import gr.dipae.thesisfitnessapp.ui.lobby.viewmodel.LobbyViewModel
 import gr.dipae.thesisfitnessapp.ui.profile.navigation.ProfileRoute
 import gr.dipae.thesisfitnessapp.ui.sport.navigation.SportsRoute
-import gr.dipae.thesisfitnessapp.ui.theme.ColorPrimary
 import gr.dipae.thesisfitnessapp.ui.workout.navigation.WorkoutRoute
 import gr.dipae.thesisfitnessapp.usecase.login.DisableGoogleSignIfUserDenialsExceedsLimitUseCase
 import gr.dipae.thesisfitnessapp.usecase.login.LogoutUserUseCase
@@ -116,7 +114,6 @@ class AppViewModel @Inject constructor(
 
     fun showLoggedInUi() {
         _appUiState.value.apply {
-            colorScreen.value = ColorPrimary
             topBarState.isVisible.value = true
             bottomAppBarItems.value = LobbyViewModel.bottomAppBarUiItems
         }
@@ -144,7 +141,6 @@ class AppViewModel @Inject constructor(
 
     fun hideScafoldBars() {
         _appUiState.value.apply {
-            colorScreen.value = Color.Black
             topBarState.isVisible.value = false
             bottomAppBarItems.value = emptyList()
         }
@@ -152,7 +148,6 @@ class AppViewModel @Inject constructor(
 
     fun showInnerLoginTopBar() {
         _appUiState.value.apply {
-            colorScreen.value = ColorPrimary
             updateTopBarNavigationIcon(Icons.Filled.ArrowBack)
             topBarState.isVisible.value = true
             topBarState.titleRes.value = R.string.empty

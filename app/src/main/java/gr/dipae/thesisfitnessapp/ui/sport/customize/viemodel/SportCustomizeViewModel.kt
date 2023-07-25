@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SportCustomizeViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val getSportByIdUseCase: GetSportByIdUseCase,
     private val sportCustomizeUiMapper: SportCustomizeUiMapper
 ) : BaseViewModel() {
@@ -22,10 +22,14 @@ class SportCustomizeViewModel @Inject constructor(
     private val _uiState: MutableState<SportCustomizeUiState?> = mutableStateOf(null)
     val uiState: State<SportCustomizeUiState?> = _uiState
 
+    private val sportId = savedStateHandle.get<String>(SportCustomizeArgumentKeys.first())!!
     fun init() {
         launchWithProgress {
-            val sportId = savedStateHandle.get<String>(SportCustomizeArgumentKeys.first())!!
             _uiState.value = sportCustomizeUiMapper(getSportByIdUseCase(sportId))
         }
+    }
+
+    fun onStartClicked() {
+        _uiState.value?.navigateToSportSession?.value = sportId
     }
 }
