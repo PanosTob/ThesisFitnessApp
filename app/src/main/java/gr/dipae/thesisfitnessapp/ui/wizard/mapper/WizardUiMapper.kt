@@ -24,12 +24,12 @@ class WizardUiMapper @Inject constructor() : Mapper {
     private fun mapWizardSports(sports: List<Sport>?): List<WizardSportUiItem> {
         if (sports == null) return emptyList()
 
-        return sports.map {
+        return sports.map { sport ->
             WizardSportUiItem(
-                id = it.id,
-                name = it.name,
-                imageUrl = it.imageUrl,
-                parameters = it.parameters
+                id = sport.id,
+                name = sport.name,
+                imageUrl = sport.imageUrl,
+                parameters = sport.parameters.map { it.name }
             )
         }
     }

@@ -21,10 +21,10 @@ class SportCustomizeUiMapper @Inject constructor() : Mapper {
         )
     }
 
-    private fun mapSportParameters(parameters: List<String>?): List<SportParameterUiItem> {
+    private fun mapSportParameters(parameters: List<SportParameter>?): List<SportParameterUiItem> {
         parameters ?: return emptyList()
 
-        return parameters.map { SportParameterUiItem(it, iconRes = parameterIconMap[it] ?: -1) }
+        return parameters.map { SportParameterUiItem(it.name, iconRes = parameterIconMap[it.name] ?: -1) }
     }
 
     fun mapSportParameter(parameter: SportParameterUiItem?): SportParameter? {

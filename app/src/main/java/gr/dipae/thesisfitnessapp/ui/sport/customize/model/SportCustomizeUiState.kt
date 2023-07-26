@@ -9,7 +9,7 @@ data class SportCustomizeUiState(
     val name: String,
     val parameters: List<SportParameterUiItem>,
     val selectedParameter: MutableState<SportParameterUiItem?> = mutableStateOf(null),
-    val navigateToSportSession: MutableState<String?> = mutableStateOf(null)
+    val navigateToSportSession: MutableState<Pair<String, String>?> = mutableStateOf(null)
 ) {
     fun onParameterSelection(parameterUiItem: SportParameterUiItem) {
         parameters.onEach { it.selected.value = false }

@@ -5,20 +5,19 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
-import gr.dipae.thesisfitnessapp.domain.sport.entity.SportSessionSaveResult
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.sport.customize.mapper.SportCustomizeUiMapper
 import gr.dipae.thesisfitnessapp.ui.sport.customize.model.SportCustomizeUiState
 import gr.dipae.thesisfitnessapp.ui.sport.customize.navigation.SportCustomizeArgumentKeys
+import gr.dipae.thesisfitnessapp.usecase.sports.CreateSportParameterNavigationArgumentUseCase
 import gr.dipae.thesisfitnessapp.usecase.sports.GetSportByIdUseCase
-import gr.dipae.thesisfitnessapp.usecase.sports.InitializeSportSessionUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class SportCustomizeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getSportByIdUseCase: GetSportByIdUseCase,
-    private val initializeSportSessionUseCase: InitializeSportSessionUseCase,
+    private val createSportParameterNavigationArgumentUseCase: CreateSportParameterNavigationArgumentUseCase,
     private val sportCustomizeUiMapper: SportCustomizeUiMapper
 ) : BaseViewModel() {
 
@@ -34,13 +33,8 @@ class SportCustomizeViewModel @Inject constructor(
 
     fun onStartClicked() {
         _uiState.value?.apply {
-            launchWithProgress {
-                val result = initializeSportSessionUseCase(sportId, sportCustomizeUiMapper.mapSportParameter(selectedParameter.value))
-                if (result is SportSessionSaveResult.Success) {
-                    navigateToSportSession.value = sportId
-                } else {
-                    //TODO something went wrong
-                }
+            createSportParameterNavigationArgumentUseCase(sportCustomizeUiMapper.mapSportParameter(selectedParameter.value))?.let {
+                navigateToSportSession.value = Pair(sportId, it)
             }
         }
     }

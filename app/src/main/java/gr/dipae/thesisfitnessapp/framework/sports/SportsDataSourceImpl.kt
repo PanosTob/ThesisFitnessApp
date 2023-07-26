@@ -7,9 +7,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException
 import gr.dipae.thesisfitnessapp.data.sport.SportsDataSource
 import gr.dipae.thesisfitnessapp.data.sport.model.RemoteSport
-import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
+import gr.dipae.thesisfitnessapp.data.sport.model.SportParameterRequest
+import gr.dipae.thesisfitnessapp.data.sport.model.SportSessionRequest
 import gr.dipae.thesisfitnessapp.util.ACTIVITIES_DONE_COLLECTION
-import gr.dipae.thesisfitnessapp.util.ACTIVITIES_DONE_DETAILS_FIELD
+import gr.dipae.thesisfitnessapp.util.ACTIVITY_STATISTICS
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_COLLECTION
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_DATE
 import gr.dipae.thesisfitnessapp.util.SPORTS_COLLECTION
@@ -32,29 +33,33 @@ class SportsDataSourceImpl @Inject constructor(
         return fireStore.document("$SPORTS_COLLECTION/$sportId").getDocumentResponse<RemoteSport>()
     }
 
-    override suspend fun initializeSportSession(sportId: String, parameter: SportParameter) {
-        val todaySummaryDocument = fireStore
+    override suspend fun setSportSession(sportDoneRequest: SportSessionRequest, parameters: List<SportParameterRequest>) {
+        val todaySummaryDocument = initializeTodaySummary()
+        val activityDoneDocument = initializeActivityDone(todaySummaryDocument, sportDoneRequest)
+        parameters.forEach {
+            activityDoneDocument.collection(ACTIVITY_STATISTICS).document().set(it)
+        }
+    }
+
+    private suspend fun initializeTodaySummary(): DocumentReference {
+        val todaySummary = fireStore
             .collection(USERS_COLLECTION)
             .document(getFirebaseUserId())
             .collection(DAY_SUMMARY_COLLECTION)
             .document()
 
-        todaySummaryDocument.set(
+        todaySummary.set(
             mapOf(
                 DAY_SUMMARY_DATE to FieldValue.serverTimestamp()
             )
         ).await()
 
-        setSportSessionParameter(todaySummaryDocument, parameter)
+        return todaySummary
     }
 
-    private suspend fun setSportSessionParameter(todaySummaryDocument: DocumentReference, parameter: SportParameter) {
-        todaySummaryDocument.collection(ACTIVITIES_DONE_COLLECTION).document().set(
-            mapOf(
-                ACTIVITIES_DONE_DETAILS_FIELD to mapOf(
-                    parameter.name to parameter.value
-                )
-            )
-        ).await()
+    private suspend fun initializeActivityDone(todaySummaryDocument: DocumentReference, sportDoneRequest: SportSessionRequest): DocumentReference {
+        val activityDone = todaySummaryDocument.collection(ACTIVITIES_DONE_COLLECTION).document()
+        activityDone.set(sportDoneRequest).await()
+        return activityDone
     }
 }

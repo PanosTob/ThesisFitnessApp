@@ -1,10 +1,11 @@
 package gr.dipae.thesisfitnessapp.data.sport
 
 import gr.dipae.thesisfitnessapp.data.sport.model.RemoteSport
-import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
+import gr.dipae.thesisfitnessapp.data.sport.model.SportParameterRequest
+import gr.dipae.thesisfitnessapp.data.sport.model.SportSessionRequest
 
 interface SportsDataSource {
     suspend fun getSports(): List<RemoteSport>
     suspend fun getSportById(sportId: String): RemoteSport?
-    suspend fun initializeSportSession(sportId: String, parameter: SportParameter)
+    suspend fun setSportSession(sportDoneRequest: SportSessionRequest, parameters: List<SportParameterRequest>)
 }

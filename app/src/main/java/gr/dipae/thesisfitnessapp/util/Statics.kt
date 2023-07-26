@@ -72,4 +72,7 @@ const val DAY_SUMMARY_WORKOUT_EXERCISES_DONE_COLLECTION = "exercises"
 const val DAY_SUMMARY_DATE = "date"
 
 const val ACTIVITIES_DONE_COLLECTION = "activitiesDone"
+const val ACTIVITIES_DONE_ACTIVITY_ID = "activityId"
 const val ACTIVITIES_DONE_DETAILS_FIELD = "details"
+
+const val ACTIVITY_STATISTICS = "activityStatistics"

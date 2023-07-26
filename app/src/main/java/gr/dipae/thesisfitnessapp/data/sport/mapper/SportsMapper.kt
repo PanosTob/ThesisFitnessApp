@@ -5,6 +5,7 @@ import gr.dipae.thesisfitnessapp.data.sport.model.RemoteSport
 import gr.dipae.thesisfitnessapp.data.sport.model.RemoteSportDetails
 import gr.dipae.thesisfitnessapp.domain.sport.entity.Sport
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportDetails
+import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
 import javax.inject.Inject
 
 class SportsMapper @Inject constructor() : Mapper {
@@ -19,10 +20,14 @@ class SportsMapper @Inject constructor() : Mapper {
             id = remoteSport.id,
             name = remoteSport.name,
             imageUrl = remoteSport.imageUrl,
-            parameters = remoteSport.parameters,
+            parameters = mapSportParameters(remoteSport.parameters),
             details = mapSportDetails(remoteSport.details),
             favorite = favoriteSportIds.contains(remoteSport.id)
         )
+    }
+
+    private fun mapSportParameters(parameters: List<String>): List<SportParameter> {
+        return parameters.map { SportParameter(name = it) }
     }
 
     private fun mapSportDetails(details: RemoteSportDetails): SportDetails {

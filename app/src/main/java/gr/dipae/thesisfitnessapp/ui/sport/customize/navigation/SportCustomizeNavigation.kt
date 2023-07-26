@@ -18,7 +18,6 @@ import gr.dipae.thesisfitnessapp.util.ext.getComposeNavigationArgs
 import gr.dipae.thesisfitnessapp.util.ext.replaceRouteStringWithArgumentPlaceholders
 import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 
 internal val SportCustomizeArgumentKeys = listOf("sportId")
@@ -27,7 +26,7 @@ internal val SportCustomizeRoute = "sports_customize${SportCustomizeArgumentKeys
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.sportCustomizeScreen(
     onSportCustomizeShown: () -> Unit,
-    onStartClicked: (String) -> Unit
+    onStartClicked: (Pair<String, String>) -> Unit
 ) {
     composable(route = SportCustomizeRoute, arguments = sportCustomizeArguments()) {
         val viewModel: SportCustomizeViewModel = hiltViewModel()
@@ -36,7 +35,6 @@ fun NavGraphBuilder.sportCustomizeScreen(
         LaunchedEffect(viewModel, lifecycleOwner) {
             snapshotFlow { viewModel.uiState.value?.navigateToSportSession?.value }
                 .filterNotNull()
-                .filter { it.isNotBlank() }
                 .flowWithLifecycle(lifecycleOwner.lifecycle)
                 .collectLatest {
                     onStartClicked(it)

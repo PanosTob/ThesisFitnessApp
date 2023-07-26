@@ -28,6 +28,9 @@
     <string name="sport_title">Activity</string>
     <string name="sport_start_button">Start</string>
 
+    <!-- Sports Session -->
+    <string name="sport_session_button">Finish</string>
+
     <!-- Workout Screen -->
     <string name="workout_title">Workout</string>
 

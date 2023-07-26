@@ -1,14 +1,11 @@
 package gr.dipae.thesisfitnessapp.di.module.core
 
-import android.content.SharedPreferences
-import androidx.compose.ui.layout.Placeable
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import gr.dipae.thesisfitnessapp.di.module.qualifier.CookieSharedPrefs
 import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -60,7 +57,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideMoshi(): Moshi = Moshi.Builder().build()
+    fun provideMoshi(): Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
     @Singleton
     @Provides

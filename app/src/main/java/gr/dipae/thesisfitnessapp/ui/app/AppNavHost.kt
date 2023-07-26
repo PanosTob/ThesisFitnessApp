@@ -44,6 +44,7 @@ import gr.dipae.thesisfitnessapp.ui.profile.navigation.ProfileRoute
 import gr.dipae.thesisfitnessapp.ui.profile.navigation.profileScreen
 import gr.dipae.thesisfitnessapp.ui.sport.customize.navigation.navigateToSportCustomize
 import gr.dipae.thesisfitnessapp.ui.sport.customize.navigation.sportCustomizeScreen
+import gr.dipae.thesisfitnessapp.ui.sport.navigation.SportsRoute
 import gr.dipae.thesisfitnessapp.ui.sport.navigation.sportsScreen
 import gr.dipae.thesisfitnessapp.ui.sport.session.navigation.navigateToSportSession
 import gr.dipae.thesisfitnessapp.ui.sport.session.navigation.sportSessionScreen
@@ -156,9 +157,10 @@ fun AppNavHost(
                         onSportCustomizeShown = { viewModel.showInnerLoginTopBar() },
                         onStartClicked = { navController.navigateToSportSession(it) }
                     )
-                    sportSessionScreen {
-
-                    }
+                    sportSessionScreen(
+                        { viewModel.showSportSessionTopBar() },
+                        { navController.popBackStack(route = SportsRoute, inclusive = false) }
+                    )
                     dietScreen(
                         onDietShown = { viewModel.showDietTopBar() }
                     )

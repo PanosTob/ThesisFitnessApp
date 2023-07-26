@@ -35,6 +35,6 @@ fun List<String>.getComposeNavigationArgs(): String {
 
 fun String.replaceRouteStringWithArgumentPlaceholders(keys: List<String>): String {
     var convertedString = this
-    keys.forEachIndexed { index, key -> convertedString = replaceFirst("{$key}", "%${index + 1}\$s") }
+    keys.forEachIndexed { index, key -> convertedString = convertedString.replaceFirst("{$key}", "%${index + 1}\$s") }
     return convertedString
 }

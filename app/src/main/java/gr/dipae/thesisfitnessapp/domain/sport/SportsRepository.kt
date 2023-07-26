@@ -1,10 +1,14 @@
 package gr.dipae.thesisfitnessapp.domain.sport
 
+import gr.dipae.thesisfitnessapp.data.sport.model.SportParameterRequest
+import gr.dipae.thesisfitnessapp.data.sport.model.SportSessionRequest
 import gr.dipae.thesisfitnessapp.domain.sport.entity.Sport
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
 
 interface SportsRepository {
     suspend fun getSports(favoriteSportIds: List<String>): List<Sport>
     suspend fun getSportById(sportId: String): Sport?
-    suspend fun initializeSportSession(sportId: String, parameter: SportParameter)
+    suspend fun setSportSession(sportSessionRequest: SportSessionRequest, parameters: List<SportParameterRequest>)
+    fun sportParameterAsArgumentString(parameter: SportParameter): String
+    fun getSportParameterArgument(parameterJson: String): SportParameter?
 }

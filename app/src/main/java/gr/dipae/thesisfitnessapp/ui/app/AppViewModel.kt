@@ -5,6 +5,7 @@ import android.content.IntentSender
 import android.os.Bundle
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -125,6 +126,12 @@ class AppViewModel @Inject constructor(
 
     fun showSportsTopBar() {
         _appUiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_edit_sport, {}), TopBarActionUiItem(R.drawable.ic_calendar))
+    }
+
+    fun showSportSessionTopBar() {
+        _appUiState.value.topBarState.actionIcons.value = emptyList()
+        _appUiState.value.topBarState.navigationIcon.value = Icons.Filled.Close
+
     }
 
     fun showWorkoutTopBar() {

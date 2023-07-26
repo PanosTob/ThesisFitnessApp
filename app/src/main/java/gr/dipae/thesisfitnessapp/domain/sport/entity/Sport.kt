@@ -4,7 +4,7 @@ data class Sport(
     val id: String,
     val name: String,
     val imageUrl: String,
-    val parameters: List<String>,
+    val parameters: List<SportParameter>,
     val details: SportDetails,
     val favorite: Boolean
 )
@@ -16,5 +16,5 @@ data class SportDetails(
 
 data class SportParameter(
     val name: String,
-    val value: Long
+    val value: Long = 0
 )
