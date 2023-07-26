@@ -12,6 +12,7 @@ import gr.dipae.thesisfitnessapp.ui.sport.session.navigation.SportSessionArgumen
 import gr.dipae.thesisfitnessapp.usecase.sports.GetSportByIdUseCase
 import gr.dipae.thesisfitnessapp.usecase.sports.GetSportParameterNavigationArgumentUseCase
 import gr.dipae.thesisfitnessapp.usecase.sports.SetSportSessionUseCase
+import gr.dipae.thesisfitnessapp.util.timer.MyCountUpTimer
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,6 +31,7 @@ class SportSessionViewModel @Inject constructor(
     private val sportParameter = savedStateHandle.get<String>(SportSessionArgumentKeys[1])!!
 
     private val mainTimer by lazy {
+        //TODO IMPLEMENT ANOTHER COUNT UP TIMER
         object : MyCountUpTimer(100) {
             override fun onTick(nowTime: Long) {
                 _uiState.value?.mainTimerValue?.value = sportSessionUiMapper(nowTime)
@@ -37,6 +39,7 @@ class SportSessionViewModel @Inject constructor(
         }
     }
     private val breakTimer by lazy {
+        //TODO IMPLEMENT ANOTHER COUNT UP TIMER
         object : MyCountUpTimer(100) {
             override fun onTick(nowTime: Long) {
                 _uiState.value?.breakTimerValue?.value = sportSessionUiMapper(nowTime)
