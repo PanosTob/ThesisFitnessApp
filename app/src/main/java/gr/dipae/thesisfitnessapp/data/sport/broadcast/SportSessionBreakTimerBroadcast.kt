@@ -1,0 +1,47 @@
+package gr.dipae.thesisfitnessapp.data.sport.broadcast
+
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import java.util.Timer
+import kotlin.concurrent.fixedRateTimer
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+
+class SportSessionBreakTimerBroadcast {
+
+    private var breakDuration: Duration = Duration.ZERO
+    private lateinit var breakTimer: Timer
+
+    private var _breakTimerMillisPassed: MutableStateFlow<Long> = MutableStateFlow(0)
+    val breakTimerMillisPassed = _breakTimerMillisPassed.asStateFlow()
+
+    fun startBreakTimer() {
+        breakTimer = fixedRateTimer(period = 100L) {
+            breakDuration = breakDuration.plus(100.milliseconds)
+            _breakTimerMillisPassed.value = breakDuration.inWholeMilliseconds
+        }
+    }
+
+    fun pauseBreakTimer() {
+        if (this::breakTimer.isInitialized) {
+            breakTimer.cancel()
+        }
+    }
+
+    fun clear() {
+        pauseBreakTimer()
+        _breakTimerMillisPassed.value = 0
+    }
+
+    companion object {
+
+        @Volatile
+        private var INSTANCE: SportSessionBreakTimerBroadcast? = null
+
+        fun getInstance(): SportSessionBreakTimerBroadcast {
+            return INSTANCE ?: synchronized(this) {
+                SportSessionBreakTimerBroadcast().also { INSTANCE = it }
+            }
+        }
+    }
+}

@@ -35,7 +35,6 @@ import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLText
 import gr.dipae.thesisfitnessapp.ui.sport.customize.model.SportCustomizeUiState
 import gr.dipae.thesisfitnessapp.ui.sport.customize.model.SportParameterUiItem
-import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondaryDark
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
@@ -67,7 +66,7 @@ fun SportCustomizeContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(7f)
-                .background(ColorSecondaryDark, RoundedCornerShape(SpacingDefault_16dp))
+                .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(SpacingDefault_16dp))
                 .clickable { onStartClicked() }
                 .padding(SpacingHalf_8dp),
             text = stringResource(R.string.sport_start_button),

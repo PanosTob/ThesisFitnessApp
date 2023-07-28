@@ -158,8 +158,16 @@ fun AppNavHost(
                         onStartClicked = { navController.navigateToSportSession(it) }
                     )
                     sportSessionScreen(
-                        { viewModel.showSportSessionTopBar() },
-                        { navController.popBackStack(route = SportsRoute, inclusive = false) }
+                        onSportSessionShown = {
+                            viewModel.showSportSessionTopBar()
+                            viewModel.startStopWatch()
+                        },
+                        popBackToSports = {
+                            navController.popBackStack(route = SportsRoute, inclusive = false)
+                            viewModel.stopStopWatch()
+                        },
+                        onSportSessionTimerResume = { viewModel.startStopWatch() },
+                        onSportSessionTimerPause = { viewModel.pauseStopWatch() }
                     )
                     dietScreen(
                         onDietShown = { viewModel.showDietTopBar() }

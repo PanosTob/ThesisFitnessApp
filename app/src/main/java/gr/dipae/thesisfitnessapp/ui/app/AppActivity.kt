@@ -16,11 +16,14 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
+import gr.dipae.thesisfitnessapp.framework.service.StopWatchService
 import gr.dipae.thesisfitnessapp.ui.app.composable.ActivityProgressContainer
 import gr.dipae.thesisfitnessapp.ui.base.BaseActivity
 import gr.dipae.thesisfitnessapp.ui.livedata.LoadingLiveData
 import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
+import kotlinx.coroutines.DelicateCoroutinesApi
 
+@DelicateCoroutinesApi
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
@@ -50,6 +53,9 @@ class AppActivity : BaseActivity() {
             recreateApp.observe(this@AppActivity, Observer(this@AppActivity::recreateApp))
             submitLanguageChange.observe(this@AppActivity, Observer(::submitLanguageChange))
             initiateGoogleSignInWindow.observe(this@AppActivity, Observer(::initiateGoogleSignInWindow))
+            startStopWatch.observe(this@AppActivity, Observer(::startStopWatch))
+            pauseStopWatch.observe(this@AppActivity, Observer(::pauseStopWatch))
+            stopStopWatch.observe(this@AppActivity, Observer(::stopStopWatch))
         }
     }
 
@@ -76,6 +82,25 @@ class AppActivity : BaseActivity() {
     private fun initiateGoogleSignInWindow(intentSender: IntentSender) {
         val intent = IntentSenderRequest.Builder(intentSender).build()
         googleSignInIntentListener?.launch(intent)
+    }
+
+    //STOP WATCH SERVICE
+    private fun startStopWatch(unit: Unit) {
+        startService(
+            Intent(this, StopWatchService::class.java).apply { action = StopWatchService.STOP_WATCH_ACTION_START }
+        )
+    }
+
+    private fun pauseStopWatch(unit: Unit) {
+        startService(
+            Intent(this, StopWatchService::class.java).apply { action = StopWatchService.STOP_WATCH_ACTION_PAUSE }
+        )
+    }
+
+    private fun stopStopWatch(unit: Unit) {
+        startService(
+            Intent(this, StopWatchService::class.java).apply { action = StopWatchService.STOP_WATCH_ACTION_STOP }
+        )
     }
 
     companion object {

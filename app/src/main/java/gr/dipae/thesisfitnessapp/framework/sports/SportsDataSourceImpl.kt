@@ -6,6 +6,8 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException
 import gr.dipae.thesisfitnessapp.data.sport.SportsDataSource
+import gr.dipae.thesisfitnessapp.data.sport.broadcast.SportSessionBreakTimerBroadcast
+import gr.dipae.thesisfitnessapp.data.sport.broadcast.StopWatchBroadcast
 import gr.dipae.thesisfitnessapp.data.sport.model.RemoteSport
 import gr.dipae.thesisfitnessapp.data.sport.model.SportParameterRequest
 import gr.dipae.thesisfitnessapp.data.sport.model.SportSessionRequest
@@ -17,12 +19,15 @@ import gr.dipae.thesisfitnessapp.util.SPORTS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.USERS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.ext.getDocumentResponse
 import gr.dipae.thesisfitnessapp.util.ext.getDocumentsResponse
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class SportsDataSourceImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    private val fireStore: FirebaseFirestore
+    private val fireStore: FirebaseFirestore,
+    private val stopWatchBroadcast: StopWatchBroadcast,
+    private val breakTimerBroadcast: SportSessionBreakTimerBroadcast
 ) : SportsDataSource {
     private fun getFirebaseUserId() = firebaseAuth.currentUser?.uid ?: throw FirebaseNoSignedInUserException("")
     override suspend fun getSports(): List<RemoteSport> {
@@ -61,5 +66,25 @@ class SportsDataSourceImpl @Inject constructor(
         val activityDone = todaySummaryDocument.collection(ACTIVITIES_DONE_COLLECTION).document()
         activityDone.set(sportDoneRequest).await()
         return activityDone
+    }
+
+    override fun getSportSessionDurationLive(): Flow<Long> {
+        return stopWatchBroadcast.stopWatchMillisPassed
+    }
+
+    override fun getSportSessionBreakTimerLive(): Flow<Long> {
+        return breakTimerBroadcast.breakTimerMillisPassed
+    }
+
+    override fun clearSportSessionBreakTimer() {
+        breakTimerBroadcast.clear()
+    }
+
+    override fun startSportSessionBreakTimer() {
+        breakTimerBroadcast.startBreakTimer()
+    }
+
+    override fun pauseSportSessionBreakTimer() {
+        breakTimerBroadcast.pauseBreakTimer()
     }
 }

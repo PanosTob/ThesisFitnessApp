@@ -12,6 +12,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import gr.dipae.thesisfitnessapp.ui.sport.session.composable.OnSportSessionTimerPause
+import gr.dipae.thesisfitnessapp.ui.sport.session.composable.OnSportSessionTimerResume
 import gr.dipae.thesisfitnessapp.ui.sport.session.composable.SportSessionContent
 import gr.dipae.thesisfitnessapp.ui.sport.session.viewmodel.SportSessionViewModel
 import gr.dipae.thesisfitnessapp.util.ext.getComposeNavigationArgs
@@ -28,6 +30,8 @@ internal val SportSessionRoute = "sports_session${SportSessionArgumentKeys.getCo
 fun NavGraphBuilder.sportSessionScreen(
     onSportSessionShown: () -> Unit,
     popBackToSports: () -> Unit,
+    onSportSessionTimerResume: OnSportSessionTimerResume,
+    onSportSessionTimerPause: OnSportSessionTimerPause
 ) {
     composable(route = SportSessionRoute, arguments = sportCustomizeArguments()) {
         val viewModel: SportSessionViewModel = hiltViewModel()
@@ -51,7 +55,15 @@ fun NavGraphBuilder.sportSessionScreen(
         viewModel.uiState.value?.let { uiState ->
             SportSessionContent(
                 uiState = uiState,
-                onSessionFinish = { viewModel.onSessionFinish() }
+                onSessionFinish = { viewModel.onSessionFinish() },
+                onSportSessionTimerResume = {
+                    viewModel.startBreakTimer()
+                    onSportSessionTimerResume()
+                },
+                onSportSessionTimerPause = {
+                    viewModel.pauseBreakTimer()
+                    onSportSessionTimerPause()
+                }
             )
         }
     }

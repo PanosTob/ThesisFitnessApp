@@ -61,6 +61,15 @@ class AppViewModel @Inject constructor(
     private val _recreateApp = SingleLiveEvent<Unit>()
     val recreateApp: LiveData<Unit> = _recreateApp
 
+    private val _startStopWatch = SingleLiveEvent<Unit>()
+    val startStopWatch: LiveData<Unit> = _startStopWatch
+
+    private val _pauseStopWatch = SingleLiveEvent<Unit>()
+    val pauseStopWatch: LiveData<Unit> = _pauseStopWatch
+
+    private val _stopStopWatch = SingleLiveEvent<Unit>()
+    val stopStopWatch: LiveData<Unit> = _stopStopWatch
+
     private val _submitLanguageChange = MutableLiveData<Unit>()
     val submitLanguageChange: LiveData<Unit> = _submitLanguageChange
 
@@ -111,6 +120,18 @@ class AppViewModel @Inject constructor(
             }
             _appUiState.value.navigateToWizard.value = true
         }
+    }
+
+    fun startStopWatch() {
+        _startStopWatch.value = Unit
+    }
+
+    fun pauseStopWatch() {
+        _pauseStopWatch.value = Unit
+    }
+
+    fun stopStopWatch() {
+        _stopStopWatch.value = Unit
     }
 
     fun showLoggedInUi() {

@@ -5,14 +5,20 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.sport.session.mapper.SportSessionUiMapper
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.SportSessionUiState
 import gr.dipae.thesisfitnessapp.ui.sport.session.navigation.SportSessionArgumentKeys
 import gr.dipae.thesisfitnessapp.usecase.sports.GetSportByIdUseCase
 import gr.dipae.thesisfitnessapp.usecase.sports.GetSportParameterNavigationArgumentUseCase
+import gr.dipae.thesisfitnessapp.usecase.sports.GetSportSessionBreakTimerDurationLiveUseCase
+import gr.dipae.thesisfitnessapp.usecase.sports.GetSportSessionDurationLiveUseCase
+import gr.dipae.thesisfitnessapp.usecase.sports.PauseSportSessionBreakTimerUseCase
 import gr.dipae.thesisfitnessapp.usecase.sports.SetSportSessionUseCase
-import gr.dipae.thesisfitnessapp.util.timer.MyCountUpTimer
+import gr.dipae.thesisfitnessapp.usecase.sports.StartSportSessionBreakTimerUseCase
+import gr.dipae.thesisfitnessapp.usecase.sports.StopSportSessionBreakTimerUseCase
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,6 +27,11 @@ class SportSessionViewModel @Inject constructor(
     private val getSportByIdUseCase: GetSportByIdUseCase,
     private val getSportParameterNavigationArgumentUseCase: GetSportParameterNavigationArgumentUseCase,
     private val setSportSessionUseCase: SetSportSessionUseCase,
+    private val getSportSessionDurationLiveUseCase: GetSportSessionDurationLiveUseCase,
+    private val getSportSessionBreakTimerDurationLiveUseCase: GetSportSessionBreakTimerDurationLiveUseCase,
+    private val startSportSessionBreakTimerUseCase: StartSportSessionBreakTimerUseCase,
+    private val pauseSportSessionBreakTimerUseCase: PauseSportSessionBreakTimerUseCase,
+    private val stopSportSessionBreakTimerUseCase: StopSportSessionBreakTimerUseCase,
     private val sportSessionUiMapper: SportSessionUiMapper
 ) : BaseViewModel() {
 
@@ -30,47 +41,37 @@ class SportSessionViewModel @Inject constructor(
     private val sportId = savedStateHandle.get<String>(SportSessionArgumentKeys[0])!!
     private val sportParameter = savedStateHandle.get<String>(SportSessionArgumentKeys[1])!!
 
-    private val mainTimer by lazy {
-        //TODO IMPLEMENT ANOTHER COUNT UP TIMER
-        object : MyCountUpTimer(100) {
-            override fun onTick(nowTime: Long) {
-                _uiState.value?.mainTimerValue?.value = sportSessionUiMapper(nowTime)
-            }
-        }
-    }
-    private val breakTimer by lazy {
-        //TODO IMPLEMENT ANOTHER COUNT UP TIMER
-        object : MyCountUpTimer(100) {
-            override fun onTick(nowTime: Long) {
-                _uiState.value?.breakTimerValue?.value = sportSessionUiMapper(nowTime)
-            }
-        }
-    }
-
     override fun onCleared() {
-        cancelMainTimer()
-        cancelBreakTimer()
+        stopSportSessionBreakTimerUseCase()
         super.onCleared()
     }
-
     fun init() {
         launchWithProgress {
             getSportByIdUseCase(sportId)?.let {
                 _uiState.value = sportSessionUiMapper(sportId, it.parameters, getSportParameterNavigationArgumentUseCase(sportParameter))
+            }
+        }
+        launch {
+            getSportSessionDurationLiveUseCase().collectLatest {
+                _uiState.value?.mainTimerValue?.value = sportSessionUiMapper(it)
+            }
+        }
 
-                initMainTimer()
+        launch {
+            getSportSessionBreakTimerDurationLiveUseCase().collectLatest {
+                _uiState.value?.breakTimerValue?.value = sportSessionUiMapper(it)
             }
         }
     }
 
-    fun onStartClicked() {
-        pauseBreakTimer()
-        initMainTimer()
+    fun startBreakTimer() {
+        startSportSessionBreakTimerUseCase()
+        _uiState.value?.playPauseIcon?.value = R.drawable.ic_play
     }
 
-    fun onPauseClicked() {
-        pauseMainTimer()
-        initBreakTimer()
+    fun pauseBreakTimer() {
+        pauseSportSessionBreakTimerUseCase()
+        _uiState.value?.playPauseIcon?.value = R.drawable.ic_pause
     }
 
     fun onSessionFinish() {
@@ -80,33 +81,5 @@ class SportSessionViewModel @Inject constructor(
                 backToLogin.value = true
             }
         }
-    }
-
-    private fun initMainTimer() {
-        if (!mainTimer.isActive) {
-            mainTimer.start()
-        }
-    }
-
-    private fun pauseMainTimer() {
-
-    }
-
-    private fun initBreakTimer() {
-        if (!mainTimer.isActive) {
-            mainTimer.start()
-        }
-    }
-
-    private fun pauseBreakTimer() {
-
-    }
-
-    private fun cancelBreakTimer() {
-        breakTimer.cancel()
-    }
-
-    private fun cancelMainTimer() {
-        mainTimer.cancel()
     }
 }
