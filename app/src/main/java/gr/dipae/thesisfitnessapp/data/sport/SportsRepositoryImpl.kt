@@ -9,7 +9,7 @@ import gr.dipae.thesisfitnessapp.domain.sport.entity.Sport
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
 import gr.dipae.thesisfitnessapp.util.ext.fromJson
 import gr.dipae.thesisfitnessapp.util.ext.toJson
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 class SportsRepositoryImpl @Inject constructor(
@@ -38,11 +38,11 @@ class SportsRepositoryImpl @Inject constructor(
         return parameterJson.fromJson(moshi, SportParameter::class.java)
     }
 
-    override fun getSportSessionDurationLive(): Flow<Long> {
+    override fun getSportSessionDurationLive(): StateFlow<Long> {
         return dataSource.getSportSessionDurationLive()
     }
 
-    override fun getSportSessionBreakTimerLive(): Flow<Long> {
+    override fun getSportSessionBreakTimerLive(): StateFlow<Long> {
         return dataSource.getSportSessionBreakTimerLive()
     }
 

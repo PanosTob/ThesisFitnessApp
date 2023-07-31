@@ -90,12 +90,18 @@ class StopWatchService : Service() {
     }
 
     private fun startTimer() {
-        GlobalScope.launch(Dispatchers.IO) {
-            stopWatchBroadcast.refreshStopWatchMillisPassed(duration.inWholeMilliseconds)
-        }
         timer = fixedRateTimer(period = 100L) {
             duration = duration.plus(100.milliseconds)
-            updateStopWatchNotification()
+            updateSportSessionStopWatch()
+            if (duration.inWholeMilliseconds.mod(1000) == 0) {
+                updateStopWatchNotification()
+            }
+        }
+    }
+
+    private fun updateSportSessionStopWatch() {
+        GlobalScope.launch(Dispatchers.IO) {
+            stopWatchBroadcast.refreshStopWatchMillisPassed(duration.inWholeMilliseconds)
         }
     }
 
@@ -112,12 +118,11 @@ class StopWatchService : Service() {
     }
 
     private fun convertDurationToStopWatchTimerString(millis: Long): String {
-        val tensOfSeconds = (millis / 100) % 60
         val seconds = (millis / 1000) % 60
         val minutes = ((millis / (1000 * 60)) % 60)
         val hours = ((millis / (1000 * 60 * 60)) % 24)
 
-        return "${String.format("%02d", hours)}:${String.format("%02d", minutes)}:${String.format("%02d", seconds)}:${String.format("%02d", tensOfSeconds)}"
+        return "${String.format("%02d", hours)}:${String.format("%02d", minutes)}:${String.format("%02d", seconds)}"
     }
 
     private fun removeStopWatchNotification() {

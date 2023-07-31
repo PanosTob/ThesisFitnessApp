@@ -19,7 +19,7 @@ import gr.dipae.thesisfitnessapp.util.SPORTS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.USERS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.ext.getDocumentResponse
 import gr.dipae.thesisfitnessapp.util.ext.getDocumentsResponse
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -68,11 +68,11 @@ class SportsDataSourceImpl @Inject constructor(
         return activityDone
     }
 
-    override fun getSportSessionDurationLive(): Flow<Long> {
+    override fun getSportSessionDurationLive(): StateFlow<Long> {
         return stopWatchBroadcast.stopWatchMillisPassed
     }
 
-    override fun getSportSessionBreakTimerLive(): Flow<Long> {
+    override fun getSportSessionBreakTimerLive(): StateFlow<Long> {
         return breakTimerBroadcast.breakTimerMillisPassed
     }
 

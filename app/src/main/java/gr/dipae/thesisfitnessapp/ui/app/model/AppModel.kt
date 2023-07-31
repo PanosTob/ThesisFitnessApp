@@ -2,12 +2,13 @@ package gr.dipae.thesisfitnessapp.ui.app.model
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import gr.dipae.thesisfitnessapp.R
-import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondary
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -42,7 +43,7 @@ data class BottomAppBarUiItem(
     val route: String,
     val selected: MutableState<Boolean> = mutableStateOf(false),
 ) {
-    fun getColor(): Color = if (selected.value) ColorSecondary else Color.White
+    val iconColor: @Composable () -> Color = { if (selected.value) MaterialTheme.colorScheme.primary else Color.White }
 }
 
 @Singleton

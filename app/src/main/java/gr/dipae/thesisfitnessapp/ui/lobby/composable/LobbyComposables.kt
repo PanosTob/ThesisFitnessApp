@@ -86,7 +86,7 @@ fun RowScope.LobbyBottomNavItem(
             .weight(0.2f)
             .fillMaxHeight(),
         colors = IconButtonDefaults.filledIconButtonColors(
-            contentColor = item.getColor(),
+            contentColor = item.iconColor(),
             containerColor = ColorBottomNavBar
         ),
         onClick = { onClick() }) {
@@ -106,7 +106,7 @@ fun RowScope.LobbyBottomNavItem(
                 modifier = Modifier
                     .weight(0.3f),
                 text = stringResource(id = item.labelStringRes),
-                color = item.getColor()
+                color = item.iconColor()
             )
         }
     }

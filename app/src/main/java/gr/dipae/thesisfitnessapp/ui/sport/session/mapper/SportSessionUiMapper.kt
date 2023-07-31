@@ -14,7 +14,7 @@ class SportSessionUiMapper @Inject constructor(
         return SportSessionUiState(sportId, parameters, sportParameterToBeAchieved)
     }
 
-    operator fun invoke(millis: Long): String {
+    fun toHundredsOfASecond(millis: Long): String {
         if (millis == 0L) {
             return "00:00:00:00"
         }
@@ -25,5 +25,16 @@ class SportSessionUiMapper @Inject constructor(
         val hours = ((millis / (1000 * 60 * 60)) % 24)
 
         return "${String.format("%02d", hours)}:${String.format("%02d", minutes)}:${String.format("%02d", seconds)}:${String.format("%02d", tensOfSeconds)}"
+    }
+
+    fun toSecondsString(millis: Long): String {
+        if (millis == 0L) {
+            return "00:00:00"
+        }
+        val seconds = millis / 100
+        val minutes = ((millis / (1000 * 60)) % 60)
+        val hours = ((millis / (1000 * 60 * 60)) % 24)
+
+        return "${String.format("%02d", hours)}:${String.format("%02d", minutes)}:${String.format("%02d", seconds)}"
     }
 }

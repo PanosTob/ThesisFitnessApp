@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.sport.session.mapper.SportSessionUiMapper
+import gr.dipae.thesisfitnessapp.ui.sport.session.model.ContinuationState
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.SportSessionUiState
 import gr.dipae.thesisfitnessapp.ui.sport.session.navigation.SportSessionArgumentKeys
 import gr.dipae.thesisfitnessapp.usecase.sports.GetSportByIdUseCase
@@ -45,6 +46,7 @@ class SportSessionViewModel @Inject constructor(
         stopSportSessionBreakTimerUseCase()
         super.onCleared()
     }
+
     fun init() {
         launchWithProgress {
             getSportByIdUseCase(sportId)?.let {
@@ -53,31 +55,37 @@ class SportSessionViewModel @Inject constructor(
         }
         launch {
             getSportSessionDurationLiveUseCase().collectLatest {
-                _uiState.value?.mainTimerValue?.value = sportSessionUiMapper(it)
+                _uiState.value?.mainTimerValue?.value = sportSessionUiMapper.toHundredsOfASecond(it)
             }
         }
 
         launch {
             getSportSessionBreakTimerDurationLiveUseCase().collectLatest {
-                _uiState.value?.breakTimerValue?.value = sportSessionUiMapper(it)
+                _uiState.value?.breakTimerValue?.value = sportSessionUiMapper.toSecondsString(it)
             }
         }
     }
 
     fun startBreakTimer() {
         startSportSessionBreakTimerUseCase()
-        _uiState.value?.playPauseIcon?.value = R.drawable.ic_play
+        _uiState.value?.playBreakBtnState?.apply {
+            timerState.value = ContinuationState.Stopped
+            iconRes.value = R.drawable.ic_play
+        }
     }
 
     fun pauseBreakTimer() {
         pauseSportSessionBreakTimerUseCase()
-        _uiState.value?.playPauseIcon?.value = R.drawable.ic_pause
+        _uiState.value?.playBreakBtnState?.apply {
+            timerState.value = ContinuationState.Running
+            iconRes.value = R.drawable.ic_pause
+        }
     }
 
     fun onSessionFinish() {
         launchWithProgress {
             _uiState.value?.apply {
-                setSportSessionUseCase(sportId, parameters, parameterToBeAchieved)
+                setSportSessionUseCase(sportId, parameters, parameterToBeAchieved, sportParameter)
                 backToLogin.value = true
             }
         }

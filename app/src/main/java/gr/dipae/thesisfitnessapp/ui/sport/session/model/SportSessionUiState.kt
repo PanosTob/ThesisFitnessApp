@@ -11,12 +11,16 @@ data class SportSessionUiState(
     val parameterToBeAchieved: SportParameter,
     val mainTimerValue: MutableState<String> = mutableStateOf(""),
     val breakTimerValue: MutableState<String> = mutableStateOf(""),
-    val resumePauseToggleBtn: MutableState<ContinuationState> = mutableStateOf(ContinuationState.PauseState),
-    val playPauseIcon: MutableState<Int> = mutableStateOf(R.drawable.ic_pause),
+    val playBreakBtnState: PlayBreakBtnState = PlayBreakBtnState(),
     val backToLogin: MutableState<Boolean> = mutableStateOf(false)
 )
 
+data class PlayBreakBtnState(
+    val timerState: MutableState<ContinuationState> = mutableStateOf(ContinuationState.Running),
+    val iconRes: MutableState<Int> = mutableStateOf(R.drawable.ic_pause)
+)
+
 sealed class ContinuationState {
-    object ResumeState : ContinuationState()
-    object PauseState : ContinuationState()
+    object Running : ContinuationState()
+    object Stopped : ContinuationState()
 }

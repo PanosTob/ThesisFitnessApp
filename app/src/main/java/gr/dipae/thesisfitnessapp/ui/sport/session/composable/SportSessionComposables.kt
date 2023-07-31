@@ -21,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import gr.dipae.thesisfitnessapp.R
-import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLText
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.ContinuationState
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.SportSessionUiState
@@ -32,6 +31,7 @@ import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
 internal typealias OnSessionFinish = () -> Unit
 internal typealias OnSportSessionTimerResume = () -> Unit
 internal typealias OnSportSessionTimerPause = () -> Unit
+internal typealias OnSportSessionTimerStop = () -> Unit
 
 @Composable
 fun SportSessionContent(
@@ -45,48 +45,53 @@ fun SportSessionContent(
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
             .padding(horizontal = SpacingCustom_24dp, vertical = SpacingDefault_16dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            contentAlignment = Alignment.Center
         ) {
-            ThesisFitnessHLAutoSizeText(
-                text = uiState.mainTimerValue.value,
-                color = MaterialTheme.colorScheme.primary,
-                maxFontSize = 42.sp
-            )
-            if (uiState.breakTimerValue.value.isNotBlank()) {
-                ThesisFitnessHLAutoSizeText(
-                    text = uiState.breakTimerValue.value,
-                    color = MaterialTheme.colorScheme.primary,
-                    maxFontSize = 32.sp
-                )
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.2f)
-                    .aspectRatio(1f)
-                    .align(Alignment.CenterHorizontally)
-                    .background(MaterialTheme.colorScheme.primary, CircleShape)
-                    .clickable {
-                        if (uiState.resumePauseToggleBtn.value is ContinuationState.PauseState) {
-                            onSportSessionTimerResume()
-                        } else {
-                            onSportSessionTimerPause()
-                        }
-                    }
-                    .padding(SpacingHalf_8dp)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(SpacingDefault_16dp)
             ) {
-                Icon(
-                    modifier = Modifier.fillMaxSize(),
-                    painter = painterResource(uiState.playPauseIcon.value),
-                    tint = MaterialTheme.colorScheme.background,
-                    contentDescription = ""
+                ThesisFitnessHLText(
+                    text = uiState.mainTimerValue.value,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 64.sp
                 )
+                if (uiState.breakTimerValue.value.isNotBlank()) {
+                    ThesisFitnessHLText(
+                        text = uiState.breakTimerValue.value,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 32.sp
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(0.2f)
+                        .aspectRatio(1f)
+                        .align(Alignment.CenterHorizontally)
+                        .background(MaterialTheme.colorScheme.primary, CircleShape)
+                        .clickable {
+                            if (uiState.playBreakBtnState.timerState.value is ContinuationState.Stopped) {
+                                onSportSessionTimerResume()
+                            } else {
+                                onSportSessionTimerPause()
+                            }
+                        }
+                        .padding(SpacingHalf_8dp)
+                ) {
+                    Icon(
+                        modifier = Modifier.fillMaxSize(),
+                        painter = painterResource(uiState.playBreakBtnState.iconRes.value),
+                        tint = MaterialTheme.colorScheme.background,
+                        contentDescription = ""
+                    )
+                }
             }
         }
 

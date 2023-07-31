@@ -11,10 +11,11 @@ import javax.inject.Inject
 class SetSportSessionUseCase @Inject constructor(
     private val repository: SportsRepository
 ) : UseCase {
-    suspend operator fun invoke(sportId: String, sportParameters: List<SportParameter>, achievedParameter: SportParameter) {
+    suspend operator fun invoke(sportId: String, sportParameters: List<SportParameter>, achievedParameter: SportParameter, sportParameterValue: String) {
         try {
+            val sportParameterNumber = sportParameterValue.toLongOrNull() ?: return
             val sportSessionRequest = createSportSessionRequest(sportId)
-            val sportParametersRequest = mapSportParameters(sportParameters, achievedParameter)
+            val sportParametersRequest = mapSportParameters(sportParameters, achievedParameter, sportParameterNumber)
             repository.setSportSession(sportSessionRequest, sportParametersRequest)
         } catch (ex: Exception) {
             Timber.tag(SetSportSessionUseCase::class.simpleName.toString()).e(ex)
@@ -25,9 +26,13 @@ class SetSportSessionUseCase @Inject constructor(
         return SportSessionRequest(sportId)
     }
 
-    private fun mapSportParameters(sportParameter: List<SportParameter>, achievedParameter: SportParameter): List<SportParameterRequest> {
+    private fun mapSportParameters(sportParameter: List<SportParameter>, achievedParameter: SportParameter, sportParameterNumber: Long): List<SportParameterRequest> {
         return sportParameter.map {
-            SportParameterRequest(it.name, it.value, achievedParameter.name == it.name)
+            if (it.name == "duration") {
+                SportParameterRequest(it.name, sportParameterNumber, achievedParameter.name == it.name && achievedParameter.value == sportParameterNumber)
+            } else {
+                SportParameterRequest(it.name, it.value, true)
+            }
         }
     }
 }

@@ -16,8 +16,8 @@ class SportSessionBreakTimerBroadcast {
     val breakTimerMillisPassed = _breakTimerMillisPassed.asStateFlow()
 
     fun startBreakTimer() {
-        breakTimer = fixedRateTimer(period = 100L) {
-            breakDuration = breakDuration.plus(100.milliseconds)
+        breakTimer = fixedRateTimer(period = 1000L) {
+            breakDuration = breakDuration.plus(1000.milliseconds)
             _breakTimerMillisPassed.value = breakDuration.inWholeMilliseconds
         }
     }
