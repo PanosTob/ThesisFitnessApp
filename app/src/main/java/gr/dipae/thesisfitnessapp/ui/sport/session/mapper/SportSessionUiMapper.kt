@@ -8,9 +8,7 @@ import javax.inject.Inject
 class SportSessionUiMapper @Inject constructor(
 ) : Mapper {
 
-    operator fun invoke(sportId: String, sportParameterToBeAchieved: SportParameter?): SportSessionUiState? {
-        sportParameterToBeAchieved ?: return null
-
+    operator fun invoke(sportId: String, sportParameterToBeAchieved: SportParameter?): SportSessionUiState {
         return SportSessionUiState(
             sportId,
             sportParameterToBeAchieved

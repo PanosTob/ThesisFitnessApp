@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLText
+import gr.dipae.thesisfitnessapp.ui.sport.customize.model.SportCustomizeStartButtonUiItem
 import gr.dipae.thesisfitnessapp.ui.sport.customize.model.SportCustomizeUiState
 import gr.dipae.thesisfitnessapp.ui.sport.customize.model.SportParameterUiItem
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
@@ -40,11 +41,13 @@ import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
 
 internal typealias OnStartClicked = () -> Unit
+internal typealias OnClearParameterSelection = () -> Unit
 
 @Composable
 fun SportCustomizeContent(
     uiState: SportCustomizeUiState,
-    onStartClicked: OnStartClicked
+    onStartClicked: OnStartClicked,
+    onClearParameterSelection: OnClearParameterSelection
 ) {
     Column(
         modifier = Modifier
@@ -58,35 +61,59 @@ fun SportCustomizeContent(
             SportCustomizeParametersDropdown(
                 uiState.parameters,
                 uiState.selectedParameter.value,
-                onParameterSelection = { uiState.onParameterSelection(it) }
+                onParameterSelection = { uiState.onParameterSelection(it) },
+                onClearParameterSelection = { onClearParameterSelection() }
             )
-            SportParameterEditText(uiState.selectedParameter.value, Modifier.fillMaxWidth(0.5f))
+            SportParameterEditText(uiState.selectedParameter.value, Modifier.fillMaxWidth(0.5f)) { uiState.updateStartButtonEnabledState() }
         }
-        ThesisFitnessHLText(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(7f)
-                .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(SpacingDefault_16dp))
-                .clickable { onStartClicked() }
-                .padding(SpacingHalf_8dp),
-            text = stringResource(R.string.sport_start_button),
-            fontSize = 32.sp,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.background
-        )
+        SportCustomizeStartButton(uiState.startButton) { onStartClicked() }
     }
 }
 
 @Composable
-fun SportParameterEditText(parameter: SportParameterUiItem?, modifier: Modifier = Modifier) {
+fun SportCustomizeStartButton(
+    startButton: SportCustomizeStartButtonUiItem,
+    onStartClicked: OnStartClicked
+) {
+    ThesisFitnessHLText(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(7f)
+            .background(startButton.color.invoke(), RoundedCornerShape(SpacingDefault_16dp))
+            .clickable { startButton.onClick { onStartClicked() } }
+            .padding(SpacingHalf_8dp),
+        text = stringResource(R.string.sport_start_button),
+        fontSize = 32.sp,
+        textAlign = TextAlign.Center,
+        color = MaterialTheme.colorScheme.background
+    )
+}
+
+@Composable
+fun SportParameterEditText(
+    parameter: SportParameterUiItem?,
+    modifier: Modifier = Modifier,
+    onParameterTextChanged: (String) -> Unit
+) {
     parameter?.let {
         var parameterValueText by remember { mutableStateOf(TextFieldValue(parameter.parameterValue.value)) }
+        val validationPattern = remember { Regex("^\\d+\$") }
         TextField(
             modifier = modifier,
             value = parameterValueText,
             onValueChange = {
-                parameterValueText = it
-                parameter.parameterValue.value = it.text
+                when {
+                    it.text.isBlank() -> {
+                        parameterValueText = TextFieldValue("")
+                        parameter.parameterValue.value = ""
+                    }
+
+                    it.text.matches(validationPattern) -> {
+                        parameterValueText = it
+                        parameter.parameterValue.value = it.text
+                    }
+                }
+                onParameterTextChanged(it.text)
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
@@ -98,11 +125,15 @@ fun SportParameterEditText(parameter: SportParameterUiItem?, modifier: Modifier 
 fun SportCustomizeParametersDropdown(
     sportParameters: List<SportParameterUiItem>,
     selectedParameter: SportParameterUiItem?,
-    onParameterSelection: (SportParameterUiItem) -> Unit
+    onParameterSelection: (SportParameterUiItem) -> Unit,
+    onClearParameterSelection: OnClearParameterSelection
 ) {
     if (sportParameters.isNotEmpty()) {
         var expanded by remember { mutableStateOf(false) }
-        ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { expanded = !expanded }
+        ) {
             TextField(
                 value = selectedParameter?.name ?: "",
                 onValueChange = {},
@@ -136,6 +167,26 @@ fun SportCustomizeParametersDropdown(
                         }
                     )
                 }
+                DropdownMenuItem(
+                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                    text = { ThesisFitnessHLText(text = stringResource(id = R.string.sport_customize_clear_parameter_selection), fontSize = 18.sp, color = Color.Black) },
+                    onClick = {
+                        expanded = false
+                        onClearParameterSelection()
+                    },
+                    colors = MenuDefaults.itemColors(
+                        textColor = MaterialTheme.colorScheme.primary,
+                        leadingIconColor = MaterialTheme.colorScheme.primary,
+
+                        ),
+                    leadingIcon = {
+                        Icon(
+                            painterResource(id = R.drawable.ic_deselect),
+                            contentDescription = null,
+                            tint = Color.Black
+                        )
+                    }
+                )
             }
         }
     }

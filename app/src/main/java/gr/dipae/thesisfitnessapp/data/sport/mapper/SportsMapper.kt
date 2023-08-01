@@ -24,19 +24,23 @@ class SportsMapper @Inject constructor() : Mapper {
         )
     }
 
-    operator fun invoke(distance: Long, duration: Long, goalParameter: SportParameter): List<SportParameterRequest> {
+    operator fun invoke(distance: Long, duration: Long, goalParameter: SportParameter?): List<SportParameterRequest> {
         return listOf(
             SportParameterRequest(
                 name = "distance",
                 value = distance,
-                achieved = goalParameter.type is SportParameterType.Distance && goalParameter.value == distance
+                achieved = goalParameter?.type is SportParameterType.Distance && distance <= goalParameter.value
             ),
             SportParameterRequest(
                 name = "duration",
                 value = duration,
-                achieved = goalParameter.type is SportParameterType.Duration && goalParameter.value == duration
+                achieved = goalParameter?.type is SportParameterType.Duration && convertMillisToMinutes(duration) >= goalParameter.value
             )
         )
+    }
+
+    private fun convertMillisToMinutes(durationMillis: Long): Int {
+        return ((durationMillis / (1000 * 60)).mod(60))
     }
 
     fun mapSportParameterArgument(parameter: SportParameter): SportParameterArgument {

@@ -75,10 +75,15 @@ fun NavGraphBuilder.sportSessionScreen(
     }
 }
 
-fun NavController.navigateToSportSession(arguments: Pair<String, String>) {
+fun NavController.navigateToSportSession(arguments: Pair<String, String?>) {
     singleNavigate(String.format(SportSessionRoute.replaceRouteStringWithArgumentPlaceholders(SportSessionArgumentKeys), arguments.first, arguments.second))
 }
 
 private fun sportCustomizeArguments(): List<NamedNavArgument> {
-    return SportSessionArgumentKeys.map { (navArgument(it) { type = NavType.StringType }) }
+    return SportSessionArgumentKeys.map {
+        (navArgument(it) {
+            nullable = true
+            type = NavType.StringType
+        })
+    }
 }

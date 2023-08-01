@@ -14,7 +14,6 @@ class SetSportSessionUseCase @Inject constructor(
 ) : UseCase {
     suspend operator fun invoke(sportId: String, goalParameter: SportParameter?): SportSessionSaveResult {
         try {
-            goalParameter ?: return SportSessionSaveResult.Failure()
 
             val duration = getSportSessionDurationLiveUseCase().value
             val distance = getSportSessionDistanceLiveUseCase().value

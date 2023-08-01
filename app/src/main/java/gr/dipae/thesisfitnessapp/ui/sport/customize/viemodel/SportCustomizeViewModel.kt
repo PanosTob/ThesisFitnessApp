@@ -38,4 +38,11 @@ class SportCustomizeViewModel @Inject constructor(
             }
         }
     }
+
+    fun onClearParameterSelection() {
+        _uiState.value?.apply {
+            selectedParameter.value = null
+            updateStartButtonEnabledState()
+        }
+    }
 }

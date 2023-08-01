@@ -44,7 +44,7 @@ class SportSessionViewModel @Inject constructor(
     val uiState: State<SportSessionUiState?> = _uiState
 
     private val sportId = savedStateHandle.get<String>(SportSessionArgumentKeys[0])!!
-    private val sportParameter = getSportParameterNavigationArgumentUseCase(savedStateHandle.get<String>(SportSessionArgumentKeys[1])!!)
+    private val sportParameter = getSportParameterNavigationArgumentUseCase(savedStateHandle[SportSessionArgumentKeys[1]])
 
     private var jobOfCollectingDuration: Job? = null
     private var jobOfCollectingBreak: Job? = null

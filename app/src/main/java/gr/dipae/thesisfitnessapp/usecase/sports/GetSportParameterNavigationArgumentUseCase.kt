@@ -8,7 +8,9 @@ import javax.inject.Inject
 class GetSportParameterNavigationArgumentUseCase @Inject constructor(
     private val repository: SportsRepository
 ) : UseCase {
-    operator fun invoke(parameterJson: String): SportParameter? {
+    operator fun invoke(parameterJson: String?): SportParameter? {
+        if (parameterJson.isNullOrBlank()) return null
+
         return try {
             repository.getSportParameterArgument(parameterJson)
         } catch (ex: Exception) {

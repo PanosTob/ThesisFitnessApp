@@ -1,6 +1,5 @@
 package gr.dipae.thesisfitnessapp.ui.sport.customize.mapper
 
-import androidx.compose.runtime.mutableStateOf
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.data.Mapper
 import gr.dipae.thesisfitnessapp.data.sport.mapper.SportsMapper
@@ -18,8 +17,7 @@ class SportCustomizeUiMapper @Inject constructor() : Mapper {
         return SportCustomizeUiState(
             sportId = sport?.id ?: "",
             name = sport?.name ?: "",
-            parameters = sportParameters,
-            selectedParameter = mutableStateOf(sportParameters.firstOrNull())
+            parameters = sportParameters
         )
     }
 

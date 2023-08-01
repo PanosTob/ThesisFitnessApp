@@ -26,7 +26,7 @@ internal val SportCustomizeRoute = "sports_customize${SportCustomizeArgumentKeys
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.sportCustomizeScreen(
     onSportCustomizeShown: () -> Unit,
-    onStartClicked: (Pair<String, String>) -> Unit
+    onStartClicked: (Pair<String, String?>) -> Unit
 ) {
     composable(route = SportCustomizeRoute, arguments = sportCustomizeArguments()) {
         val viewModel: SportCustomizeViewModel = hiltViewModel()
@@ -49,7 +49,8 @@ fun NavGraphBuilder.sportCustomizeScreen(
         viewModel.uiState.value?.let { uiState ->
             SportCustomizeContent(
                 uiState = uiState,
-                onStartClicked = { viewModel.onStartClicked() }
+                onStartClicked = { viewModel.onStartClicked() },
+                onClearParameterSelection = { viewModel.onClearParameterSelection() }
             )
         }
     }
