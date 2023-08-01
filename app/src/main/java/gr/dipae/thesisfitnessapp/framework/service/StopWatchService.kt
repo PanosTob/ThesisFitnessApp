@@ -90,8 +90,8 @@ class StopWatchService : Service() {
     }
 
     private fun startTimer() {
-        timer = fixedRateTimer(period = 100L) {
-            duration = duration.plus(100.milliseconds)
+        timer = fixedRateTimer(period = 10L) {
+            duration = duration.plus(10.milliseconds)
             updateSportSessionStopWatch()
             if (duration.inWholeMilliseconds.mod(1000) == 0) {
                 updateStopWatchNotification()

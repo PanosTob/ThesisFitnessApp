@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import gr.dipae.thesisfitnessapp.R
+import gr.dipae.thesisfitnessapp.ui.base.compose.HorizontalSpacerDefault
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLText
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.ContinuationState
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.SportSessionUiState
@@ -63,11 +65,23 @@ fun SportSessionContent(
                     fontSize = 64.sp
                 )
                 if (uiState.breakTimerValue.value.isNotBlank()) {
-                    ThesisFitnessHLText(
-                        text = uiState.breakTimerValue.value,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 32.sp
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        ThesisFitnessHLText(
+                            text = stringResource(id = R.string.sport_session_stop_watch_break_timer_label),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 32.sp
+                        )
+                        HorizontalSpacerDefault()
+                        ThesisFitnessHLText(
+                            text = uiState.breakTimerValue.value,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 32.sp
+                        )
+                    }
                 }
 
                 Box(

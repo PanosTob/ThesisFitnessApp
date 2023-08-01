@@ -63,11 +63,11 @@ fun NavGraphBuilder.sportSessionScreen(
                 },
                 onSportSessionTimerResume = {
                     onSportSessionTimerResume()
-                    viewModel.startBreakTimer()
+                    viewModel.pauseBreakTimer()
                 },
                 onSportSessionTimerPause = {
                     onSportSessionTimerPause()
-                    viewModel.pauseBreakTimer()
+                    viewModel.startBreakTimer()
                 }
             )
         }

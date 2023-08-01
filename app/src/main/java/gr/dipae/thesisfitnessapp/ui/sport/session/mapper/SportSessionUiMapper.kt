@@ -19,21 +19,21 @@ class SportSessionUiMapper @Inject constructor(
             return "00:00:00:00"
         }
 
-        val tensOfSeconds = (millis / 100) % 60
-        val seconds = (millis / 1000) % 60
-        val minutes = ((millis / (1000 * 60)) % 60)
-        val hours = ((millis / (1000 * 60 * 60)) % 24)
+        val hundredsOfASecond = (millis / 10).mod(100)
+        val seconds = (millis / 1000).mod(60)
+        val minutes = ((millis / (1000 * 60)).mod(60))
+        val hours = ((millis / (1000 * 60 * 60)).mod(24))
 
-        return "${String.format("%02d", hours)}:${String.format("%02d", minutes)}:${String.format("%02d", seconds)}:${String.format("%02d", tensOfSeconds)}"
+        return "${String.format("%02d", hours)}:${String.format("%02d", minutes)}:${String.format("%02d", seconds)}:${String.format("%02d", hundredsOfASecond)}"
     }
 
     fun toSecondsString(millis: Long): String {
         if (millis == 0L) {
             return "00:00:00"
         }
-        val seconds = millis / 100
-        val minutes = ((millis / (1000 * 60)) % 60)
-        val hours = ((millis / (1000 * 60 * 60)) % 24)
+        val seconds = (millis / 1000).mod(60)
+        val minutes = ((millis / (1000 * 60)).mod(60))
+        val hours = ((millis / (1000 * 60 * 60)).mod(24))
 
         return "${String.format("%02d", hours)}:${String.format("%02d", minutes)}:${String.format("%02d", seconds)}"
     }
