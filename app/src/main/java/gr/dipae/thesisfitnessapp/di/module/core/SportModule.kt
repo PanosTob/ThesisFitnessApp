@@ -15,6 +15,7 @@ import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.data.sport.SportsDataSource
 import gr.dipae.thesisfitnessapp.data.sport.SportsRepositoryImpl
 import gr.dipae.thesisfitnessapp.data.sport.broadcast.SportSessionBreakTimerBroadcast
+import gr.dipae.thesisfitnessapp.data.sport.broadcast.SportSessionBroadcast
 import gr.dipae.thesisfitnessapp.data.sport.broadcast.StopWatchBroadcast
 import gr.dipae.thesisfitnessapp.domain.sport.SportsRepository
 import gr.dipae.thesisfitnessapp.framework.service.StopWatchService
@@ -28,6 +29,12 @@ object SportModule {
     fun provideSportSessionBreakTimerBroadcast(): SportSessionBreakTimerBroadcast {
         return SportSessionBreakTimerBroadcast.getInstance()
     }
+
+    @Provides
+    fun provideSportSessionBroadcast(): SportSessionBroadcast {
+        return SportSessionBroadcast.getInstance()
+    }
+
 }
 
 @Module

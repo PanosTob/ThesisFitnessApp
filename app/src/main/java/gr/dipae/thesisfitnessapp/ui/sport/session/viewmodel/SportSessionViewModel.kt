@@ -4,8 +4,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gr.dipae.thesisfitnessapp.R
+import gr.dipae.thesisfitnessapp.domain.sport.entity.SportSessionSaveResult
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.sport.session.mapper.SportSessionUiMapper
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.ContinuationState
@@ -19,14 +21,16 @@ import gr.dipae.thesisfitnessapp.usecase.sports.PauseSportSessionBreakTimerUseCa
 import gr.dipae.thesisfitnessapp.usecase.sports.SetSportSessionUseCase
 import gr.dipae.thesisfitnessapp.usecase.sports.StartSportSessionBreakTimerUseCase
 import gr.dipae.thesisfitnessapp.usecase.sports.StopSportSessionBreakTimerUseCase
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SportSessionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    getSportParameterNavigationArgumentUseCase: GetSportParameterNavigationArgumentUseCase,
     private val getSportByIdUseCase: GetSportByIdUseCase,
-    private val getSportParameterNavigationArgumentUseCase: GetSportParameterNavigationArgumentUseCase,
     private val setSportSessionUseCase: SetSportSessionUseCase,
     private val getSportSessionDurationLiveUseCase: GetSportSessionDurationLiveUseCase,
     private val getSportSessionBreakTimerDurationLiveUseCase: GetSportSessionBreakTimerDurationLiveUseCase,
@@ -40,8 +44,10 @@ class SportSessionViewModel @Inject constructor(
     val uiState: State<SportSessionUiState?> = _uiState
 
     private val sportId = savedStateHandle.get<String>(SportSessionArgumentKeys[0])!!
-    private val sportParameter = savedStateHandle.get<String>(SportSessionArgumentKeys[1])!!
+    private val sportParameter = getSportParameterNavigationArgumentUseCase(savedStateHandle.get<String>(SportSessionArgumentKeys[1])!!)
 
+    private var jobOfCollectingDuration: Job? = null
+    private var jobOfCollectingBreak: Job? = null
     override fun onCleared() {
         stopSportSessionBreakTimerUseCase()
         super.onCleared()
@@ -50,16 +56,16 @@ class SportSessionViewModel @Inject constructor(
     fun init() {
         launchWithProgress {
             getSportByIdUseCase(sportId)?.let {
-                _uiState.value = sportSessionUiMapper(sportId, it.parameters, getSportParameterNavigationArgumentUseCase(sportParameter))
+                _uiState.value = sportSessionUiMapper(sportId, sportParameter)
             }
         }
-        launch {
+        jobOfCollectingDuration = viewModelScope.launch {
             getSportSessionDurationLiveUseCase().collectLatest {
                 _uiState.value?.mainTimerValue?.value = sportSessionUiMapper.toHundredsOfASecond(it)
             }
         }
 
-        launch {
+        jobOfCollectingBreak = viewModelScope.launch {
             getSportSessionBreakTimerDurationLiveUseCase().collectLatest {
                 _uiState.value?.breakTimerValue?.value = sportSessionUiMapper.toSecondsString(it)
             }
@@ -85,8 +91,13 @@ class SportSessionViewModel @Inject constructor(
     fun onSessionFinish() {
         launchWithProgress {
             _uiState.value?.apply {
-                setSportSessionUseCase(sportId, parameters, parameterToBeAchieved, sportParameter)
-                backToLogin.value = true
+                jobOfCollectingDuration?.cancel()
+                jobOfCollectingBreak?.cancel()
+
+                val response = setSportSessionUseCase(sportId, sportParameter)
+                if (response is SportSessionSaveResult.Success) {
+                    backToLogin.value = true
+                }
             }
         }
     }

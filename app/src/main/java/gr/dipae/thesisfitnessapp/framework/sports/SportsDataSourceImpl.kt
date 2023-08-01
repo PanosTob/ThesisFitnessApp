@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException
 import gr.dipae.thesisfitnessapp.data.sport.SportsDataSource
 import gr.dipae.thesisfitnessapp.data.sport.broadcast.SportSessionBreakTimerBroadcast
+import gr.dipae.thesisfitnessapp.data.sport.broadcast.SportSessionBroadcast
 import gr.dipae.thesisfitnessapp.data.sport.broadcast.StopWatchBroadcast
 import gr.dipae.thesisfitnessapp.data.sport.model.RemoteSport
 import gr.dipae.thesisfitnessapp.data.sport.model.SportParameterRequest
@@ -27,6 +28,7 @@ class SportsDataSourceImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val fireStore: FirebaseFirestore,
     private val stopWatchBroadcast: StopWatchBroadcast,
+    private val sportSessionBroadcast: SportSessionBroadcast,
     private val breakTimerBroadcast: SportSessionBreakTimerBroadcast
 ) : SportsDataSource {
     private fun getFirebaseUserId() = firebaseAuth.currentUser?.uid ?: throw FirebaseNoSignedInUserException("")
@@ -42,7 +44,7 @@ class SportsDataSourceImpl @Inject constructor(
         val todaySummaryDocument = initializeTodaySummary()
         val activityDoneDocument = initializeActivityDone(todaySummaryDocument, sportDoneRequest)
         parameters.forEach {
-            activityDoneDocument.collection(ACTIVITY_STATISTICS).document().set(it)
+            activityDoneDocument.collection(ACTIVITY_STATISTICS).document().set(it).await()
         }
     }
 
@@ -70,6 +72,10 @@ class SportsDataSourceImpl @Inject constructor(
 
     override fun getSportSessionDurationLive(): StateFlow<Long> {
         return stopWatchBroadcast.stopWatchMillisPassed
+    }
+
+    override fun getSportSessionDistanceLive(): StateFlow<Long> {
+        return sportSessionBroadcast.sportDistance
     }
 
     override fun getSportSessionBreakTimerLive(): StateFlow<Long> {

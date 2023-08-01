@@ -98,9 +98,7 @@ class AppActivity : BaseActivity() {
     }
 
     private fun stopStopWatch(unit: Unit) {
-        startService(
-            Intent(this, StopWatchService::class.java).apply { action = StopWatchService.STOP_WATCH_ACTION_STOP }
-        )
+        stopService(Intent(this, StopWatchService::class.java))
     }
 
     companion object {

@@ -33,7 +33,7 @@ class SportCustomizeViewModel @Inject constructor(
 
     fun onStartClicked() {
         _uiState.value?.apply {
-            createSportParameterNavigationArgumentUseCase(sportCustomizeUiMapper.mapSportParameter(selectedParameter.value))?.let {
+            createSportParameterNavigationArgumentUseCase(sportCustomizeUiMapper.mapSportParameter(selectedParameter.value)).let {
                 navigateToSportSession.value = Pair(sportId, it)
             }
         }

@@ -16,5 +16,17 @@ data class SportDetails(
 
 data class SportParameter(
     val name: String,
+    val type: SportParameterType,
     val value: Long = 0
 )
+
+data class SportParameterArgument(
+    val name: String,
+    val value: Long = 0
+)
+
+sealed class SportParameterType {
+    class Distance : SportParameterType()
+    class Duration : SportParameterType()
+    object Unknown : SportParameterType()
+}

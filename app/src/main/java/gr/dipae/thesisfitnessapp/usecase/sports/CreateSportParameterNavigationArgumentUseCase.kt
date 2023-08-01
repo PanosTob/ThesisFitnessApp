@@ -8,12 +8,12 @@ import javax.inject.Inject
 class CreateSportParameterNavigationArgumentUseCase @Inject constructor(
     private val repository: SportsRepository
 ) : UseCase {
-    operator fun invoke(parameter: SportParameter?): String? {
-        parameter ?: return null
+    operator fun invoke(parameter: SportParameter?): String {
+        parameter ?: return ""
         return try {
             repository.sportParameterAsArgumentString(parameter)
         } catch (ex: Exception) {
-            null
+            ""
         }
     }
 }

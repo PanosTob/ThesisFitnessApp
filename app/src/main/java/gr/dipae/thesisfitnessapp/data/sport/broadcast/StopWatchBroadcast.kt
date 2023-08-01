@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class StopWatchBroadcast {
 
-    private var _stopWatchMillisPassed: MutableStateFlow<Long> = MutableStateFlow(0)
+    private val _stopWatchMillisPassed: MutableStateFlow<Long> = MutableStateFlow(0)
     val stopWatchMillisPassed = _stopWatchMillisPassed.asStateFlow()
 
     suspend fun refreshStopWatchMillisPassed(millis: Long) {

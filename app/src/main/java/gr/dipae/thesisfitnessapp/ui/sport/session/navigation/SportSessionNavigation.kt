@@ -50,6 +50,7 @@ fun NavGraphBuilder.sportSessionScreen(
                 .filter { it }
                 .flowWithLifecycle(lifecycleOwner.lifecycle)
                 .collectLatest {
+                    onSportSessionTimerStop()
                     popBackToSports()
                 }
         }

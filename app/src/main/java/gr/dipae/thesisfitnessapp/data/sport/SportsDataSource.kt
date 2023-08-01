@@ -10,6 +10,7 @@ interface SportsDataSource {
     suspend fun getSportById(sportId: String): RemoteSport?
     suspend fun setSportSession(sportDoneRequest: SportSessionRequest, parameters: List<SportParameterRequest>)
     fun getSportSessionDurationLive(): StateFlow<Long>
+    fun getSportSessionDistanceLive(): StateFlow<Long>
     fun getSportSessionBreakTimerLive(): StateFlow<Long>
     fun startSportSessionBreakTimer()
     fun pauseSportSessionBreakTimer()

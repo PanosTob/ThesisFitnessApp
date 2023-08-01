@@ -126,12 +126,14 @@ class StopWatchService : Service() {
     }
 
     private fun removeStopWatchNotification() {
+        pauseTimer()
         notificationManager.cancel(1)
     }
 
     private fun clearService() {
         removeStopWatchNotification()
         stopWatchBroadcast.clear()
+        stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
 
@@ -142,7 +144,6 @@ class StopWatchService : Service() {
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        stopForeground(STOP_FOREGROUND_REMOVE)
         clearService()
         Timber.tag(StopWatchService::class.simpleName.toString()).e("StopWatchService - onTaskRemoved: ${rootIntent.toString()}")
         super.onTaskRemoved(rootIntent)

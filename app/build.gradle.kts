@@ -207,10 +207,12 @@ dependencies {
 
     val moshi by extra { "1.15.0" }
     implementation("com.squareup.moshi:moshi-kotlin:$moshi")
+    implementation("com.squareup.moshi:moshi-adapters:$moshi")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi")
 
     implementation("com.jakewharton.timber:timber:5.0.1")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
+
 
     //Hilt Libs | Dependency injection
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")

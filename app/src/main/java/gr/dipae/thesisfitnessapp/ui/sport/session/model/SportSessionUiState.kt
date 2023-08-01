@@ -7,8 +7,7 @@ import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
 
 data class SportSessionUiState(
     val sportId: String,
-    val parameters: List<SportParameter>,
-    val parameterToBeAchieved: SportParameter,
+    val goalParameter: SportParameter,
     val mainTimerValue: MutableState<String> = mutableStateOf(""),
     val breakTimerValue: MutableState<String> = mutableStateOf(""),
     val playBreakBtnState: PlayBreakBtnState = PlayBreakBtnState(),

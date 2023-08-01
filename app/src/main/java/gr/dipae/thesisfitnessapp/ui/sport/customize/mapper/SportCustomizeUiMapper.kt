@@ -3,8 +3,10 @@ package gr.dipae.thesisfitnessapp.ui.sport.customize.mapper
 import androidx.compose.runtime.mutableStateOf
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.data.Mapper
+import gr.dipae.thesisfitnessapp.data.sport.mapper.SportsMapper
 import gr.dipae.thesisfitnessapp.domain.sport.entity.Sport
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
+import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameterType
 import gr.dipae.thesisfitnessapp.ui.sport.customize.model.SportCustomizeUiState
 import gr.dipae.thesisfitnessapp.ui.sport.customize.model.SportParameterUiItem
 import javax.inject.Inject
@@ -33,6 +35,7 @@ class SportCustomizeUiMapper @Inject constructor() : Mapper {
         val parameterValue = parameter.parameterValue.value.toLongOrNull() ?: return null
         return SportParameter(
             name = parameter.name,
+            type = SportsMapper.sportParameterTypesMap[parameter.name] ?: SportParameterType.Unknown,
             value = parameterValue
         )
     }

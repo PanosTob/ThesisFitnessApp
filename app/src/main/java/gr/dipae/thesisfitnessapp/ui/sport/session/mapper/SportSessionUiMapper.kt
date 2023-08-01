@@ -8,11 +8,15 @@ import javax.inject.Inject
 class SportSessionUiMapper @Inject constructor(
 ) : Mapper {
 
-    operator fun invoke(sportId: String, parameters: List<SportParameter>, sportParameterToBeAchieved: SportParameter?): SportSessionUiState? {
+    operator fun invoke(sportId: String, sportParameterToBeAchieved: SportParameter?): SportSessionUiState? {
         sportParameterToBeAchieved ?: return null
 
-        return SportSessionUiState(sportId, parameters, sportParameterToBeAchieved)
+        return SportSessionUiState(
+            sportId,
+            sportParameterToBeAchieved
+        )
     }
+
 
     fun toHundredsOfASecond(millis: Long): String {
         if (millis == 0L) {
