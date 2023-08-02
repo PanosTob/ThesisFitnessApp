@@ -7,7 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.sport.mapper.SportsUiMapper
 import gr.dipae.thesisfitnessapp.ui.sport.model.SportsUiState
-import gr.dipae.thesisfitnessapp.usecase.sports.GetSportsUseCase
+import gr.dipae.thesisfitnessapp.usecase.sport.GetSportsUseCase
 import javax.inject.Inject
 
 @HiltViewModel

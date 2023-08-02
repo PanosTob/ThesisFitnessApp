@@ -2,7 +2,7 @@ package gr.dipae.thesisfitnessapp.usecase.user.sport
 
 import gr.dipae.thesisfitnessapp.domain.user.UserRepository
 import gr.dipae.thesisfitnessapp.usecase.UseCase
-import gr.dipae.thesisfitnessapp.usecase.sports.GetSportsUseCase
+import gr.dipae.thesisfitnessapp.usecase.sport.GetSportsUseCase
 import timber.log.Timber
 import javax.inject.Inject
 

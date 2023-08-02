@@ -5,15 +5,15 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class SportSessionBroadcast {
 
-    private val _sportDistance: MutableStateFlow<Long> = MutableStateFlow(0)
+    private val _sportDistance: MutableStateFlow<Double> = MutableStateFlow(0.0)
     val sportDistance = _sportDistance.asStateFlow()
 
-    suspend fun refreshSportDistance(meters: Long) {
+    suspend fun refreshSportDistance(meters: Double) {
         _sportDistance.emit(meters)
     }
 
     fun clear() {
-        _sportDistance.value = 0
+        _sportDistance.value = 0.0
     }
 
     companion object {

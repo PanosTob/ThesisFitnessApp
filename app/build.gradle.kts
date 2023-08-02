@@ -147,15 +147,16 @@ android {
 
 dependencies {
     //CORE LIBS
-    implementation ("androidx.core:core-ktx:1.10.1")
-    implementation ("org.jetbrains.kotlin:kotlin-bom:1.8.0")
-    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation("androidx.core:core-ktx:1.10.1")
+    implementation("org.jetbrains.kotlin:kotlin-bom:1.8.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.fragment:fragment-ktx:1.6.0")
 
     val lifecycleVersion by extra { "2.6.1" }
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
 
     implementation("androidx.navigation:navigation-fragment-ktx:${rootProject.extra.get("navVersion")}")
     implementation("androidx.navigation:navigation-ui-ktx:${rootProject.extra.get("navVersion")}")
@@ -229,7 +230,12 @@ dependencies {
     implementation("io.coil-kt:coil-compose:$coil")
 
     // Google Maps in Compose
-    implementation("com.google.maps.android:maps-compose:2.11.4")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("com.google.maps.android:maps-compose:2.12.0")
+    implementation("com.google.maps.android:maps-compose-utils:2.12.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.maps.android:android-maps-utils:2.2.3")
+    implementation("com.google.maps.android:maps-utils-ktx:3.3.0")
 
     //DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")

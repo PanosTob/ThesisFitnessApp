@@ -2,15 +2,20 @@ package gr.dipae.thesisfitnessapp.ui.sport.session.mapper
 
 import gr.dipae.thesisfitnessapp.data.Mapper
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
+import gr.dipae.thesisfitnessapp.ui.sport.session.model.SportSessionUiMapState
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.SportSessionUiState
 import javax.inject.Inject
 
 class SportSessionUiMapper @Inject constructor(
 ) : Mapper {
 
-    operator fun invoke(sportId: String, sportParameterToBeAchieved: SportParameter?): SportSessionUiState {
+    operator fun invoke(sportId: String?, sportParameterToBeAchieved: SportParameter?, sportHasMap: Boolean?): SportSessionUiState? {
+        sportId ?: return null
+        sportHasMap ?: return null
+
         return SportSessionUiState(
             sportId,
+            mapState = SportSessionUiMapState(showMap = sportHasMap),
             sportParameterToBeAchieved
         )
     }

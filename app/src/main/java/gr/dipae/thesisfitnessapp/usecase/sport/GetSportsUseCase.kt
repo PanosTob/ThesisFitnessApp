@@ -1,4 +1,4 @@
-package gr.dipae.thesisfitnessapp.usecase.sports
+package gr.dipae.thesisfitnessapp.usecase.sport
 
 import gr.dipae.thesisfitnessapp.domain.sport.SportsRepository
 import gr.dipae.thesisfitnessapp.domain.sport.entity.Sport

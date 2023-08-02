@@ -1,4 +1,4 @@
-package gr.dipae.thesisfitnessapp.usecase.sports
+package gr.dipae.thesisfitnessapp.usecase.sport
 
 import gr.dipae.thesisfitnessapp.domain.sport.SportsRepository
 import gr.dipae.thesisfitnessapp.domain.sport.entity.Sport
@@ -10,8 +10,10 @@ class GetSportByIdUseCase @Inject constructor(
     private val repository: SportsRepository
 ) : UseCase {
 
-    suspend operator fun invoke(sportId: String): Sport? {
+    suspend operator fun invoke(sportId: String?): Sport? {
         return try {
+            sportId ?: return null
+
             repository.getSportById(sportId)
         } catch (ex: Exception) {
             Timber.tag(GetSportByIdUseCase::class.simpleName.toString()).e(ex)

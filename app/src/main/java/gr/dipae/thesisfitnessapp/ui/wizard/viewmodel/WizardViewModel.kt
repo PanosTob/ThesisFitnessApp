@@ -8,7 +8,7 @@ import gr.dipae.thesisfitnessapp.domain.app.entity.FirebaseWriteDocumentResult
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.wizard.mapper.WizardUiMapper
 import gr.dipae.thesisfitnessapp.ui.wizard.model.WizardUiState
-import gr.dipae.thesisfitnessapp.usecase.sports.GetSportsUseCase
+import gr.dipae.thesisfitnessapp.usecase.sport.GetSportsUseCase
 import gr.dipae.thesisfitnessapp.usecase.user.SetUserFitnessProfileUseCase
 import gr.dipae.thesisfitnessapp.usecase.wizard.SetWizardDetailsLocallyUseCase
 import javax.inject.Inject

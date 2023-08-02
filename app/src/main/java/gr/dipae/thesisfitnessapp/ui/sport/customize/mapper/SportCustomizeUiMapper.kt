@@ -17,6 +17,7 @@ class SportCustomizeUiMapper @Inject constructor() : Mapper {
         return SportCustomizeUiState(
             sportId = sport?.id ?: "",
             name = sport?.name ?: "",
+            hasMap = sport?.hasMap ?: false,
             parameters = sportParameters
         )
     }

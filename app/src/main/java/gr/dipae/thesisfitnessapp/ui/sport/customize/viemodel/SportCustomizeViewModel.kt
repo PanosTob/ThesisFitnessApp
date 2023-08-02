@@ -9,8 +9,8 @@ import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.sport.customize.mapper.SportCustomizeUiMapper
 import gr.dipae.thesisfitnessapp.ui.sport.customize.model.SportCustomizeUiState
 import gr.dipae.thesisfitnessapp.ui.sport.customize.navigation.SportCustomizeArgumentKeys
-import gr.dipae.thesisfitnessapp.usecase.sports.CreateSportParameterNavigationArgumentUseCase
-import gr.dipae.thesisfitnessapp.usecase.sports.GetSportByIdUseCase
+import gr.dipae.thesisfitnessapp.usecase.sport.CreateSportParameterNavigationArgumentUseCase
+import gr.dipae.thesisfitnessapp.usecase.sport.GetSportByIdUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,7 +34,7 @@ class SportCustomizeViewModel @Inject constructor(
     fun onStartClicked() {
         _uiState.value?.apply {
             createSportParameterNavigationArgumentUseCase(sportCustomizeUiMapper.mapSportParameter(selectedParameter.value)).let {
-                navigateToSportSession.value = Pair(sportId, it)
+                navigateToSportSession.value = Triple(sportId, hasMap, it)
             }
         }
     }

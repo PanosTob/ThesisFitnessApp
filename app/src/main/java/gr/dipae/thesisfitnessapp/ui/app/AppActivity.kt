@@ -15,6 +15,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.Observer
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
 import gr.dipae.thesisfitnessapp.framework.service.StopWatchService
 import gr.dipae.thesisfitnessapp.ui.app.composable.ActivityProgressContainer
@@ -23,6 +24,7 @@ import gr.dipae.thesisfitnessapp.ui.livedata.LoadingLiveData
 import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
 import kotlinx.coroutines.DelicateCoroutinesApi
 
+@ExperimentalPermissionsApi
 @DelicateCoroutinesApi
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi

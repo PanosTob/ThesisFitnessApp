@@ -1,5 +1,6 @@
 package gr.dipae.thesisfitnessapp.data.sport
 
+import com.google.android.gms.maps.model.LatLng
 import com.squareup.moshi.Moshi
 import gr.dipae.thesisfitnessapp.data.sport.mapper.SportsMapper
 import gr.dipae.thesisfitnessapp.domain.sport.SportsRepository
@@ -8,6 +9,7 @@ import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameterArgument
 import gr.dipae.thesisfitnessapp.util.ext.fromJson
 import gr.dipae.thesisfitnessapp.util.ext.toJson
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
@@ -25,8 +27,24 @@ class SportsRepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun setSportSession(sportId: String, distance: Long, duration: Long, breakTime: Long, goalParameter: SportParameter?) {
+    override suspend fun setSportSession(sportId: String, distance: Double, duration: Long, breakTime: Long, goalParameter: SportParameter?) {
         return dataSource.setSportSession(sportsMapper(sportId, breakTime), sportsMapper(distance, duration, goalParameter))
+    }
+
+    override suspend fun getUserLocation(): Flow<LatLng> {
+        return dataSource.getUserLocation()
+    }
+
+    override fun startUserLocationUpdates(locationUpdateIntervalMillis: Long) {
+        return dataSource.startUserLocationUpdates(locationUpdateIntervalMillis)
+    }
+
+    override fun getUserPreviousLocation(): LatLng {
+        return dataSource.getUserPreviousLocation()
+    }
+
+    override fun stopUserLocationUpdated() {
+        return dataSource.stopUserLocationUpdated()
     }
 
     override fun sportParameterAsArgumentString(parameter: SportParameter): String {
@@ -41,7 +59,11 @@ class SportsRepositoryImpl @Inject constructor(
         return dataSource.getSportSessionDurationLive()
     }
 
-    override fun getSportSessionDistanceLive(): StateFlow<Long> {
+    override suspend fun setSportSessionDistance(distance: Double) {
+        return dataSource.setSportSessionDistance(distance)
+    }
+
+    override fun getSportSessionDistanceLive(): StateFlow<Double> {
         return dataSource.getSportSessionDistanceLive()
     }
 

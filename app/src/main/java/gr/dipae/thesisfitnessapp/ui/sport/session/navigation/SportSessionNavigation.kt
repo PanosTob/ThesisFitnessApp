@@ -12,6 +12,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import gr.dipae.thesisfitnessapp.ui.sport.session.composable.OnSportSessionTimerPause
 import gr.dipae.thesisfitnessapp.ui.sport.session.composable.OnSportSessionTimerResume
 import gr.dipae.thesisfitnessapp.ui.sport.session.composable.OnSportSessionTimerStop
@@ -24,9 +25,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 
-internal val SportSessionArgumentKeys = listOf("sportId", "sportParameter")
+internal val SportSessionArgumentKeys = listOf("sportId", "hasMap", "sportParameter")
 internal val SportSessionRoute = "sports_session${SportSessionArgumentKeys.getComposeNavigationArgs()}"
 
+@ExperimentalPermissionsApi
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.sportSessionScreen(
     onSportSessionShown: () -> Unit,
@@ -58,6 +60,9 @@ fun NavGraphBuilder.sportSessionScreen(
         viewModel.uiState.value?.let { uiState ->
             SportSessionContent(
                 uiState = uiState,
+                onLocationPermissionsAccepted = { viewModel.onLocationPermissionsAccepted() },
+                onMapLoaded = { viewModel.onMapLoaded() },
+                onMyLocationButtonClick = { viewModel.onMyLocationButtonClick() },
                 onSessionFinish = {
                     onSportSessionTimerStop()
                     viewModel.onSessionFinish()
@@ -75,15 +80,21 @@ fun NavGraphBuilder.sportSessionScreen(
     }
 }
 
-fun NavController.navigateToSportSession(arguments: Pair<String, String?>) {
-    singleNavigate(String.format(SportSessionRoute.replaceRouteStringWithArgumentPlaceholders(SportSessionArgumentKeys), arguments.first, arguments.second))
+fun NavController.navigateToSportSession(arguments: Triple<String, Boolean, String?>) {
+    singleNavigate(String.format(SportSessionRoute.replaceRouteStringWithArgumentPlaceholders(SportSessionArgumentKeys), arguments.first, arguments.second, arguments.third))
 }
 
 private fun sportCustomizeArguments(): List<NamedNavArgument> {
-    return SportSessionArgumentKeys.map {
-        (navArgument(it) {
+    return listOf(
+        navArgument(SportSessionArgumentKeys[0]) {
+            type = NavType.StringType
+        },
+        navArgument(SportSessionArgumentKeys[1]) {
+            type = NavType.BoolType
+        },
+        navArgument(SportSessionArgumentKeys[2]) {
             nullable = true
             type = NavType.StringType
-        })
-    }
+        }
+    )
 }

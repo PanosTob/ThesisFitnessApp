@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBMText
 import gr.dipae.thesisfitnessapp.ui.diet.navigation.dietScreen
@@ -58,6 +59,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 
+@ExperimentalPermissionsApi
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi

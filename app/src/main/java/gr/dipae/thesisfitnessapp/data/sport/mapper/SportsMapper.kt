@@ -25,7 +25,7 @@ class SportsMapper @Inject constructor() : Mapper {
         )
     }
 
-    operator fun invoke(distance: Long, duration: Long, goalParameter: SportParameter?): List<SportParameterRequest> {
+    operator fun invoke(distance: Double, duration: Long, goalParameter: SportParameter?): List<SportParameterRequest> {
         return listOf(
             SportParameterRequest(
                 name = "distance",
@@ -67,6 +67,7 @@ class SportsMapper @Inject constructor() : Mapper {
         return Sport(
             id = remoteSport.id,
             name = remoteSport.name,
+            hasMap = remoteSport.showMap,
             imageUrl = remoteSport.imageUrl,
             parameters = mapSportParameters(remoteSport.parameters),
             details = mapSportDetails(remoteSport.details),

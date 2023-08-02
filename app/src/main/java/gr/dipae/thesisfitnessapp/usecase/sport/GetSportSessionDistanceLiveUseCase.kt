@@ -1,4 +1,4 @@
-package gr.dipae.thesisfitnessapp.usecase.sports
+package gr.dipae.thesisfitnessapp.usecase.sport
 
 import gr.dipae.thesisfitnessapp.domain.sport.SportsRepository
 import gr.dipae.thesisfitnessapp.usecase.UseCase
@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetSportSessionDistanceLiveUseCase @Inject constructor(
     private val repository: SportsRepository
 ) : UseCase {
-    operator fun invoke(): StateFlow<Long> {
+    operator fun invoke(): StateFlow<Double> {
         return repository.getSportSessionDistanceLive()
     }
 }

@@ -10,6 +10,6 @@ data class SportSessionRequest(
 
 data class SportParameterRequest(
     val name: String,
-    val value: Long,
+    val value: Any,
     val achieved: Boolean
 )

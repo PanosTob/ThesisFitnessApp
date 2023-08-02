@@ -47,4 +47,5 @@
     <string name="profile_title">Profile</string>
     <string name="profile_logout_btn">Logout</string>
 
+    <string name="google_maps_key" translatable="false">AIzaSyB_HCdtKwGn823A2c4fvPPLtSb9VFxeS14</string>
 </resources>

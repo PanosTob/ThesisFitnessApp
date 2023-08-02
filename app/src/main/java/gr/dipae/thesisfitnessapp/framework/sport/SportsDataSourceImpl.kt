@@ -1,5 +1,6 @@
-package gr.dipae.thesisfitnessapp.framework.sports
+package gr.dipae.thesisfitnessapp.framework.sport
 
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
@@ -12,6 +13,7 @@ import gr.dipae.thesisfitnessapp.data.sport.broadcast.StopWatchBroadcast
 import gr.dipae.thesisfitnessapp.data.sport.model.RemoteSport
 import gr.dipae.thesisfitnessapp.data.sport.model.SportParameterRequest
 import gr.dipae.thesisfitnessapp.data.sport.model.SportSessionRequest
+import gr.dipae.thesisfitnessapp.framework.sport.location.SportLocationProvider
 import gr.dipae.thesisfitnessapp.util.ACTIVITIES_DONE_COLLECTION
 import gr.dipae.thesisfitnessapp.util.ACTIVITY_STATISTICS
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_COLLECTION
@@ -20,6 +22,7 @@ import gr.dipae.thesisfitnessapp.util.SPORTS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.USERS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.ext.getDocumentResponse
 import gr.dipae.thesisfitnessapp.util.ext.getDocumentsResponse
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -29,6 +32,7 @@ class SportsDataSourceImpl @Inject constructor(
     private val fireStore: FirebaseFirestore,
     private val stopWatchBroadcast: StopWatchBroadcast,
     private val sportSessionBroadcast: SportSessionBroadcast,
+    private val sportLocationProvider: SportLocationProvider,
     private val breakTimerBroadcast: SportSessionBreakTimerBroadcast
 ) : SportsDataSource {
     private fun getFirebaseUserId() = firebaseAuth.currentUser?.uid ?: throw FirebaseNoSignedInUserException("")
@@ -46,6 +50,22 @@ class SportsDataSourceImpl @Inject constructor(
         parameters.forEach {
             activityDoneDocument.collection(ACTIVITY_STATISTICS).document().set(it).await()
         }
+    }
+
+    override suspend fun getUserLocation(): Flow<LatLng> {
+        return sportLocationProvider.userLiveLocation
+    }
+
+    override fun getUserPreviousLocation(): LatLng {
+        return sportLocationProvider.userLastLocation
+    }
+
+    override fun startUserLocationUpdates(locationUpdateIntervalMillis: Long) {
+        return sportLocationProvider.startUserLocationUpdates(locationUpdateIntervalMillis)
+    }
+
+    override fun stopUserLocationUpdated() {
+        return sportLocationProvider.stopTracking()
     }
 
     private suspend fun initializeTodaySummary(): DocumentReference {
@@ -74,8 +94,12 @@ class SportsDataSourceImpl @Inject constructor(
         return stopWatchBroadcast.stopWatchMillisPassed
     }
 
-    override fun getSportSessionDistanceLive(): StateFlow<Long> {
+    override fun getSportSessionDistanceLive(): StateFlow<Double> {
         return sportSessionBroadcast.sportDistance
+    }
+
+    override suspend fun setSportSessionDistance(distance: Double) {
+        sportSessionBroadcast.refreshSportDistance(distance)
     }
 
     override fun getSportSessionBreakTimerLive(): StateFlow<Long> {

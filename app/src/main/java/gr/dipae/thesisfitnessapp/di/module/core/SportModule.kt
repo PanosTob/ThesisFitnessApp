@@ -10,6 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.data.sport.SportsDataSource
@@ -19,20 +20,29 @@ import gr.dipae.thesisfitnessapp.data.sport.broadcast.SportSessionBroadcast
 import gr.dipae.thesisfitnessapp.data.sport.broadcast.StopWatchBroadcast
 import gr.dipae.thesisfitnessapp.domain.sport.SportsRepository
 import gr.dipae.thesisfitnessapp.framework.service.StopWatchService
-import gr.dipae.thesisfitnessapp.framework.sports.SportsDataSourceImpl
+import gr.dipae.thesisfitnessapp.framework.sport.SportsDataSourceImpl
+import gr.dipae.thesisfitnessapp.framework.sport.location.SportLocationProvider
 import kotlinx.coroutines.DelicateCoroutinesApi
 
 @Module
 @InstallIn(ViewModelComponent::class)
 object SportModule {
     @Provides
+    @ViewModelScoped
     fun provideSportSessionBreakTimerBroadcast(): SportSessionBreakTimerBroadcast {
         return SportSessionBreakTimerBroadcast.getInstance()
     }
 
     @Provides
+    @ViewModelScoped
     fun provideSportSessionBroadcast(): SportSessionBroadcast {
         return SportSessionBroadcast.getInstance()
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideSportLocationProvider(@ApplicationContext context: Context): SportLocationProvider {
+        return SportLocationProvider(context)
     }
 
 }

@@ -11,10 +11,11 @@ import gr.dipae.thesisfitnessapp.ui.theme.ColorDisabledButton
 data class SportCustomizeUiState(
     val sportId: String,
     val name: String,
+    val hasMap: Boolean,
     val parameters: List<SportParameterUiItem>,
     val startButton: SportCustomizeStartButtonUiItem = SportCustomizeStartButtonUiItem(),
     val selectedParameter: MutableState<SportParameterUiItem?> = mutableStateOf(null),
-    val navigateToSportSession: MutableState<Pair<String, String?>?> = mutableStateOf(null)
+    val navigateToSportSession: MutableState<Triple<String, Boolean, String?>?> = mutableStateOf(null)
 ) {
     fun onParameterSelection(parameterUiItem: SportParameterUiItem) {
         parameters.onEach { it.selected.value = false }
