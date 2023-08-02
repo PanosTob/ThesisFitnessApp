@@ -18,9 +18,10 @@ class SportsMapper @Inject constructor() : Mapper {
         return remoteSports.mapNotNull { mapSport(it, favoriteSportIds) }
     }
 
-    operator fun invoke(sportId: String): SportSessionRequest {
+    operator fun invoke(sportId: String, breakTime: Long): SportSessionRequest {
         return SportSessionRequest(
-            sportId = sportId
+            sportId = sportId,
+            breakTime = breakTime
         )
     }
 

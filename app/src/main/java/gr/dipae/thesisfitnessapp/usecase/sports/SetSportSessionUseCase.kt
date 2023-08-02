@@ -10,17 +10,20 @@ import javax.inject.Inject
 class SetSportSessionUseCase @Inject constructor(
     private val repository: SportsRepository,
     private val getSportSessionDurationLiveUseCase: GetSportSessionDurationLiveUseCase,
-    private val getSportSessionDistanceLiveUseCase: GetSportSessionDistanceLiveUseCase
+    private val getSportSessionDistanceLiveUseCase: GetSportSessionDistanceLiveUseCase,
+    private val getSportSessionBreakTimerDurationLiveUseCase: GetSportSessionBreakTimerDurationLiveUseCase
 ) : UseCase {
     suspend operator fun invoke(sportId: String, goalParameter: SportParameter?): SportSessionSaveResult {
         try {
 
             val duration = getSportSessionDurationLiveUseCase().value
             val distance = getSportSessionDistanceLiveUseCase().value
+            val breakTime = getSportSessionBreakTimerDurationLiveUseCase().value
             repository.setSportSession(
                 sportId = sportId,
                 duration = duration,
                 distance = distance,
+                breakTime = breakTime,
                 goalParameter = goalParameter
             )
 

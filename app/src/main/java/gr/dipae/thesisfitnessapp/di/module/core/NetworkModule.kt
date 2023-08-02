@@ -6,7 +6,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import gr.dipae.thesisfitnessapp.framework.sports.session.typeadapter.SportParameterTypeAdapter
 import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -61,7 +60,6 @@ object NetworkModule {
     @Provides
     fun provideMoshi(): Moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
-        .add(SportParameterTypeAdapter())
         .build()
 
     @Singleton
