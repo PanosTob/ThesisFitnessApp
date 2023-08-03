@@ -28,8 +28,8 @@ import gr.dipae.thesisfitnessapp.usecase.sport.StartUserLocationUpdatesUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.StopSportSessionBreakTimerUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.StopUserLocationUpdatesUseCase
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -78,15 +78,17 @@ class SportSessionViewModel @Inject constructor(
 
     private fun initTimers() {
         launch {
-            jobOfCollectingDuration = getSportSessionDurationLiveUseCase().onEach {
-                _uiState.value?.mainTimerValue?.value = sportSessionUiMapper.toHundredsOfASecond(it)
-            }.launchIn(viewModelScope)
-        }
+            jobOfCollectingDuration = viewModelScope.launch {
+                getSportSessionDurationLiveUseCase().collectLatest {
+                    _uiState.value?.mainTimerValue?.value = sportSessionUiMapper.toHundredsOfASecond(it)
+                }
+            }
 
-        launch {
-            jobOfCollectingBreak = getSportSessionBreakTimerDurationLiveUseCase().onEach {
-                _uiState.value?.breakTimerValue?.value = sportSessionUiMapper.toSecondsString(it)
-            }.launchIn(viewModelScope)
+            jobOfCollectingBreak = viewModelScope.launch {
+                getSportSessionBreakTimerDurationLiveUseCase().collectLatest {
+                    _uiState.value?.breakTimerValue?.value = sportSessionUiMapper.toSecondsString(it)
+                }
+            }
         }
     }
 
@@ -102,16 +104,17 @@ class SportSessionViewModel @Inject constructor(
     private fun showContent() {
         _uiState.value?.showContent?.value = true
         _uiState.value?.playStateBtn?.iconRes?.value = R.drawable.ic_pause
+        onMapLoaded()
     }
 
     fun onMapLoaded() {
         _uiState.value?.apply {
-            launch {
-                jobOfCollectionUserLocation = getUserLocationUseCase().onEach {
+            jobOfCollectionUserLocation = viewModelScope.launch {
+                getUserLocationUseCase().collectLatest {
                     val distance = calculateTravelledDistanceUseCase(getUserPreviousLocationUseCase(), it)
                     setSportSessionDistanceUseCase(distance)
                     mapState.userLocation.value = it
-                }.launchIn(viewModelScope)
+                }
             }
             startUserLocationUpdatesUseCase()
         }
@@ -142,6 +145,7 @@ class SportSessionViewModel @Inject constructor(
             sportId?.apply {
                 jobOfCollectingDuration?.cancel()
                 jobOfCollectingBreak?.cancel()
+                jobOfCollectionUserLocation?.cancel()
 
                 val response = setSportSessionUseCase(sportId, sportParameter)
                 if (response is SportSessionSaveResult.Success) {

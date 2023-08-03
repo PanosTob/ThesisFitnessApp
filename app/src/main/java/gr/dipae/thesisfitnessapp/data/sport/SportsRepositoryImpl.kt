@@ -31,7 +31,7 @@ class SportsRepositoryImpl @Inject constructor(
         return dataSource.setSportSession(sportsMapper(sportId, breakTime), sportsMapper(distance, duration, goalParameter))
     }
 
-    override suspend fun getUserLocation(): Flow<LatLng> {
+    override fun getUserLocation(): Flow<LatLng> {
         return dataSource.getUserLocation()
     }
 

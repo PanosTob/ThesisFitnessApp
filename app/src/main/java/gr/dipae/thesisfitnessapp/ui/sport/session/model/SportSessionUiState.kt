@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import com.google.android.gms.maps.model.LatLng
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
-import kotlinx.coroutines.flow.MutableStateFlow
 
 data class SportSessionUiState(
     val hasMap: Boolean,
@@ -19,7 +18,7 @@ data class SportSessionUiState(
 )
 
 data class SportSessionUiMapState(
-    val userLocation: MutableStateFlow<LatLng> = MutableStateFlow(LatLng(0.0, 0.0))
+    val userLocation: MutableState<LatLng> = mutableStateOf(LatLng(0.0, 0.0))
 )
 
 data class PlayStateButtonUiItem(

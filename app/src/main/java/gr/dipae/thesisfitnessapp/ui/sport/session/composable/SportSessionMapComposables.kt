@@ -2,9 +2,7 @@ package gr.dipae.thesisfitnessapp.ui.sport.session.composable
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -17,7 +15,6 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import gr.dipae.thesisfitnessapp.data.sport.location.composable.LocationPermissionsHandler
 import gr.dipae.thesisfitnessapp.data.sport.location.composable.OnLocationPermissionsAccepted
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.SportSessionUiMapState
-import kotlinx.coroutines.launch
 
 @ExperimentalPermissionsApi
 @Composable
@@ -37,25 +34,19 @@ fun SportSessionMapContent(
         animationVisibility = animationVisibility,
         onStartAnimationComplete = { onStartAnimationComplete() }
     )
-
     if (showContent) {
-        val cameraPositionState = sportSessionCameraPosition(mapState.userLocation.collectAsStateWithLifecycle().value)
-        val coroutineScope = rememberCoroutineScope()
+        val cameraPositionState = sportSessionCameraPosition(mapState.userLocation.value)
+
         GoogleMap(
             modifier = modifier,
             cameraPositionState = cameraPositionState,
             properties = MapProperties(isMyLocationEnabled = true),
             uiSettings = MapUiSettings(mapToolbarEnabled = false),
-            onMyLocationButtonClick = {
-                coroutineScope.launch {
-                    cameraPositionState.animate(CameraUpdateFactory.newCameraPosition(cameraPositionState.position))
-                }
-                true
-            },
             onMapLoaded = {
-                onMapLoaded()
+//                onMapLoaded()
             }
         )
+
     }
 }
 
@@ -63,12 +54,11 @@ fun SportSessionMapContent(
 fun sportSessionCameraPosition(
     userLocation: LatLng
 ): CameraPositionState {
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(userLocation, 14f)
-    }
+
+    val cameraPositionState = rememberCameraPositionState()
 
     LaunchedEffect(key1 = userLocation) {
-        cameraPositionState.animate(CameraUpdateFactory.newLatLng(userLocation), durationMs = 300)
+        cameraPositionState.move(CameraUpdateFactory.newCameraPosition(CameraPosition(userLocation, 10f, 0f, 0f)))
     }
 
     return cameraPositionState

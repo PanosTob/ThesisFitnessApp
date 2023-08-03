@@ -11,7 +11,7 @@ interface SportsDataSource {
     suspend fun getSports(): List<RemoteSport>
     suspend fun getSportById(sportId: String): RemoteSport?
     suspend fun setSportSession(sportDoneRequest: SportSessionRequest, parameters: List<SportParameterRequest>)
-    suspend fun getUserLocation(): Flow<LatLng>
+    fun getUserLocation(): Flow<LatLng>
     fun getUserPreviousLocation(): LatLng
     suspend fun setSportSessionDistance(distance: Double)
     fun startUserLocationUpdates(locationUpdateIntervalMillis: Long)

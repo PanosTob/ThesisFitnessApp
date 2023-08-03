@@ -8,6 +8,7 @@ import javax.inject.Inject
 class CalculateTravelledDistanceUseCase @Inject constructor() : UseCase {
 
     operator fun invoke(userPreviousLocation: LatLng, userNewLocation: LatLng): Double {
+        if (userPreviousLocation.latitude == 0.0 && userPreviousLocation.longitude == 0.0) return 0.0
         return SphericalUtil.computeDistanceBetween(userPreviousLocation, userNewLocation)
     }
 }

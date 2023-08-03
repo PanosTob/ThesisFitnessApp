@@ -52,7 +52,7 @@ class SportsDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserLocation(): Flow<LatLng> {
+    override fun getUserLocation(): Flow<LatLng> {
         return sportLocationProvider.userLiveLocation
     }
 

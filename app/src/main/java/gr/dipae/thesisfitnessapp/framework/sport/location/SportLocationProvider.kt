@@ -11,7 +11,6 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 
 class SportLocationProvider(private val context: Context) {
 
@@ -28,9 +27,8 @@ class SportLocationProvider(private val context: Context) {
             locationResult.locations.lastOrNull()?.let {
                 _userLastLocation = LatLng(it.longitude, it.longitude)
             }
-
             locationResult.lastLocation?.let {
-                _userLiveLocation.update { LatLng(it.longitude, it.longitude) }
+                _userLiveLocation.value = LatLng(it.longitude, it.longitude)
             }
         }
     }
