@@ -30,6 +30,9 @@
 
     <!-- Sports Customize Screen -->
     <string name="sport_customize_clear_parameter_selection">Clear</string>
+    <string name="sport_customize_clear_selection_box">Please select the desired goal parameter</string>
+    <string name="sport_customize_duration_placeholder">Type in the duration in minutes</string>
+    <string name="sport_customize_distance_placeholder">Type in the distance in meters</string>
 
     <!-- Sports Session -->
     <string name="sport_session_button">Finish</string>

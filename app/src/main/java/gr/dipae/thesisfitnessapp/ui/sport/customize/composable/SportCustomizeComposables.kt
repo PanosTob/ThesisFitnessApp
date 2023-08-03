@@ -1,19 +1,26 @@
 package gr.dipae.thesisfitnessapp.ui.sport.customize.composable
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
@@ -23,15 +30,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gr.dipae.thesisfitnessapp.R
+import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLText
 import gr.dipae.thesisfitnessapp.ui.sport.customize.model.SportCustomizeStartButtonUiItem
 import gr.dipae.thesisfitnessapp.ui.sport.customize.model.SportCustomizeUiState
@@ -49,24 +67,38 @@ fun SportCustomizeContent(
     onStartClicked: OnStartClicked,
     onClearParameterSelection: OnClearParameterSelection
 ) {
+    val localFocusManager = LocalFocusManager.current
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
+            .pointerInput(Unit) {
+                detectTapGestures {
+                    localFocusManager.clearFocus()
+                }
+            }
             .padding(horizontal = SpacingCustom_24dp, vertical = SpacingDefault_16dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(SpacingDefault_16dp)) {
             ThesisFitnessHLText(text = uiState.name, fontSize = 24.sp)
             SportCustomizeParametersDropdown(
+                localFocusManager,
                 uiState.parameters,
                 uiState.selectedParameter.value,
                 onParameterSelection = { uiState.onParameterSelection(it) },
                 onClearParameterSelection = { onClearParameterSelection() }
             )
-            SportParameterEditText(uiState.selectedParameter.value, Modifier.fillMaxWidth(0.5f)) { uiState.updateStartButtonEnabledState() }
+            SportParameterEditText(
+                uiState.selectedParameter.value,
+                Modifier
+                    .fillMaxWidth(0.5f)
+            ) { uiState.updateStartButtonEnabledState() }
         }
-        SportCustomizeStartButton(uiState.startButton) { onStartClicked() }
+        SportCustomizeStartButton(uiState.startButton) {
+            localFocusManager.clearFocus()
+            onStartClicked()
+        }
     }
 }
 
@@ -96,11 +128,20 @@ fun SportParameterEditText(
     onParameterTextChanged: (String) -> Unit
 ) {
     parameter?.let {
-        var parameterValueText by remember { mutableStateOf(TextFieldValue(parameter.parameterValue.value)) }
+        var parameterValueText by remember(parameter) {
+            mutableStateOf(
+                TextFieldValue(
+                    text = parameter.parameterValue.value,
+                    selection = TextRange(parameter.parameterValue.value.length)
+                )
+            )
+        }
         val validationPattern = remember { Regex("^\\d+\$") }
         TextField(
             modifier = modifier,
             value = parameterValueText,
+            placeholder = { },
+
             onValueChange = {
                 when {
                     it.text.isBlank() -> {
@@ -115,7 +156,24 @@ fun SportParameterEditText(
                 }
                 onParameterTextChanged(it.text)
             },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            visualTransformation = { text ->
+                val annotatedString = AnnotatedString.Builder().run {
+                    append(text)
+                    if (text.text.isNotBlank()) {
+                        append(parameter.unitSuffix)
+                    }
+                    toAnnotatedString()
+                }
+                val offsetMapping = if (text.text.isNotBlank()) {
+                    object : OffsetMapping {
+                        override fun originalToTransformed(offset: Int) = offset
+                        override fun transformedToOriginal(offset: Int) = offset.coerceIn(0, parameterValueText.text.length)
+                    }
+                } else OffsetMapping.Identity
+
+                TransformedText(annotatedString, offsetMapping)
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
         )
     }
 }
@@ -123,6 +181,7 @@ fun SportParameterEditText(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SportCustomizeParametersDropdown(
+    localFocusManager: FocusManager,
     sportParameters: List<SportParameterUiItem>,
     selectedParameter: SportParameterUiItem?,
     onParameterSelection: (SportParameterUiItem) -> Unit,
@@ -131,27 +190,70 @@ fun SportCustomizeParametersDropdown(
     if (sportParameters.isNotEmpty()) {
         var expanded by remember { mutableStateOf(false) }
         ExposedDropdownMenuBox(
+            modifier = Modifier
+                .fillMaxWidth(0.7f)
+                .aspectRatio(5f)
+                .clickable { localFocusManager.clearFocus() },
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
         ) {
-            TextField(
-                value = selectedParameter?.name ?: "",
-                onValueChange = {},
-                readOnly = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor()
-            )
+            Row(
+                Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background, shape = MaterialTheme.shapes.small)
+                    .border(BorderStroke(2.dp, MaterialTheme.colorScheme.primary), shape = MaterialTheme.shapes.small)
+                    .clip(MaterialTheme.shapes.small)
+                    .menuAnchor()
+                    .padding(horizontal = SpacingHalf_8dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ThesisFitnessHLAutoSizeText(
+                    text = if (selectedParameter?.name.isNullOrBlank()) stringResource(id = R.string.sport_customize_clear_selection_box) else selectedParameter?.name ?: "",
+                    maxLines = 1
+                )
+                Icon(
+                    if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                    contentDescription = ""
+                )
+            }
             ExposedDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                sportParameters.forEach {
+                Column(Modifier.fillMaxSize()) {
+                    sportParameters.forEach {
+                        DropdownMenuItem(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .background(MaterialTheme.colorScheme.background),
+                            text = { ThesisFitnessHLText(text = it.name, fontSize = 18.sp, color = Color.Black) },
+                            onClick = {
+                                expanded = false
+                                onParameterSelection(it)
+                            },
+                            colors = MenuDefaults.itemColors(
+                                textColor = MaterialTheme.colorScheme.primary,
+                                leadingIconColor = MaterialTheme.colorScheme.primary,
+
+                                ),
+                            leadingIcon = {
+                                Icon(
+                                    painterResource(id = it.iconRes),
+                                    contentDescription = null,
+                                    tint = Color.Black
+                                )
+                            }
+                        )
+                    }
                     DropdownMenuItem(
-                        modifier = Modifier.background(MaterialTheme.colorScheme.background),
-                        text = { ThesisFitnessHLText(text = it.name, fontSize = 18.sp, color = Color.Black) },
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .background(MaterialTheme.colorScheme.background),
+                        text = { ThesisFitnessHLText(text = stringResource(id = R.string.sport_customize_clear_parameter_selection), fontSize = 18.sp, color = Color.Black) },
                         onClick = {
                             expanded = false
-                            onParameterSelection(it)
+                            onClearParameterSelection()
                         },
                         colors = MenuDefaults.itemColors(
                             textColor = MaterialTheme.colorScheme.primary,
@@ -160,33 +262,13 @@ fun SportCustomizeParametersDropdown(
                             ),
                         leadingIcon = {
                             Icon(
-                                painterResource(id = it.iconRes),
+                                painterResource(id = R.drawable.ic_deselect),
                                 contentDescription = null,
                                 tint = Color.Black
                             )
                         }
                     )
                 }
-                DropdownMenuItem(
-                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
-                    text = { ThesisFitnessHLText(text = stringResource(id = R.string.sport_customize_clear_parameter_selection), fontSize = 18.sp, color = Color.Black) },
-                    onClick = {
-                        expanded = false
-                        onClearParameterSelection()
-                    },
-                    colors = MenuDefaults.itemColors(
-                        textColor = MaterialTheme.colorScheme.primary,
-                        leadingIconColor = MaterialTheme.colorScheme.primary,
-
-                        ),
-                    leadingIcon = {
-                        Icon(
-                            painterResource(id = R.drawable.ic_deselect),
-                            contentDescription = null,
-                            tint = Color.Black
-                        )
-                    }
-                )
             }
         }
     }

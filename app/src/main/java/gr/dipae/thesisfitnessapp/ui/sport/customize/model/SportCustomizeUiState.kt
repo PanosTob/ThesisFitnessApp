@@ -1,6 +1,7 @@
 package gr.dipae.thesisfitnessapp.ui.sport.customize.model
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -49,6 +50,8 @@ data class SportCustomizeStartButtonUiItem(
 
 data class SportParameterUiItem(
     val name: String,
+    val unitSuffix: String,
+    @StringRes val placeholder: Int,
     val parameterValue: MutableState<String> = mutableStateOf(""),
     @DrawableRes val iconRes: Int,
     val selected: MutableState<Boolean> = mutableStateOf(false)

@@ -25,7 +25,25 @@ class SportCustomizeUiMapper @Inject constructor() : Mapper {
     private fun mapSportParameters(parameters: List<SportParameter>?): List<SportParameterUiItem> {
         parameters ?: return emptyList()
 
-        return parameters.map { SportParameterUiItem(it.name, iconRes = parameterIconMap[it.name] ?: -1) }
+        return parameters.mapNotNull {
+            val nameFirstLetter = it.name.firstOrNull() ?: return@mapNotNull null
+            val unitSuffix = when (it.type) {
+                is SportParameterType.Distance -> "/meters"
+                is SportParameterType.Duration -> "/minutes"
+                SportParameterType.Unknown -> ""
+            }
+            val placeholder = when (it.type) {
+                is SportParameterType.Distance -> R.string.sport_customize_distance_placeholder
+                is SportParameterType.Duration -> R.string.sport_customize_duration_placeholder
+                SportParameterType.Unknown -> R.string.empty
+            }
+            SportParameterUiItem(
+                name = it.name.replace(nameFirstLetter, nameFirstLetter.uppercaseChar()),
+                unitSuffix = unitSuffix,
+                placeholder = placeholder,
+                iconRes = parameterIconMap[it.name] ?: -1
+            )
+        }
     }
 
     fun mapSportParameter(parameter: SportParameterUiItem?): SportParameter? {
