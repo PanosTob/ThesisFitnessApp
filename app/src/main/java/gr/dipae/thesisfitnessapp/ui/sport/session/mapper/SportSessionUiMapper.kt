@@ -9,14 +9,13 @@ import javax.inject.Inject
 class SportSessionUiMapper @Inject constructor(
 ) : Mapper {
 
-    operator fun invoke(sportId: String?, sportParameterToBeAchieved: SportParameter?, sportHasMap: Boolean?): SportSessionUiState? {
-        sportId ?: return null
+    operator fun invoke(sportParameterToBeAchieved: SportParameter?, sportHasMap: Boolean?): SportSessionUiState? {
         sportHasMap ?: return null
 
         return SportSessionUiState(
-            sportId,
-            mapState = SportSessionUiMapState(showMap = sportHasMap),
-            sportParameterToBeAchieved
+            hasMap = sportHasMap,
+            mapState = SportSessionUiMapState(),
+            goalParameter = sportParameterToBeAchieved
         )
     }
 
@@ -36,7 +35,7 @@ class SportSessionUiMapper @Inject constructor(
 
     fun toSecondsString(millis: Long): String {
         if (millis == 0L) {
-            return "00:00:00"
+            return ""
         }
         val seconds = (millis / 1000).mod(60)
         val minutes = ((millis / (1000 * 60)).mod(60))

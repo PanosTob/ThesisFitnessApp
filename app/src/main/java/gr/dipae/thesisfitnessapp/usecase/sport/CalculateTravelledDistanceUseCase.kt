@@ -1,0 +1,13 @@
+package gr.dipae.thesisfitnessapp.usecase.sport
+
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.SphericalUtil
+import gr.dipae.thesisfitnessapp.usecase.UseCase
+import javax.inject.Inject
+
+class CalculateTravelledDistanceUseCase @Inject constructor() : UseCase {
+
+    operator fun invoke(userPreviousLocation: LatLng, userNewLocation: LatLng): Double {
+        return SphericalUtil.computeDistanceBetween(userPreviousLocation, userNewLocation)
+    }
+}

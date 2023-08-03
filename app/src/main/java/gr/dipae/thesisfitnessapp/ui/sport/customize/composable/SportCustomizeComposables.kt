@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -41,6 +42,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TextFieldValue
@@ -90,6 +92,7 @@ fun SportCustomizeContent(
                 onClearParameterSelection = { onClearParameterSelection() }
             )
             SportParameterEditText(
+                localFocusManager,
                 uiState.selectedParameter.value,
                 Modifier
                     .fillMaxWidth(0.5f)
@@ -123,6 +126,7 @@ fun SportCustomizeStartButton(
 
 @Composable
 fun SportParameterEditText(
+    localFocusManager: FocusManager,
     parameter: SportParameterUiItem?,
     modifier: Modifier = Modifier,
     onParameterTextChanged: (String) -> Unit
@@ -173,7 +177,8 @@ fun SportParameterEditText(
 
                 TransformedText(annotatedString, offsetMapping)
             },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword, imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = { localFocusManager.clearFocus() })
         )
     }
 }

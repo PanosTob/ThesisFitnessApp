@@ -22,7 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -40,7 +40,6 @@ import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerDouble
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerHalf
 import gr.dipae.thesisfitnessapp.ui.base.compose.ifable
 import gr.dipae.thesisfitnessapp.ui.theme.ColorDisabledButton
-import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondary
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_12dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDouble_32dp
@@ -96,11 +95,12 @@ fun LoginContent(
 
             VerticalSpacerDouble()
 
+            val primaryColor = MaterialTheme.colorScheme.primary
             val googleSignInButtonTextColor by remember(uiState.googleSignInButtonEnabledState.value) {
-                mutableStateOf(if (uiState.googleSignInButtonEnabledState.value) Color.White else ColorDisabledButton)
+                mutableStateOf(if (uiState.googleSignInButtonEnabledState.value) primaryColor else ColorDisabledButton)
             }
             val googleSignInButtonBorderColor by remember(uiState.googleSignInButtonEnabledState.value) {
-                mutableStateOf(if (uiState.googleSignInButtonEnabledState.value) ColorSecondary else ColorDisabledButton)
+                mutableStateOf(if (uiState.googleSignInButtonEnabledState.value) primaryColor else ColorDisabledButton)
             }
             Row(
                 modifier = Modifier
@@ -109,6 +109,7 @@ fun LoginContent(
                     .ifable(uiState.googleSignInButtonEnabledState.value) {
                         clickable { onGoogleSignInClicked() }
                     }
+                    .clip(RoundedCornerShape(SpacingDefault_16dp))
                     .padding(SpacingCustom_12dp),
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically

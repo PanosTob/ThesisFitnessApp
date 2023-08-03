@@ -8,27 +8,32 @@ import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
 import kotlinx.coroutines.flow.MutableStateFlow
 
 data class SportSessionUiState(
-    val sportId: String,
+    val hasMap: Boolean,
+    val showContent: MutableState<Boolean> = mutableStateOf(false),
     val mapState: SportSessionUiMapState,
     val goalParameter: SportParameter?,
     val mainTimerValue: MutableState<String> = mutableStateOf(""),
     val breakTimerValue: MutableState<String> = mutableStateOf(""),
-    val playBreakBtnState: PlayBreakBtnState = PlayBreakBtnState(),
+    val playStateBtn: PlayStateButtonUiItem = PlayStateButtonUiItem(),
     val backToLogin: MutableState<Boolean> = mutableStateOf(false)
 )
 
 data class SportSessionUiMapState(
-    val showMap: Boolean,
-    val isInitialized: MutableState<Boolean> = mutableStateOf(false),
     val userLocation: MutableStateFlow<LatLng> = MutableStateFlow(LatLng(0.0, 0.0))
 )
 
-data class PlayBreakBtnState(
+data class PlayStateButtonUiItem(
     val timerState: MutableState<ContinuationState> = mutableStateOf(ContinuationState.Running),
-    val iconRes: MutableState<Int> = mutableStateOf(R.drawable.ic_pause)
+    val iconRes: MutableState<Int> = mutableStateOf(R.drawable.ic_play),
+    val isEnabled: MutableState<Boolean> = mutableStateOf(false)
 )
 
 sealed class ContinuationState {
     object Running : ContinuationState()
     object Stopped : ContinuationState()
+}
+
+sealed class SportInfoType {
+    object Map : SportInfoType()
+    object Mapless : SportInfoType()
 }

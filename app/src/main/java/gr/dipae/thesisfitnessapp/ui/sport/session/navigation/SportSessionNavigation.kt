@@ -32,6 +32,7 @@ internal val SportSessionRoute = "sports_session${SportSessionArgumentKeys.getCo
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.sportSessionScreen(
     onSportSessionShown: () -> Unit,
+    onSessionStart: () -> Unit,
     popBackToSports: () -> Unit,
     onSportSessionTimerResume: OnSportSessionTimerResume,
     onSportSessionTimerPause: OnSportSessionTimerPause,
@@ -61,6 +62,10 @@ fun NavGraphBuilder.sportSessionScreen(
             SportSessionContent(
                 uiState = uiState,
                 onLocationPermissionsAccepted = { viewModel.onLocationPermissionsAccepted() },
+                onStartAnimationComplete = {
+                    viewModel.onStartAnimationComplete()
+                    onSessionStart()
+                },
                 onMapLoaded = { viewModel.onMapLoaded() },
                 onMyLocationButtonClick = { viewModel.onMyLocationButtonClick() },
                 onSessionFinish = {

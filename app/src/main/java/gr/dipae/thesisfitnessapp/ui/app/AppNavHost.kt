@@ -162,6 +162,8 @@ fun AppNavHost(
                     sportSessionScreen(
                         onSportSessionShown = {
                             viewModel.showSportSessionTopBar()
+                        },
+                        onSessionStart = {
                             viewModel.startStopWatch()
                         },
                         popBackToSports = {
