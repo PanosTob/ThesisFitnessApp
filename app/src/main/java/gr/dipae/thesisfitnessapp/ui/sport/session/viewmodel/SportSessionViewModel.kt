@@ -17,12 +17,14 @@ import gr.dipae.thesisfitnessapp.usecase.sport.CalculateTravelledDistanceUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.GetSportByIdUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.GetSportParameterNavigationArgumentUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.GetSportSessionBreakTimerDurationLiveUseCase
+import gr.dipae.thesisfitnessapp.usecase.sport.GetSportSessionDistanceLiveUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.GetSportSessionDurationLiveUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.GetUserLocationUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.GetUserPreviousLocationUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.PauseSportSessionBreakTimerUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.SetSportSessionDistanceUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.SetSportSessionUseCase
+import gr.dipae.thesisfitnessapp.usecase.sport.SetUserPreviousLocationUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.StartSportSessionBreakTimerUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.StartUserLocationUpdatesUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.StopSportSessionBreakTimerUseCase
@@ -39,8 +41,10 @@ class SportSessionViewModel @Inject constructor(
     private val getSportByIdUseCase: GetSportByIdUseCase,
     private val setSportSessionUseCase: SetSportSessionUseCase,
     private val getUserPreviousLocationUseCase: GetUserPreviousLocationUseCase,
+    private val setUserPreviousLocationUseCase: SetUserPreviousLocationUseCase,
     private val setSportSessionDistanceUseCase: SetSportSessionDistanceUseCase,
     private val calculateTravelledDistanceUseCase: CalculateTravelledDistanceUseCase,
+    private val getSportSessionDistanceLiveUseCase: GetSportSessionDistanceLiveUseCase,
     private val startUserLocationUpdatesUseCase: StartUserLocationUpdatesUseCase,
     private val stopUserLocationUpdatesUseCase: StopUserLocationUpdatesUseCase,
     private val getUserLocationUseCase: GetUserLocationUseCase,
@@ -80,13 +84,13 @@ class SportSessionViewModel @Inject constructor(
         launch {
             jobOfCollectingDuration = viewModelScope.launch {
                 getSportSessionDurationLiveUseCase().collectLatest {
-                    _uiState.value?.mainTimerValue?.value = sportSessionUiMapper.toHundredsOfASecond(it)
+                    _uiState.value?.duration?.value = sportSessionUiMapper.toHundredsOfASecond(it)
                 }
             }
 
             jobOfCollectingBreak = viewModelScope.launch {
                 getSportSessionBreakTimerDurationLiveUseCase().collectLatest {
-                    _uiState.value?.breakTimerValue?.value = sportSessionUiMapper.toSecondsString(it)
+                    _uiState.value?.breakTime?.value = sportSessionUiMapper.toSecondsString(it)
                 }
             }
         }
@@ -94,6 +98,14 @@ class SportSessionViewModel @Inject constructor(
 
     fun onLocationPermissionsAccepted() {
         _uiState.value?.playStateBtn?.isEnabled?.value = true
+    }
+
+    fun onStopSession() {
+        sportId?.apply {
+            jobOfCollectingDuration?.cancel()
+            jobOfCollectingBreak?.cancel()
+            jobOfCollectionUserLocation?.cancel()
+        }
     }
 
     fun onStartAnimationComplete() {
@@ -111,8 +123,12 @@ class SportSessionViewModel @Inject constructor(
         _uiState.value?.apply {
             jobOfCollectionUserLocation = viewModelScope.launch {
                 getUserLocationUseCase().collectLatest {
-                    val distance = calculateTravelledDistanceUseCase(getUserPreviousLocationUseCase(), it)
-                    setSportSessionDistanceUseCase(distance)
+                    val travelledDistance = calculateTravelledDistanceUseCase(getUserPreviousLocationUseCase(), it, getSportSessionDistanceLiveUseCase().value)
+                    distance.value = "${travelledDistance.toInt()}/m"
+
+                    setSportSessionDistanceUseCase(travelledDistance)
+                    setUserPreviousLocationUseCase(it)
+
                     mapState.userLocation.value = it
                 }
             }

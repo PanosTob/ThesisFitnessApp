@@ -12,10 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.compose.ifable
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.PlayStateButtonUiItem
 import gr.dipae.thesisfitnessapp.ui.theme.ColorDisabledButton
-import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
+import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 
 @Composable
 fun SportSessionPlayButton(
@@ -39,12 +40,45 @@ fun SportSessionPlayButton(
                     onClick()
                 }
             }
-            .padding(SpacingHalf_8dp)
+            .padding(SpacingDefault_16dp)
     ) {
         Icon(
             modifier = Modifier.fillMaxSize(),
             painter = painterResource(buttonItem.iconRes.value),
-            tint = MaterialTheme.colorScheme.background,
+            tint = MaterialTheme.colorScheme.surface,
+            contentDescription = ""
+        )
+    }
+}
+
+@Composable
+fun SportSessionStopButton(
+    modifier: Modifier,
+    sessionIsStarted: Boolean,
+    onClick: () -> Unit
+) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    Box(
+        modifier = modifier
+            .graphicsLayer {
+                clip = true
+                shape = CircleShape
+            }
+            .drawBehind {
+                val backgroundColor = if (sessionIsStarted) primaryColor else ColorDisabledButton
+                drawCircle(backgroundColor)
+            }
+            .ifable(sessionIsStarted) {
+                clickable {
+                    onClick()
+                }
+            }
+            .padding(SpacingDefault_16dp)
+    ) {
+        Icon(
+            modifier = Modifier.fillMaxSize(),
+            painter = painterResource(id = R.drawable.ic_stop),
+            tint = MaterialTheme.colorScheme.surface,
             contentDescription = ""
         )
     }

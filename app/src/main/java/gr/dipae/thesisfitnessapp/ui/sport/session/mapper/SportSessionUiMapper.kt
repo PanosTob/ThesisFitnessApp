@@ -35,7 +35,7 @@ class SportSessionUiMapper @Inject constructor(
 
     fun toSecondsString(millis: Long): String {
         if (millis == 0L) {
-            return ""
+            return "-"
         }
         val seconds = (millis / 1000).mod(60)
         val minutes = ((millis / (1000 * 60)).mod(60))

@@ -14,6 +14,7 @@ interface SportsRepository {
     suspend fun setSportSessionDistance(distance: Double)
     fun startUserLocationUpdates(locationUpdateIntervalMillis: Long)
     fun getUserPreviousLocation(): LatLng
+    fun setUserPreviousLocation(location: LatLng)
     fun stopUserLocationUpdated()
     fun sportParameterAsArgumentString(parameter: SportParameter): String
     fun getSportParameterArgument(parameterJson: String): SportParameter?

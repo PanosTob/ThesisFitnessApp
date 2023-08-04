@@ -66,6 +66,10 @@ fun NavGraphBuilder.sportSessionScreen(
                     viewModel.onStartAnimationComplete()
                     onSessionStart()
                 },
+                onStopSession = {
+                    viewModel.onStopSession()
+                    onSportSessionTimerStop()
+                },
                 onMapLoaded = { viewModel.onMapLoaded() },
                 onMyLocationButtonClick = { viewModel.onMyLocationButtonClick() },
                 onSessionFinish = {

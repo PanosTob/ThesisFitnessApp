@@ -1,5 +1,6 @@
 package gr.dipae.thesisfitnessapp.ui.sport.session.composable
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -18,7 +19,7 @@ fun LottieCountDownAnimationOverlay(
     onStartAnimationComplete: OnStartAnimationComplete
 ) {
     if (animationVisibility) {
-        val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.countdown_animation))
+        val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(if (isSystemInDarkTheme()) R.raw.anim_start_session_dark else R.raw.anim_start_session_light))
         val progress by animateLottieCompositionAsState(composition)
         LottieAnimation(
             modifier = modifier,

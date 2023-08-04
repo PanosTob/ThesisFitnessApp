@@ -11,8 +11,10 @@ data class SportSessionUiState(
     val showContent: MutableState<Boolean> = mutableStateOf(false),
     val mapState: SportSessionUiMapState,
     val goalParameter: SportParameter?,
-    val mainTimerValue: MutableState<String> = mutableStateOf(""),
-    val breakTimerValue: MutableState<String> = mutableStateOf(""),
+    val duration: MutableState<String> = mutableStateOf("-"),
+    val breakTime: MutableState<String> = mutableStateOf("-"),
+    val distance: MutableState<String> = mutableStateOf("-"),
+    val pace: MutableState<String> = mutableStateOf("-"),
     val playStateBtn: PlayStateButtonUiItem = PlayStateButtonUiItem(),
     val backToLogin: MutableState<Boolean> = mutableStateOf(false)
 )

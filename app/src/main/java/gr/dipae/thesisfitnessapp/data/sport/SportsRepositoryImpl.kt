@@ -43,6 +43,10 @@ class SportsRepositoryImpl @Inject constructor(
         return dataSource.getUserPreviousLocation()
     }
 
+    override fun setUserPreviousLocation(location: LatLng) {
+        return dataSource.setUserPreviousLocation(location)
+    }
+
     override fun stopUserLocationUpdated() {
         return dataSource.stopUserLocationUpdated()
     }

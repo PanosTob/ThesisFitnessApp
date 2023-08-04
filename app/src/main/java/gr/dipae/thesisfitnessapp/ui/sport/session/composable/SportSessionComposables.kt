@@ -20,18 +20,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.data.sport.location.composable.OnLocationPermissionsAccepted
-import gr.dipae.thesisfitnessapp.ui.base.compose.HorizontalSpacerDefault
+import gr.dipae.thesisfitnessapp.ui.base.compose.HorizontalSpacerHalf
+import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLText
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.ContinuationState
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.SportSessionUiState
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
+import gr.dipae.thesisfitnessapp.ui.theme.openSansFontFamily
 
 internal typealias OnSessionFinish = () -> Unit
 internal typealias OnSportSessionTimerResume = () -> Unit
@@ -40,6 +43,7 @@ internal typealias OnSportSessionTimerStop = () -> Unit
 internal typealias OnMapLoaded = () -> Unit
 internal typealias OnMyLocationButtonClick = () -> Unit
 internal typealias OnStartAnimationComplete = () -> Unit
+internal typealias OnStopSession = () -> Unit
 
 @ExperimentalPermissionsApi
 @Composable
@@ -47,6 +51,7 @@ fun SportSessionContent(
     uiState: SportSessionUiState,
     onLocationPermissionsAccepted: OnLocationPermissionsAccepted,
     onStartAnimationComplete: OnStartAnimationComplete,
+    onStopSession: OnStopSession,
     onMapLoaded: OnMapLoaded,
     onSessionFinish: OnSessionFinish,
     onSportSessionTimerResume: OnSportSessionTimerResume,
@@ -83,23 +88,6 @@ fun SportSessionContent(
                 .fillMaxWidth()
                 .padding(vertical = SpacingDefault_16dp), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            SportSessionPlayButton(
-                modifier = Modifier
-                    .fillMaxWidth(0.2f)
-                    .aspectRatio(1f),
-                buttonItem = uiState.playStateBtn,
-                onClick = {
-                    if (uiState.showContent.value) {
-                        if (uiState.playStateBtn.timerState.value is ContinuationState.Stopped) {
-                            onSportSessionTimerResume()
-                        } else {
-                            onSportSessionTimerPause()
-                        }
-                    } else {
-                        startAnimation = true
-                    }
-                }
-            )
             if (uiState.showContent.value) {
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                     Box(
@@ -112,48 +100,131 @@ fun SportSessionContent(
                             verticalArrangement = Arrangement.spacedBy(SpacingDefault_16dp)
                         ) {
                             ThesisFitnessHLText(
-                                text = uiState.mainTimerValue.value,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = 64.sp
+                                text = uiState.duration.value,
+                                color = MaterialTheme.colorScheme.background,
+                                fontSize = 48.sp,
+                                style = TextStyle(fontFamily = openSansFontFamily)
                             )
-                            if (uiState.breakTimerValue.value.isNotBlank()) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.Center,
-                                    verticalAlignment = Alignment.CenterVertically
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = SpacingCustom_24dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column(
+                                    Modifier.fillMaxWidth(0.3f),
+                                    horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
-                                    ThesisFitnessHLText(
+                                    ThesisFitnessHLAutoSizeText(
                                         text = stringResource(id = R.string.sport_session_stop_watch_break_timer_label),
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontSize = 32.sp
+                                        color = MaterialTheme.colorScheme.surface,
+                                        maxFontSize = 16.sp,
+                                        style = TextStyle(fontFamily = openSansFontFamily)
                                     )
-                                    HorizontalSpacerDefault()
-                                    ThesisFitnessHLText(
-                                        text = uiState.breakTimerValue.value,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontSize = 32.sp
+                                    HorizontalSpacerHalf()
+                                    ThesisFitnessHLAutoSizeText(
+                                        text = uiState.breakTime.value,
+                                        color = MaterialTheme.colorScheme.surface,
+                                        maxFontSize = 16.sp,
+                                        maxLines = 1,
+                                        style = TextStyle(fontFamily = openSansFontFamily)
+                                    )
+                                }
+                                Column(
+                                    Modifier.fillMaxWidth(0.3f / 0.7f),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    ThesisFitnessHLAutoSizeText(
+                                        text = stringResource(id = R.string.sport_session_pace_label),
+                                        color = MaterialTheme.colorScheme.surface,
+                                        maxFontSize = 16.sp,
+                                        style = TextStyle(fontFamily = openSansFontFamily)
+                                    )
+                                    HorizontalSpacerHalf()
+                                    ThesisFitnessHLAutoSizeText(
+                                        text = "-",
+                                        color = MaterialTheme.colorScheme.surface,
+                                        maxFontSize = 16.sp,
+                                        maxLines = 1,
+                                        style = TextStyle(fontFamily = openSansFontFamily)
+                                    )
+                                }
+                                Column(
+                                    Modifier.fillMaxWidth(0.3f / 0.4f),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    ThesisFitnessHLAutoSizeText(
+                                        text = stringResource(id = R.string.sport_session_distance_label),
+                                        color = MaterialTheme.colorScheme.surface,
+                                        maxFontSize = 16.sp,
+                                        style = TextStyle(fontFamily = openSansFontFamily)
+                                    )
+                                    HorizontalSpacerHalf()
+                                    ThesisFitnessHLAutoSizeText(
+                                        text = uiState.distance.value,
+                                        color = MaterialTheme.colorScheme.surface,
+                                        maxFontSize = 16.sp,
+                                        maxLines = 1,
+                                        style = TextStyle(fontFamily = openSansFontFamily)
                                     )
                                 }
                             }
                         }
                     }
                 }
-                Box(
+            }
+
+            HorizontalSpacerHalf()
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = SpacingCustom_24dp), horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                SportSessionPlayButton(
                     modifier = Modifier
-                        .fillMaxWidth(0.7f)
-                        .aspectRatio(5f)
-                        .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(SpacingDefault_16dp))
-                        .clickable { onSessionFinish() }
-                        .padding(SpacingHalf_8dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    ThesisFitnessHLText(
-                        text = stringResource(R.string.sport_session_button),
-                        fontSize = 32.sp,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.background
-                    )
-                }
+                        .fillMaxWidth(0.25f)
+                        .aspectRatio(1f),
+                    buttonItem = uiState.playStateBtn,
+                    onClick = {
+                        if (uiState.showContent.value) {
+                            if (uiState.playStateBtn.timerState.value is ContinuationState.Stopped) {
+                                onSportSessionTimerResume()
+                            } else {
+                                onSportSessionTimerPause()
+                            }
+                        } else {
+                            startAnimation = true
+                        }
+                    }
+                )
+
+                SportSessionStopButton(
+                    modifier = Modifier
+                        .fillMaxWidth(0.25f / 0.75f)
+                        .aspectRatio(1f),
+                    sessionIsStarted = uiState.showContent.value,
+                    onClick = {
+                        onStopSession()
+                    }
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
+                    .aspectRatio(5f)
+                    .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(SpacingDefault_16dp))
+                    .clickable { onSessionFinish() }
+                    .padding(SpacingHalf_8dp),
+                contentAlignment = Alignment.Center
+            ) {
+                ThesisFitnessHLText(
+                    text = stringResource(R.string.sport_session_button),
+                    fontSize = 32.sp,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.background
+                )
             }
         }
     }
