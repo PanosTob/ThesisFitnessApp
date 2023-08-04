@@ -143,7 +143,7 @@ fun SportSessionContent(
                                     )
                                     HorizontalSpacerHalf()
                                     ThesisFitnessHLAutoSizeText(
-                                        text = "-",
+                                        text = uiState.pace.value,
                                         color = MaterialTheme.colorScheme.surface,
                                         maxFontSize = 16.sp,
                                         maxLines = 1,

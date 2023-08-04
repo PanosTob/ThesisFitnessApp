@@ -29,7 +29,7 @@ class SportsMapper @Inject constructor() : Mapper {
         return listOf(
             SportParameterRequest(
                 name = "distance",
-                value = distance,
+                value = distance.toLong(),
                 achieved = goalParameter?.type is SportParameterType.Distance && distance <= goalParameter.value
             ),
             SportParameterRequest(

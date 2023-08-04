@@ -9,6 +9,6 @@ class CalculateTravelledDistanceUseCase @Inject constructor() : UseCase {
 
     operator fun invoke(userPreviousLocation: LatLng, userNewLocation: LatLng, travelledDistanceSoFar: Double): Double {
         if (userPreviousLocation.latitude == 0.0 && userPreviousLocation.longitude == 0.0) return 0.0
-        return travelledDistanceSoFar + SphericalUtil.computeDistanceBetween(userPreviousLocation, userNewLocation)
+        return (travelledDistanceSoFar + SphericalUtil.computeDistanceBetween(userPreviousLocation, userNewLocation) / 1000)
     }
 }

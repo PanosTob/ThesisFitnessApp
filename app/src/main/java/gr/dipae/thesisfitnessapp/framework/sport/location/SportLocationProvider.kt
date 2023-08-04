@@ -3,6 +3,7 @@ package gr.dipae.thesisfitnessapp.framework.sport.location
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Looper
+import com.google.android.gms.location.Granularity
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -42,7 +43,7 @@ class SportLocationProvider(private val context: Context) {
     @SuppressLint("MissingPermission")
     fun startUserLocationUpdates(locationUpdateIntervalMillis: Long) {
         client.requestLocationUpdates(
-            LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, locationUpdateIntervalMillis).build(),
+            LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, locationUpdateIntervalMillis).setWaitForAccurateLocation(true).setGranularity(Granularity.GRANULARITY_FINE).build(),
             locationCallback,
             Looper.getMainLooper()
         )
