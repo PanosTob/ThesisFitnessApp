@@ -51,6 +51,7 @@ android {
     buildFeatures {
         compose = true
         viewBinding = true
+        buildConfig = true
     }
 
     lint {
@@ -95,6 +96,7 @@ android {
             dimension = "env"
             applicationIdSuffix = ".dev"
             resValue("string", "app_name", "Thesis Fitness DEV")
+            buildConfigField("String", "GOOGLE_STORAGE_FIREBASE", "\"gs://thesis-fitness-app-8c2a1.appspot.com/\"")
 
             signingConfig = signingConfigs.getByName("debug")
         }
@@ -102,7 +104,7 @@ android {
         create("prod") {
             dimension = "env"
             resValue("string", "app_name", "Thesis Fitness")
-
+            buildConfigField("String", "GOOGLE_STORAGE_FIREBASE", "\"gs://thesis-fitness-app-8c2a1.appspot.com/\"")
 //            signingConfig = signingConfigs.getByName("release")
         }
     }
@@ -187,6 +189,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
     implementation("com.google.android.gms:play-services-auth:20.6.0")
 
     //Room Libs

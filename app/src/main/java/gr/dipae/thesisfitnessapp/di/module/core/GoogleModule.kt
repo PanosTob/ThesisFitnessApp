@@ -8,11 +8,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.firestore.ktx.memoryCacheSettings
+import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import gr.dipae.thesisfitnessapp.BuildConfig
 import gr.dipae.thesisfitnessapp.R
 
 @Module
@@ -47,6 +49,11 @@ object GoogleModule {
                 setLocalCacheSettings(memoryCacheSettings {})
             }
         }
+
+    @Provides
+    fun provideFirebaseStorage(): FirebaseStorage {
+        return FirebaseStorage.getInstance(BuildConfig.GOOGLE_STORAGE_FIREBASE)
+    }
 
     @Provides
     fun provideFirebaseAuthentication(): FirebaseAuth =
