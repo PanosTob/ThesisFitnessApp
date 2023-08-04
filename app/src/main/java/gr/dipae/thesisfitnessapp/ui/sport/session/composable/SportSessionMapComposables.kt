@@ -58,7 +58,7 @@ fun sportSessionCameraPosition(
     val cameraPositionState = rememberCameraPositionState()
 
     LaunchedEffect(key1 = userLocation) {
-        cameraPositionState.move(CameraUpdateFactory.newCameraPosition(CameraPosition(userLocation, 10f, 0f, 0f)))
+        cameraPositionState.animate(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(userLocation, 16f)), 1000)
     }
 
     return cameraPositionState

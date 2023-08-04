@@ -25,10 +25,10 @@ class SportLocationProvider(private val context: Context) {
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             locationResult.locations.lastOrNull()?.let {
-                _userLastLocation = LatLng(it.longitude, it.longitude)
+                _userLastLocation = LatLng(it.latitude, it.longitude)
             }
             locationResult.lastLocation?.let {
-                _userLiveLocation.value = LatLng(it.longitude, it.longitude)
+                _userLiveLocation.value = LatLng(it.latitude, it.longitude)
             }
         }
     }
