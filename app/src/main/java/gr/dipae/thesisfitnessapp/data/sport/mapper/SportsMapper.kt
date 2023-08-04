@@ -10,6 +10,7 @@ import gr.dipae.thesisfitnessapp.domain.sport.entity.SportDetails
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameterArgument
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameterType
+import gr.dipae.thesisfitnessapp.util.ext.toDoubleWithSpecificDecimals
 import javax.inject.Inject
 
 class SportsMapper @Inject constructor() : Mapper {
@@ -25,24 +26,21 @@ class SportsMapper @Inject constructor() : Mapper {
         )
     }
 
-    operator fun invoke(distance: Double, duration: Long, goalParameter: SportParameter?): List<SportParameterRequest> {
+    operator fun invoke(distance: Double, duration: Long, goalParameter: Pair<SportParameter?, Boolean>): List<SportParameterRequest> {
         return listOf(
             SportParameterRequest(
                 name = "distance",
-                value = distance.toLong(),
-                achieved = goalParameter?.type is SportParameterType.Distance && distance <= goalParameter.value
+                value = distance.toDoubleWithSpecificDecimals(2),
+                achieved = goalParameter.first?.type is SportParameterType.Distance && goalParameter.second
             ),
             SportParameterRequest(
                 name = "duration",
                 value = duration,
-                achieved = goalParameter?.type is SportParameterType.Duration && convertMillisToMinutes(duration) >= goalParameter.value
+                achieved = goalParameter.first?.type is SportParameterType.Duration && goalParameter.second
             )
         )
     }
 
-    private fun convertMillisToMinutes(durationMillis: Long): Int {
-        return ((durationMillis / (1000 * 60)).mod(60))
-    }
 
     fun mapSportParameterArgument(parameter: SportParameter): SportParameterArgument {
         return SportParameterArgument(

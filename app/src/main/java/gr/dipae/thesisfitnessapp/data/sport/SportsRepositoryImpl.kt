@@ -27,7 +27,7 @@ class SportsRepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun setSportSession(sportId: String, distance: Double, duration: Long, breakTime: Long, goalParameter: SportParameter?) {
+    override suspend fun setSportSession(sportId: String, distance: Double, duration: Long, breakTime: Long, goalParameter: Pair<SportParameter?, Boolean>) {
         return dataSource.setSportSession(sportsMapper(sportId, breakTime), sportsMapper(distance, duration, goalParameter))
     }
 
