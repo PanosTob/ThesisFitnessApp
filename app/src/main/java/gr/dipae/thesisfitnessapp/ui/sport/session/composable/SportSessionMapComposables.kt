@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -25,22 +24,14 @@ fun SportSessionMapContent(
     modifier: Modifier = Modifier,
     mapState: SportSessionUiMapState,
     showContent: Boolean,
-    animationVisibility: Boolean,
     onLocationPermissionsAccepted: OnLocationPermissionsAccepted,
     onMapLoaded: OnMapLoaded,
     onMyLocationButtonClick: OnMyLocationButtonClick,
-    onStartAnimationComplete: () -> Unit
 ) {
     LocationPermissionsHandler { onLocationPermissionsAccepted() }
-    LottieCountDownAnimationOverlay(
-        modifier = modifier,
-        animationVisibility = animationVisibility,
-        onStartAnimationComplete = { onStartAnimationComplete() }
-    )
     if (showContent) {
         val cameraPositionState = sportSessionCameraPosition(mapState.userLocation.value)
 
-        val a = LocalContext.current
         GoogleMap(
             modifier = modifier,
             cameraPositionState = cameraPositionState,

@@ -66,6 +66,16 @@ fun SportSessionContent(
         verticalArrangement = Arrangement.Bottom
     ) {
         var startAnimation by remember { mutableStateOf(false) }
+        LottieCountDownAnimationOverlay(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1.5f),
+            animationVisibility = startAnimation,
+            onStartAnimationComplete = {
+                onStartAnimationComplete()
+                startAnimation = false
+            }
+        )
         if (uiState.hasMap) {
             SportSessionMapContent(
                 modifier = Modifier
@@ -73,14 +83,9 @@ fun SportSessionContent(
                     .weight(1.5f),
                 mapState = uiState.mapState,
                 showContent = uiState.showContent.value,
-                animationVisibility = startAnimation,
                 onLocationPermissionsAccepted = { onLocationPermissionsAccepted() },
                 onMapLoaded = { onMapLoaded() },
                 onMyLocationButtonClick = { onMyLocationButtonClick() },
-                onStartAnimationComplete = {
-                    onStartAnimationComplete()
-                    startAnimation = false
-                }
             )
         }
         Column(
