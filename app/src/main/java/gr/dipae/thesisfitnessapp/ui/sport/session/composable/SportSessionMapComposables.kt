@@ -3,6 +3,8 @@ package gr.dipae.thesisfitnessapp.ui.sport.session.composable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -11,6 +13,7 @@ import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import gr.dipae.thesisfitnessapp.data.sport.location.composable.LocationPermissionsHandler
 import gr.dipae.thesisfitnessapp.data.sport.location.composable.OnLocationPermissionsAccepted
@@ -37,13 +40,14 @@ fun SportSessionMapContent(
     if (showContent) {
         val cameraPositionState = sportSessionCameraPosition(mapState.userLocation.value)
 
+        val a = LocalContext.current
         GoogleMap(
             modifier = modifier,
             cameraPositionState = cameraPositionState,
             properties = MapProperties(isMyLocationEnabled = true),
             uiSettings = MapUiSettings(mapToolbarEnabled = false),
-            onMapLoaded = {
-//                onMapLoaded()
+            content = {
+                Polyline(points = mapState.userRoute.value, color = Color.Black)
             }
         )
 

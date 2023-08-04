@@ -11,6 +11,7 @@ interface SportsRepository {
     suspend fun getSportById(sportId: String): Sport?
     suspend fun setSportSession(sportId: String, distance: Double, duration: Long, breakTime: Long, goalParameter: Pair<SportParameter?, Boolean>)
     fun getUserLocation(): Flow<LatLng>
+    fun getUserMapRoute(): List<LatLng>
     suspend fun setSportSessionDistance(distance: Double)
     fun startUserLocationUpdates(locationUpdateIntervalMillis: Long)
     fun getUserPreviousLocation(): LatLng

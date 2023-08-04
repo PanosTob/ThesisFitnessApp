@@ -35,6 +35,10 @@ class SportsRepositoryImpl @Inject constructor(
         return dataSource.getUserLocation()
     }
 
+    override fun getUserMapRoute(): List<LatLng> {
+        return dataSource.getUserMapRoute()
+    }
+
     override fun startUserLocationUpdates(locationUpdateIntervalMillis: Long) {
         return dataSource.startUserLocationUpdates(locationUpdateIntervalMillis)
     }

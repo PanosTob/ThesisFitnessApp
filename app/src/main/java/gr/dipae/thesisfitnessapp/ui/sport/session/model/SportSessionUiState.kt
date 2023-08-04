@@ -20,7 +20,8 @@ data class SportSessionUiState(
 )
 
 data class SportSessionUiMapState(
-    val userLocation: MutableState<LatLng> = mutableStateOf(LatLng(0.0, 0.0))
+    val userLocation: MutableState<LatLng> = mutableStateOf(LatLng(0.0, 0.0)),
+    val userRoute: MutableState<List<LatLng>> = mutableStateOf(emptyList())
 )
 
 data class PlayStateButtonUiItem(

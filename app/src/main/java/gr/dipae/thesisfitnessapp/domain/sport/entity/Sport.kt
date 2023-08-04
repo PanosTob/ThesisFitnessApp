@@ -27,7 +27,7 @@ data class SportParameterArgument(
 )
 
 sealed class SportParameterType {
-    class Distance : SportParameterType()
-    class Duration : SportParameterType()
+    object Distance : SportParameterType()
+    object Duration : SportParameterType()
     object Unknown : SportParameterType()
 }

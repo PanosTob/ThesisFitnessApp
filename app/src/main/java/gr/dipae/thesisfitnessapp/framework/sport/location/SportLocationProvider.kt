@@ -22,6 +22,10 @@ class SportLocationProvider(private val context: Context) {
     val userPreviousLocation: LatLng
         get() = _userPreviousLocation
 
+    private var _userRoute: MutableList<LatLng> = mutableListOf()
+    val userRoute: List<LatLng>
+        get() = _userRoute
+
     private val _userLiveLocation: MutableStateFlow<LatLng> = MutableStateFlow(LatLng(0.0, 0.0))
     val userLiveLocation = _userLiveLocation.asStateFlow()
 
@@ -30,7 +34,9 @@ class SportLocationProvider(private val context: Context) {
             Timber.tag(SportLocationProvider::class.java.toString()).i("New Location: Lat - ${locationResult.lastLocation?.latitude}, Long - ${locationResult.lastLocation?.longitude}")
 
             locationResult.lastLocation?.let {
-                _userLiveLocation.value = LatLng(it.latitude, it.longitude)
+                val userNewLocation = LatLng(it.latitude, it.longitude)
+                _userLiveLocation.value = userNewLocation
+                _userRoute.add(userNewLocation)
             }
         }
     }

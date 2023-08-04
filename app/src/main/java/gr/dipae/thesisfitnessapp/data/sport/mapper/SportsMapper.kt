@@ -87,8 +87,8 @@ class SportsMapper @Inject constructor() : Mapper {
 
     companion object {
         val sportParameterTypesMap = linkedMapOf(
-            "duration" to SportParameterType.Duration(),
-            "distance" to SportParameterType.Distance()
+            "duration" to SportParameterType.Duration,
+            "distance" to SportParameterType.Distance
         )
     }
 }

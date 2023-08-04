@@ -60,6 +60,10 @@ class SportsDataSourceImpl @Inject constructor(
         return sportLocationProvider.userPreviousLocation
     }
 
+    override fun getUserMapRoute(): List<LatLng> {
+        return sportLocationProvider.userRoute
+    }
+
     override fun setUserPreviousLocation(location: LatLng) {
         sportLocationProvider.setUserPreviousLocation(location)
     }
