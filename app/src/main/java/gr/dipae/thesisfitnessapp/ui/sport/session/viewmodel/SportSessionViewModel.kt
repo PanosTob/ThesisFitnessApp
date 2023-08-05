@@ -109,7 +109,11 @@ class SportSessionViewModel @Inject constructor(
             jobOfCollectingDuration?.cancel()
             jobOfCollectingBreak?.cancel()
             jobOfCollectionUserLocation?.cancel()
-            _uiState.value?.playStateBtn?.isEnabled?.value = false
+            _uiState.value?.playStateBtn?.apply {
+                isEnabled.value = false
+                iconRes.value = R.drawable.ic_play
+            }
+            _uiState.value?.stopBtnEnabled?.value = false
         }
     }
 
@@ -121,6 +125,7 @@ class SportSessionViewModel @Inject constructor(
     private fun showContent() {
         _uiState.value?.showContent?.value = true
         _uiState.value?.playStateBtn?.iconRes?.value = R.drawable.ic_pause
+        _uiState.value?.stopBtnEnabled?.value = true
         startLocationUpdatesListener()
     }
 

@@ -54,7 +54,7 @@ fun SportSessionPlayButton(
 @Composable
 fun SportSessionStopButton(
     modifier: Modifier,
-    sessionIsStarted: Boolean,
+    isEnabled: Boolean,
     onClick: () -> Unit
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
@@ -65,10 +65,10 @@ fun SportSessionStopButton(
                 shape = CircleShape
             }
             .drawBehind {
-                val backgroundColor = if (sessionIsStarted) primaryColor else ColorDisabledButton
+                val backgroundColor = if (isEnabled) primaryColor else ColorDisabledButton
                 drawCircle(backgroundColor)
             }
-            .ifable(sessionIsStarted) {
+            .ifable(isEnabled) {
                 clickable {
                     onClick()
                 }

@@ -208,7 +208,7 @@ fun SportSessionContent(
                     modifier = Modifier
                         .fillMaxWidth(0.25f / 0.75f)
                         .aspectRatio(1f),
-                    sessionIsStarted = uiState.showContent.value,
+                    isEnabled = uiState.stopBtnEnabled.value,
                     onClick = {
                         onStopSession()
                     }

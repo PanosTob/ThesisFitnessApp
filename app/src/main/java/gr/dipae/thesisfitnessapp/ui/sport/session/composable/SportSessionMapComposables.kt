@@ -31,7 +31,7 @@ fun SportSessionMapContent(
     onMyLocationButtonClick: OnMyLocationButtonClick,
 ) {
     LocationPermissionsHandler { onLocationPermissionsAccepted() }
-    if (showContent) {
+    if (showContent && mapState.userLocation.value != null) {
         val cameraPositionState = sportSessionCameraPosition(mapState.userLocation.value)
         val userRoute = remember { mutableStateListOf(mapState.userLocation.value) }
         LaunchedEffect(key1 = mapState.userLocation.value) {
@@ -44,7 +44,7 @@ fun SportSessionMapContent(
             properties = MapProperties(isMyLocationEnabled = true),
             uiSettings = MapUiSettings(mapToolbarEnabled = false),
             content = {
-                Polyline(points = userRoute, color = Color.Black)
+                Polyline(points = userRoute.toList().filterNotNull(), color = Color.Black)
             }
         )
 
@@ -53,13 +53,15 @@ fun SportSessionMapContent(
 
 @Composable
 fun sportSessionCameraPosition(
-    userLocation: LatLng
+    userLocation: LatLng?
 ): CameraPositionState {
 
     val cameraPositionState = rememberCameraPositionState()
 
     LaunchedEffect(key1 = userLocation) {
-        cameraPositionState.animate(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(userLocation, 17f)), 1000)
+        if (userLocation != null) {
+            cameraPositionState.animate(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(userLocation, 17f)), 1000)
+        }
     }
 
     return cameraPositionState
