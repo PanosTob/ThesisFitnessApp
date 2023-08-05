@@ -31,6 +31,7 @@ import gr.dipae.thesisfitnessapp.ui.lobby.composable.LobbyBottomNavItem
 import gr.dipae.thesisfitnessapp.ui.lobby.home.navigation.HomeRoute
 import gr.dipae.thesisfitnessapp.ui.lobby.home.navigation.homeScreen
 import gr.dipae.thesisfitnessapp.ui.lobby.viewModel.LobbyViewModel
+import gr.dipae.thesisfitnessapp.ui.onboarding.navigation.OnBoardingNavHostRoute
 import gr.dipae.thesisfitnessapp.ui.profile.navigation.profileScreen
 import gr.dipae.thesisfitnessapp.ui.sport.customize.navigation.navigateToSportCustomize
 import gr.dipae.thesisfitnessapp.ui.sport.customize.navigation.sportCustomizeScreen
@@ -41,7 +42,6 @@ import gr.dipae.thesisfitnessapp.ui.sport.session.navigation.sportSessionScreen
 import gr.dipae.thesisfitnessapp.ui.theme.ColorBottomNavBar
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.workout.navigation.workoutScreen
-import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
 import gr.dipae.thesisfitnessapp.util.ext.singleNavigateWithPopInclusive
 
 internal const val LobbyNavHostRoute = "lobby_nav_host"
@@ -164,5 +164,5 @@ fun NavGraphBuilder.lobbyNavHost(
 }
 
 fun NavController.navigateToLobbyNavHost() {
-    singleNavigate(LobbyNavHostRoute)
+    singleNavigateWithPopInclusive(LobbyNavHostRoute, OnBoardingNavHostRoute)
 }

@@ -18,12 +18,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import gr.dipae.thesisfitnessapp.R
-import gr.dipae.thesisfitnessapp.ui.lobby.home.navigation.navigateToHome
 import gr.dipae.thesisfitnessapp.ui.lobby.navhost.lobbyNavHost
 import gr.dipae.thesisfitnessapp.ui.lobby.navhost.navigateToLobbyNavHost
 import gr.dipae.thesisfitnessapp.ui.onboarding.navigation.OnBoardingNavHostRoute
 import gr.dipae.thesisfitnessapp.ui.onboarding.navigation.onBoardingNavHost
-import gr.dipae.thesisfitnessapp.ui.profile.navigation.ProfileRoute
 import gr.dipae.thesisfitnessapp.ui.welcome.navigation.LoginRoute
 import gr.dipae.thesisfitnessapp.ui.wizard.navigation.navigateToWizard
 import kotlinx.coroutines.flow.collectLatest
@@ -54,12 +52,12 @@ fun AppNavHost(
         }
         LaunchedEffect(viewModel, lifecycle) {
             snapshotFlow { navigateToLobby.value }.filterNotNull().filter { it }.flowWithLifecycle(lifecycle).collectLatest {
-                navController.navigateToHome()
+                navController.navigateToLobbyNavHost()
             }
         }
         LaunchedEffect(viewModel, lifecycle) {
             snapshotFlow { navigateBackToLogin.value }.filterNotNull().filter { it }.flowWithLifecycle(lifecycle).collectLatest {
-                navController.navigateBackToLogin()
+                navController.navigateUp()
             }
         }
 
@@ -84,9 +82,9 @@ fun AppNavHost(
     }
 }
 
-fun NavController.navigateBackToLogin() {
+fun NavController.navigateBackToOnBoadingNavHost() {
     if (currentDestination?.route != LoginRoute) {
-        val navOptions = NavOptions.Builder().setPopUpTo(ProfileRoute, true).setEnterAnim(R.anim.slide_in_left).build()
-        navigate(LoginRoute, navOptions)
+        val navOptions = NavOptions.Builder().setPopUpTo(OnBoardingNavHostRoute, false).setEnterAnim(R.anim.slide_in_left).build()
+        navigate(OnBoardingNavHostRoute, navOptions)
     }
 }

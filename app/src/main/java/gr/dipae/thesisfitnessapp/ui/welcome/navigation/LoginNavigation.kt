@@ -20,12 +20,11 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 
 
-internal const val LoginRoute = "welcome"
+internal const val LoginRoute = "login"
 
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.loginScreen(
-    onGoogleSignInClicked: (IntentSender) -> Unit,
-    onLogoutPressed: () -> Unit
+    onGoogleSignInClicked: (IntentSender) -> Unit
 ) {
     composable(LoginRoute) {
         val viewModel: LoginViewModel = hiltViewModel()

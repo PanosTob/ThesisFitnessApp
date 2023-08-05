@@ -35,8 +35,7 @@ fun OnBoardingNavHost(
             }
         }
         loginScreen(
-            onGoogleSignInClicked = { onGoogleSignInClicked(it) },
-            onLogoutPressed = {}
+            onGoogleSignInClicked = { onGoogleSignInClicked(it) }
         )
         wizardScreen {
             navController.navigateToHome()
