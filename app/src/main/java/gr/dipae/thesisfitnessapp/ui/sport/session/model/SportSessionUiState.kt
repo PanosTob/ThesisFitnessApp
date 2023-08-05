@@ -17,11 +17,12 @@ data class SportSessionUiState(
     val pace: MutableState<String> = mutableStateOf("-"),
     val playStateBtn: PlayStateButtonUiItem = PlayStateButtonUiItem(),
     val stopBtnEnabled: MutableState<Boolean> = mutableStateOf(false),
-    val backToLogin: MutableState<Boolean> = mutableStateOf(false)
+    val backToSports: MutableState<Boolean> = mutableStateOf(false)
 )
 
 data class SportSessionUiMapState(
-    val userLocation: MutableState<LatLng?> = mutableStateOf(null)
+    val userLocation: MutableState<LatLng?> = mutableStateOf(null),
+    val userRoute: MutableState<List<List<LatLng>>> = mutableStateOf(emptyList())
 )
 
 data class PlayStateButtonUiItem(

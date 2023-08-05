@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import timber.log.Timber
 
-class SportLocationProvider(private val context: Context) {
+class SportSessionLocationProvider(private val context: Context) {
 
     private val client by lazy { LocationServices.getFusedLocationProviderClient(context) }
 
@@ -22,27 +22,27 @@ class SportLocationProvider(private val context: Context) {
     val userPreviousLocation: LatLng
         get() = _userPreviousLocation
 
-    private var _userRoute: MutableList<LatLng> = mutableListOf()
-    val userRoute: List<LatLng>
+    private var _userRoute: MutableList<MutableList<LatLng>> = mutableListOf(mutableListOf())
+    val userRoute: List<List<LatLng>>
         get() = _userRoute
 
-    private val _userLiveLocation: MutableStateFlow<LatLng> = MutableStateFlow(LatLng(0.0, 0.0))
+    private val _userLiveLocation: MutableStateFlow<LatLng?> = MutableStateFlow(null)
     val userLiveLocation = _userLiveLocation.asStateFlow()
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-            Timber.tag(SportLocationProvider::class.java.toString()).i("New Location: Lat - ${locationResult.lastLocation?.latitude}, Long - ${locationResult.lastLocation?.longitude}")
+            Timber.tag(SportSessionLocationProvider::class.java.toString()).i("New Location: Lat - ${locationResult.lastLocation?.latitude}, Long - ${locationResult.lastLocation?.longitude}")
 
             locationResult.lastLocation?.let {
                 val userNewLocation = LatLng(it.latitude, it.longitude)
                 _userLiveLocation.value = userNewLocation
-                _userRoute.add(userNewLocation)
+                _userRoute.lastOrNull()?.add(userNewLocation)
             }
         }
     }
 
     fun setUserPreviousLocation(location: LatLng) {
-        Timber.tag(SportLocationProvider::class.java.toString()).i("Previous Location: Lat - ${location.latitude}, Long - ${location.longitude}")
+        Timber.tag(SportSessionLocationProvider::class.java.toString()).i("Previous Location: Lat - ${location.latitude}, Long - ${location.longitude}")
         _userPreviousLocation = location
     }
 
@@ -58,6 +58,19 @@ class SportLocationProvider(private val context: Context) {
 
     fun stopTracking() {
         client.removeLocationUpdates(locationCallback)
+        _userRoute.add(mutableListOf())
+    }
+
+    companion object {
+
+        @Volatile
+        private var INSTANCE: SportSessionLocationProvider? = null
+
+        fun getInstance(context: Context): SportSessionLocationProvider {
+            return INSTANCE ?: synchronized(this) {
+                SportSessionLocationProvider(context).also { INSTANCE = it }
+            }
+        }
     }
 }
 

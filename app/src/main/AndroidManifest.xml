@@ -46,7 +46,7 @@
         </activity>
 
         <service
-            android:name=".framework.service.StopWatchService"
+            android:name=".framework.service.SportSessionService"
             android:enabled="true"
             android:exported="false" />
 

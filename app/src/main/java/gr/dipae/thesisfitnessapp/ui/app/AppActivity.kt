@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.Observer
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
-import gr.dipae.thesisfitnessapp.framework.service.StopWatchService
+import gr.dipae.thesisfitnessapp.framework.service.SportSessionService
 import gr.dipae.thesisfitnessapp.ui.app.composable.ActivityProgressContainer
 import gr.dipae.thesisfitnessapp.ui.base.BaseActivity
 import gr.dipae.thesisfitnessapp.ui.livedata.LoadingLiveData
@@ -89,18 +89,18 @@ class AppActivity : BaseActivity() {
     //STOP WATCH SERVICE
     private fun startStopWatch(unit: Unit) {
         startService(
-            Intent(this, StopWatchService::class.java).apply { action = StopWatchService.STOP_WATCH_ACTION_START }
+            Intent(this, SportSessionService::class.java).apply { action = SportSessionService.STOP_WATCH_ACTION_START }
         )
     }
 
     private fun pauseStopWatch(unit: Unit) {
         startService(
-            Intent(this, StopWatchService::class.java).apply { action = StopWatchService.STOP_WATCH_ACTION_PAUSE }
+            Intent(this, SportSessionService::class.java).apply { action = SportSessionService.STOP_WATCH_ACTION_PAUSE }
         )
     }
 
     private fun stopStopWatch(unit: Unit) {
-        stopService(Intent(this, StopWatchService::class.java))
+        stopService(Intent(this, SportSessionService::class.java))
     }
 
     companion object {

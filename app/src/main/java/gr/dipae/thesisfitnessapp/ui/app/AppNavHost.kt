@@ -163,9 +163,6 @@ fun AppNavHost(
                         onSportSessionShown = {
                             viewModel.showSportSessionTopBar()
                         },
-                        onSessionStart = {
-                            viewModel.startStopWatch()
-                        },
                         popBackToSports = {
                             navController.popBackStack(route = SportsRoute, inclusive = false)
                         },

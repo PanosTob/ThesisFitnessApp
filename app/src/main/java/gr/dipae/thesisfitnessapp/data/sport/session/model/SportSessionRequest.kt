@@ -1,4 +1,4 @@
-package gr.dipae.thesisfitnessapp.data.sport.model
+package gr.dipae.thesisfitnessapp.data.sport.session.model
 
 import com.google.firebase.firestore.PropertyName
 

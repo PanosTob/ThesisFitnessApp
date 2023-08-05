@@ -1,14 +1,17 @@
 package gr.dipae.thesisfitnessapp.data.sport.broadcast
 
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.util.Timer
+import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
-class SportSessionBreakTimerBroadcast {
+@ViewModelScoped
+class SportSessionBreakTimer @Inject constructor() {
 
     private var breakDuration: Duration = Duration.ZERO
     private lateinit var breakTimer: Timer
@@ -32,17 +35,5 @@ class SportSessionBreakTimerBroadcast {
     fun clear() {
         pauseBreakTimer()
         _breakTimerMillisPassed.update { 0 }
-    }
-
-    companion object {
-
-        @Volatile
-        private var INSTANCE: SportSessionBreakTimerBroadcast? = null
-
-        fun getInstance(): SportSessionBreakTimerBroadcast {
-            return INSTANCE ?: synchronized(this) {
-                SportSessionBreakTimerBroadcast().also { INSTANCE = it }
-            }
-        }
     }
 }

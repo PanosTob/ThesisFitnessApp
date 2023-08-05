@@ -21,11 +21,6 @@ data class SportParameter(
     val value: Long = 0
 )
 
-data class SportParameterArgument(
-    val name: String,
-    val value: Long = 0
-)
-
 sealed class SportParameterType {
     object Distance : SportParameterType()
     object Duration : SportParameterType()

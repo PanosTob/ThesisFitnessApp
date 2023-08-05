@@ -10,61 +10,39 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.data.sport.SportsDataSource
 import gr.dipae.thesisfitnessapp.data.sport.SportsRepositoryImpl
-import gr.dipae.thesisfitnessapp.data.sport.broadcast.SportSessionBreakTimerBroadcast
 import gr.dipae.thesisfitnessapp.data.sport.broadcast.SportSessionBroadcast
 import gr.dipae.thesisfitnessapp.data.sport.broadcast.StopWatchBroadcast
+import gr.dipae.thesisfitnessapp.data.sport.session.SportSessionDataSource
+import gr.dipae.thesisfitnessapp.data.sport.session.SportSessionRepositoryImpl
 import gr.dipae.thesisfitnessapp.domain.sport.SportsRepository
-import gr.dipae.thesisfitnessapp.framework.service.StopWatchService
+import gr.dipae.thesisfitnessapp.domain.sport.session.SportSessionRepository
+import gr.dipae.thesisfitnessapp.framework.service.SportSessionService
 import gr.dipae.thesisfitnessapp.framework.sport.SportsDataSourceImpl
-import gr.dipae.thesisfitnessapp.framework.sport.location.SportLocationProvider
+import gr.dipae.thesisfitnessapp.framework.sport.location.SportSessionLocationProvider
+import gr.dipae.thesisfitnessapp.framework.sport.session.SportSessionDataSourceImpl
 import kotlinx.coroutines.DelicateCoroutinesApi
 
+@DelicateCoroutinesApi
 @Module
-@InstallIn(ViewModelComponent::class)
-object SportModule {
+@InstallIn(SingletonComponent::class)
+object SportSessionModule {
     @Provides
-    @ViewModelScoped
-    fun provideSportSessionBreakTimerBroadcast(): SportSessionBreakTimerBroadcast {
-        return SportSessionBreakTimerBroadcast.getInstance()
-    }
-
-    @Provides
-    @ViewModelScoped
     fun provideSportSessionBroadcast(): SportSessionBroadcast {
         return SportSessionBroadcast.getInstance()
     }
 
     @Provides
-    @ViewModelScoped
-    fun provideSportLocationProvider(@ApplicationContext context: Context): SportLocationProvider {
-        return SportLocationProvider(context)
-    }
-
-}
-
-@Module
-@InstallIn(ViewModelComponent::class)
-interface SportBindsModule {
-    @Binds
-    fun bindSportRepository(repository: SportsRepositoryImpl): SportsRepository
-
-    @Binds
-    fun bindSportDataSource(dataSource: SportsDataSourceImpl): SportsDataSource
-}
-
-@DelicateCoroutinesApi
-@Module
-@InstallIn(SingletonComponent::class)
-object SportSessionStopWatchModule {
-
-    @Provides
     fun provideStopWatchBroadcast(): StopWatchBroadcast {
         return StopWatchBroadcast.getInstance()
+    }
+
+    @Provides
+    fun provideSportLocationProvider(@ApplicationContext context: Context): SportSessionLocationProvider {
+        return SportSessionLocationProvider.getInstance(context)
     }
 
     @Provides
@@ -79,11 +57,31 @@ object SportSessionStopWatchModule {
             PendingIntent.FLAG_IMMUTABLE
         )
 
-        return NotificationCompat.Builder(context, StopWatchService.STOP_WATCH_NOTIFICATION_CHANNEL_ID)
+        return NotificationCompat.Builder(context, SportSessionService.STOP_WATCH_NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.app_logo)
             .setContentTitle(context.getString(R.string.sport_session_stop_watch_notification_title))
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
             .setContentIntent(pendingIntent)
     }
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+interface SportBindsModule {
+    @Binds
+    fun bindSportRepository(repository: SportsRepositoryImpl): SportsRepository
+
+    @Binds
+    fun bindSportDataSource(dataSource: SportsDataSourceImpl): SportsDataSource
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+interface SportSessionBindsModule {
+    @Binds
+    fun bindSportRepository(repository: SportSessionRepositoryImpl): SportSessionRepository
+
+    @Binds
+    fun bindSportDataSource(dataSource: SportSessionDataSourceImpl): SportSessionDataSource
 }

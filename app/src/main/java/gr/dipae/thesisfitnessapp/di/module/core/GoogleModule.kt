@@ -12,13 +12,13 @@ import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import gr.dipae.thesisfitnessapp.BuildConfig
 import gr.dipae.thesisfitnessapp.R
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
+@InstallIn(SingletonComponent::class)
 object GoogleModule {
     //Google Sign In
     @Provides

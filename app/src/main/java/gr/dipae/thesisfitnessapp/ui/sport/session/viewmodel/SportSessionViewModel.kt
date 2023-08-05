@@ -4,7 +4,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gr.dipae.thesisfitnessapp.R
@@ -16,32 +15,28 @@ import gr.dipae.thesisfitnessapp.ui.sport.session.model.SportSessionUiState
 import gr.dipae.thesisfitnessapp.ui.sport.session.navigation.SportSessionArgumentKeys
 import gr.dipae.thesisfitnessapp.usecase.sport.CalculateTravelledDistanceUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.CalculateUserPaceUseCase
-import gr.dipae.thesisfitnessapp.usecase.sport.GetSportByIdUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.GetSportParameterNavigationArgumentUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.GetSportSessionBreakTimerDurationLiveUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.GetSportSessionDistanceLiveUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.GetSportSessionDurationLiveUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.GetUserLocationUseCase
+import gr.dipae.thesisfitnessapp.usecase.sport.GetUserMapRouteUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.GetUserPreviousLocationUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.PauseSportSessionBreakTimerUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.SetSportSessionDistanceUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.SetSportSessionUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.SetUserPreviousLocationUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.StartSportSessionBreakTimerUseCase
-import gr.dipae.thesisfitnessapp.usecase.sport.StartUserLocationUpdatesUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.StopSportSessionBreakTimerUseCase
-import gr.dipae.thesisfitnessapp.usecase.sport.StopUserLocationUpdatesUseCase
 import gr.dipae.thesisfitnessapp.util.ext.toDoubleWithSpecificDecimals
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SportSessionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     getSportParameterNavigationArgumentUseCase: GetSportParameterNavigationArgumentUseCase,
-    private val getSportByIdUseCase: GetSportByIdUseCase,
     private val setSportSessionUseCase: SetSportSessionUseCase,
     private val getUserPreviousLocationUseCase: GetUserPreviousLocationUseCase,
     private val setUserPreviousLocationUseCase: SetUserPreviousLocationUseCase,
@@ -49,8 +44,7 @@ class SportSessionViewModel @Inject constructor(
     private val calculateTravelledDistanceUseCase: CalculateTravelledDistanceUseCase,
     private val calculateUserPaceUseCase: CalculateUserPaceUseCase,
     private val getSportSessionDistanceLiveUseCase: GetSportSessionDistanceLiveUseCase,
-    private val startUserLocationUpdatesUseCase: StartUserLocationUpdatesUseCase,
-    private val stopUserLocationUpdatesUseCase: StopUserLocationUpdatesUseCase,
+    private val getUserMapRouteUseCase: GetUserMapRouteUseCase,
     private val getUserLocationUseCase: GetUserLocationUseCase,
     private val getSportSessionDurationLiveUseCase: GetSportSessionDurationLiveUseCase,
     private val getSportSessionBreakTimerDurationLiveUseCase: GetSportSessionBreakTimerDurationLiveUseCase,
@@ -72,30 +66,26 @@ class SportSessionViewModel @Inject constructor(
     private var jobOfCollectionUserLocation: Job? = null
     override fun onCleared() {
         stopSportSessionBreakTimerUseCase()
-        stopUserLocationUpdatesUseCase()
+        _uiState.value?.backToSports?.value = true
         super.onCleared()
     }
 
     fun init() {
         launchWithProgress {
-            getSportByIdUseCase(sportId)?.let {
-                _uiState.value = sportSessionUiMapper(sportParameter, sportHasMap)
-            }
+            _uiState.value = sportSessionUiMapper(sportParameter, sportHasMap)
         }
     }
 
     private fun initTimers() {
-        launch {
-            jobOfCollectingDuration = viewModelScope.launch {
-                getSportSessionDurationLiveUseCase().collectLatest {
-                    _uiState.value?.duration?.value = sportSessionUiMapper.toHundredsOfASecond(it)
-                }
+        jobOfCollectingDuration = launch {
+            getSportSessionDurationLiveUseCase().collectLatest {
+                _uiState.value?.duration?.value = sportSessionUiMapper.toHundredsOfASecond(it)
             }
+        }
 
-            jobOfCollectingBreak = viewModelScope.launch {
-                getSportSessionBreakTimerDurationLiveUseCase().collectLatest {
-                    _uiState.value?.breakTime?.value = sportSessionUiMapper.toSecondsString(it)
-                }
+        jobOfCollectingBreak = launch {
+            getSportSessionBreakTimerDurationLiveUseCase().collectLatest {
+                _uiState.value?.breakTime?.value = sportSessionUiMapper.toSecondsString(it)
             }
         }
     }
@@ -123,23 +113,23 @@ class SportSessionViewModel @Inject constructor(
     }
 
     private fun showContent() {
+        subscribeToLocationUpdates()
         _uiState.value?.showContent?.value = true
         _uiState.value?.playStateBtn?.iconRes?.value = R.drawable.ic_pause
         _uiState.value?.stopBtnEnabled?.value = true
-        startLocationUpdatesListener()
     }
 
-    fun startLocationUpdatesListener() {
+    fun subscribeToLocationUpdates() {
         _uiState.value?.apply {
-            jobOfCollectionUserLocation = viewModelScope.launch {
+            jobOfCollectionUserLocation = launch {
                 getUserLocationUseCase().collectLatest {
                     mapState.userLocation.value = it
+                    mapState.userRoute.value = getUserMapRouteUseCase()
                     handleDistanceAndPace(it)
 
                     setUserPreviousLocationUseCase(it)
                 }
             }
-            startUserLocationUpdatesUseCase()
         }
     }
 
@@ -173,7 +163,7 @@ class SportSessionViewModel @Inject constructor(
             timerState.value = ContinuationState.Running
             iconRes.value = R.drawable.ic_pause
         }
-        startLocationUpdatesListener()
+        subscribeToLocationUpdates()
     }
 
     fun onSessionFinish() {
@@ -185,7 +175,7 @@ class SportSessionViewModel @Inject constructor(
 
                 val response = setSportSessionUseCase(sportId, sportParameter)
                 if (response is SportSessionSaveResult.Success) {
-                    _uiState.value?.backToLogin?.value = true
+                    _uiState.value?.backToSports?.value = true
                 }
             }
         }

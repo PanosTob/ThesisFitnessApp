@@ -1,14 +1,14 @@
 package gr.dipae.thesisfitnessapp.usecase.sport
 
-import gr.dipae.thesisfitnessapp.domain.sport.SportsRepository
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportSessionSaveResult
+import gr.dipae.thesisfitnessapp.domain.sport.session.SportSessionRepository
 import gr.dipae.thesisfitnessapp.usecase.UseCase
 import timber.log.Timber
 import javax.inject.Inject
 
 class SetSportSessionUseCase @Inject constructor(
-    private val repository: SportsRepository,
+    private val repository: SportSessionRepository,
     private val getSportSessionDurationLiveUseCase: GetSportSessionDurationLiveUseCase,
     private val getSportSessionDistanceLiveUseCase: GetSportSessionDistanceLiveUseCase,
     private val getSportSessionBreakTimerDurationLiveUseCase: GetSportSessionBreakTimerDurationLiveUseCase,

@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import dagger.hilt.android.AndroidEntryPoint
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.data.sport.broadcast.StopWatchBroadcast
+import gr.dipae.thesisfitnessapp.framework.sport.location.SportSessionLocationProvider
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -26,13 +27,16 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @DelicateCoroutinesApi
 @AndroidEntryPoint
-class StopWatchService : Service() {
+class SportSessionService : Service() {
 
     @Inject
     lateinit var stopWatchBroadcast: StopWatchBroadcast
 
     @Inject
     lateinit var notification: NotificationCompat.Builder
+
+    @Inject
+    lateinit var sportSessionLocationProvider: SportSessionLocationProvider
 
     private lateinit var notificationManager: NotificationManager
 
@@ -50,7 +54,7 @@ class StopWatchService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         handleIntent(intent)
-        Timber.tag(StopWatchService::class.simpleName.toString()).e("StopWatchService - onStartCommand")
+        Timber.tag(SportSessionService::class.simpleName.toString()).e("StopWatchService - onStartCommand")
         return START_STICKY
     }
 
@@ -62,10 +66,12 @@ class StopWatchService : Service() {
 
         when (intent.action) {
             STOP_WATCH_ACTION_START -> {
+                sportSessionLocationProvider.startUserLocationUpdates(5000)
                 startTimer()
             }
 
             STOP_WATCH_ACTION_PAUSE -> {
+                sportSessionLocationProvider.stopTracking()
                 pauseTimer()
             }
 
@@ -108,6 +114,7 @@ class StopWatchService : Service() {
     private fun pauseTimer() {
         if (this::timer.isInitialized) {
             timer.cancel()
+            timer.purge()
             updateStopWatchNotification()
         }
     }
@@ -133,19 +140,20 @@ class StopWatchService : Service() {
     private fun clearService() {
         removeStopWatchNotification()
         stopWatchBroadcast.clear()
+        sportSessionLocationProvider.stopTracking()
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
 
     override fun onDestroy() {
         clearService()
-        Timber.tag(StopWatchService::class.simpleName.toString()).e("StopWatchService - onDestroy")
+        Timber.tag(SportSessionService::class.simpleName.toString()).e("StopWatchService - onDestroy")
         super.onDestroy()
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         clearService()
-        Timber.tag(StopWatchService::class.simpleName.toString()).e("StopWatchService - onTaskRemoved: ${rootIntent.toString()}")
+        Timber.tag(SportSessionService::class.simpleName.toString()).e("StopWatchService - onTaskRemoved: ${rootIntent.toString()}")
         super.onTaskRemoved(rootIntent)
     }
 
