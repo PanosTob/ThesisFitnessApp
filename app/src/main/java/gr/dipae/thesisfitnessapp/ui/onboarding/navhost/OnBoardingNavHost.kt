@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import gr.dipae.thesisfitnessapp.ui.lobby.navigation.LobbyRoute
-import gr.dipae.thesisfitnessapp.ui.lobby.navigation.navigateToLobby
+import gr.dipae.thesisfitnessapp.ui.lobby.home.navigation.HomeRoute
+import gr.dipae.thesisfitnessapp.ui.lobby.home.navigation.navigateToHome
 import gr.dipae.thesisfitnessapp.ui.splash.navigation.SplashRoute
 import gr.dipae.thesisfitnessapp.ui.splash.navigation.splashScreen
 import gr.dipae.thesisfitnessapp.ui.welcome.navigation.loginScreen
@@ -28,7 +28,7 @@ fun OnBoardingNavHost(
         startDestination = SplashRoute
     ) {
         splashScreen {
-            if (it == LobbyRoute) {
+            if (it == HomeRoute) {
                 onUserAlreadySignIn()
             } else {
                 onUserNotSignedIn()
@@ -39,7 +39,7 @@ fun OnBoardingNavHost(
             onLogoutPressed = {}
         )
         wizardScreen {
-            navController.navigateToLobby()
+            navController.navigateToHome()
         }
     }
 }

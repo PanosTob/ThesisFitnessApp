@@ -1,50 +1,15 @@
 package gr.dipae.thesisfitnessapp.ui.app.model
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import gr.dipae.thesisfitnessapp.R
 import javax.inject.Inject
 import javax.inject.Singleton
 
 data class AppUiState(
-    val topBarState: TopBarUiState = TopBarUiState(),
-    val bottomAppBarItems: MutableState<List<BottomAppBarUiItem>> = mutableStateOf(emptyList()),
     val navigateToWizard: MutableState<Boolean> = mutableStateOf(false),
     val navigateToLobby: MutableState<Boolean> = mutableStateOf(false),
     val navigateBackToLogin: MutableState<Boolean> = mutableStateOf(false)
-) {
-    fun onBottomAppBarItemSelection(item: BottomAppBarUiItem) {
-        bottomAppBarItems.value.onEach { it.selected.value = false }
-        bottomAppBarItems.value.find { it == item }?.selected?.value = true
-    }
-}
-
-data class TopBarUiState(
-    val titleRes: MutableState<Int> = mutableStateOf(R.string.empty),
-    val navigationIcon: MutableState<ImageVector?> = mutableStateOf(null),
-    val actionIcons: MutableState<List<TopBarActionUiItem>> = mutableStateOf(listOf(TopBarActionUiItem(R.drawable.ic_top_burger_menu))),
-    val isVisible: MutableState<Boolean> = mutableStateOf(false)
 )
-
-data class TopBarActionUiItem(
-    val icon: Int,
-    val clickAction: () -> Unit = {}
-)
-
-data class BottomAppBarUiItem(
-    @StringRes val labelStringRes: Int,
-    @DrawableRes val iconRes: Int,
-    val route: String,
-    val selected: MutableState<Boolean> = mutableStateOf(false),
-) {
-    val iconColor: @Composable () -> Color = { if (selected.value) MaterialTheme.colorScheme.primary else Color.White }
-}
 
 @Singleton
 class PoDHelper @Inject constructor() {

@@ -1,4 +1,4 @@
-package gr.dipae.thesisfitnessapp.ui.lobby.navigation
+package gr.dipae.thesisfitnessapp.ui.lobby.home.navigation
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.LaunchedEffect
@@ -7,34 +7,34 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import gr.dipae.thesisfitnessapp.ui.lobby.composable.LobbyContent
-import gr.dipae.thesisfitnessapp.ui.lobby.viewmodel.LobbyViewModel
+import gr.dipae.thesisfitnessapp.ui.lobby.home.composable.HomeContent
+import gr.dipae.thesisfitnessapp.ui.lobby.home.viewmodel.HomeViewModel
 import gr.dipae.thesisfitnessapp.ui.welcome.navigation.LoginRoute
 import gr.dipae.thesisfitnessapp.util.ext.singleNavigateWithPopInclusive
 
-internal const val LobbyRoute = "lobby"
+internal const val HomeRoute = "home"
 
 @ExperimentalMaterial3Api
 @ExperimentalComposeUiApi
-fun NavGraphBuilder.lobbyScreen(
-    onLobbyShown: () -> Unit
+fun NavGraphBuilder.homeScreen(
+    onHomeShown: () -> Unit
 ) {
-    composable(LobbyRoute) {
-        val viewModel: LobbyViewModel = hiltViewModel()
+    composable(HomeRoute) {
+        val viewModel: HomeViewModel = hiltViewModel()
 
         LaunchedEffect(key1 = Unit) {
             viewModel.init()
-            onLobbyShown()
+            onHomeShown()
         }
 
         viewModel.uiState.value?.let {
-            LobbyContent(
+            HomeContent(
                 uiState = it
             )
         }
     }
 }
 
-fun NavController.navigateToLobby() {
-    singleNavigateWithPopInclusive(LobbyRoute, LoginRoute)
+fun NavController.navigateToHome() {
+    singleNavigateWithPopInclusive(HomeRoute, LoginRoute)
 }

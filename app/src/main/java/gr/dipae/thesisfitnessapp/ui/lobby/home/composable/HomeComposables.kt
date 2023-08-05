@@ -1,4 +1,4 @@
-package gr.dipae.thesisfitnessapp.ui.lobby.composable
+package gr.dipae.thesisfitnessapp.ui.lobby.home.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,25 +13,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import gr.dipae.thesisfitnessapp.R
-import gr.dipae.thesisfitnessapp.ui.app.model.BottomAppBarUiItem
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBLAutoSizeText
-import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBMText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
-import gr.dipae.thesisfitnessapp.ui.lobby.model.LobbyUiState
-import gr.dipae.thesisfitnessapp.ui.lobby.model.UserDetailsUiItem
-import gr.dipae.thesisfitnessapp.ui.theme.ColorBottomNavBar
+import gr.dipae.thesisfitnessapp.ui.lobby.home.model.HomeUiState
+import gr.dipae.thesisfitnessapp.ui.lobby.home.model.UserDetailsUiItem
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
@@ -40,8 +34,8 @@ import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
 
 @ExperimentalMaterial3Api
 @Composable
-fun LobbyContent(
-    uiState: LobbyUiState
+fun HomeContent(
+    uiState: HomeUiState
 ) {
     Column(
         Modifier
@@ -66,9 +60,9 @@ fun LobbyContent(
                         .fillMaxWidth(), text = uiState.userDetails.username, maxFontSize = 38.sp, color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center
                 )
                 Row(modifier = Modifier.weight(0.5f), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
-                    LobbyUserDetailItem("64kg", R.drawable.ic_scale)
-                    LobbyUserDetailItem("35%", R.drawable.ic_muscle)
-                    LobbyUserDetailItem("12%", R.drawable.ic_weight)
+                    HomeUserDetailItem("64kg", R.drawable.ic_scale)
+                    HomeUserDetailItem("35%", R.drawable.ic_muscle)
+                    HomeUserDetailItem("12%", R.drawable.ic_weight)
                 }
             }
         }
@@ -77,43 +71,7 @@ fun LobbyContent(
 }
 
 @Composable
-fun RowScope.LobbyBottomNavItem(
-    item: BottomAppBarUiItem,
-    onClick: () -> Unit
-) {
-    IconButton(
-        modifier = Modifier
-            .weight(0.2f)
-            .fillMaxHeight(),
-        colors = IconButtonDefaults.filledIconButtonColors(
-            contentColor = item.iconColor(),
-            containerColor = ColorBottomNavBar
-        ),
-        onClick = { onClick() }) {
-        Column(
-            Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(
-                modifier = Modifier
-                    .weight(0.7f)
-                    .fillMaxWidth()
-                    .padding(SpacingHalf_8dp),
-                painter = painterResource(id = item.iconRes),
-                contentDescription = ""
-            )
-            ThesisFitnessBMText(
-                modifier = Modifier
-                    .weight(0.3f),
-                text = stringResource(id = item.labelStringRes),
-                color = item.iconColor()
-            )
-        }
-    }
-}
-
-@Composable
-fun RowScope.LobbyUserDetailItem(
+fun RowScope.HomeUserDetailItem(
     text: String,
     iconRes: Int
 ) {
@@ -133,10 +91,10 @@ fun RowScope.LobbyUserDetailItem(
 @ExperimentalMaterial3Api
 @Preview
 @Composable
-fun LobbyContentPreview() {
+fun HomeContentPreview() {
     ThesisFitnessAppTheme {
-        LobbyContent(
-            LobbyUiState(
+        HomeContent(
+            HomeUiState(
                 userDetails = UserDetailsUiItem(username = "Panagiotis Toumpas")
             )
         )
