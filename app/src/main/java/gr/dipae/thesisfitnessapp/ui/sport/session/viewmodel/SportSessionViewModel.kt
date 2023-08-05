@@ -22,7 +22,6 @@ import gr.dipae.thesisfitnessapp.usecase.sport.GetSportSessionBreakTimerDuration
 import gr.dipae.thesisfitnessapp.usecase.sport.GetSportSessionDistanceLiveUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.GetSportSessionDurationLiveUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.GetUserLocationUseCase
-import gr.dipae.thesisfitnessapp.usecase.sport.GetUserMapRouteUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.GetUserPreviousLocationUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.PauseSportSessionBreakTimerUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.SetSportSessionDistanceUseCase
@@ -53,7 +52,6 @@ class SportSessionViewModel @Inject constructor(
     private val startUserLocationUpdatesUseCase: StartUserLocationUpdatesUseCase,
     private val stopUserLocationUpdatesUseCase: StopUserLocationUpdatesUseCase,
     private val getUserLocationUseCase: GetUserLocationUseCase,
-    private val getUserMapRouteUseCase: GetUserMapRouteUseCase,
     private val getSportSessionDurationLiveUseCase: GetSportSessionDurationLiveUseCase,
     private val getSportSessionBreakTimerDurationLiveUseCase: GetSportSessionBreakTimerDurationLiveUseCase,
     private val startSportSessionBreakTimerUseCase: StartSportSessionBreakTimerUseCase,
@@ -111,6 +109,7 @@ class SportSessionViewModel @Inject constructor(
             jobOfCollectingDuration?.cancel()
             jobOfCollectingBreak?.cancel()
             jobOfCollectionUserLocation?.cancel()
+            _uiState.value?.playStateBtn?.isEnabled?.value = false
         }
     }
 
@@ -130,7 +129,6 @@ class SportSessionViewModel @Inject constructor(
             jobOfCollectionUserLocation = viewModelScope.launch {
                 getUserLocationUseCase().collectLatest {
                     mapState.userLocation.value = it
-                    mapState.userRoute.value = getUserMapRouteUseCase()
                     handleDistanceAndPace(it)
 
                     setUserPreviousLocationUseCase(it)
