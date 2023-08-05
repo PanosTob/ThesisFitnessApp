@@ -1,5 +1,6 @@
 package gr.dipae.thesisfitnessapp.data.sport.mapper
 
+import gr.dipae.thesisfitnessapp.BuildConfig
 import gr.dipae.thesisfitnessapp.data.Mapper
 import gr.dipae.thesisfitnessapp.data.sport.model.RemoteSport
 import gr.dipae.thesisfitnessapp.data.sport.model.RemoteSportDetails
@@ -21,7 +22,7 @@ class SportsMapper @Inject constructor() : Mapper {
             id = remoteSport.id,
             name = remoteSport.name,
             hasMap = remoteSport.showMap,
-            imageUrl = remoteSport.imageUrl,
+            imageUrl = "${BuildConfig.GOOGLE_STORAGE_FIREBASE}${remoteSport.imageUrl}${BuildConfig.GOOGLE_STORAGE_FIREBASE_QUERY_PARAMS}",
             parameters = mapSportParameters(remoteSport.parameters),
             details = mapSportDetails(remoteSport.details),
             favorite = favoriteSportIds.contains(remoteSport.id)
