@@ -12,20 +12,26 @@ import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
 
 internal const val DietRoute = "diet"
 
+internal typealias OnFoodSelectionFabClicked = () -> Unit
+internal typealias OnMacrosFabClicked = () -> Unit
+
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.dietScreen(
-    onDietShown: () -> Unit
+    onDietShown: () -> Unit,
+    onFoodSelectionFabClicked: OnFoodSelectionFabClicked,
+    onMacrosFabClicked: OnMacrosFabClicked
 ) {
     composable(DietRoute) {
         val viewModel: DietViewModel = hiltViewModel()
 
         LaunchedEffect(key1 = Unit) {
             viewModel.init()
-            onDietShown
+            onDietShown()
         }
 
         DietContent(
-//            uiState = viewModel.uiState.value
+            onFoodSelectionFabClicked = { onFoodSelectionFabClicked() },
+            onMacrosFabClicked = { onMacrosFabClicked() }
         )
     }
 }

@@ -9,7 +9,16 @@ class DietViewModel @Inject constructor(
 
 ) : BaseViewModel() {
 
+
     fun init() {
+
+    }
+
+    fun onFoodSelectionFabClicked() {
+
+    }
+
+    fun onMacrosFabClicked() {
 
     }
 }

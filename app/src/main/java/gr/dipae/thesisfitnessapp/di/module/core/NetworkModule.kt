@@ -6,6 +6,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import gr.dipae.thesisfitnessapp.BuildConfig
+import gr.dipae.thesisfitnessapp.data.diet.typeadapter.FoodNutrientTypeAdapter
+import gr.dipae.thesisfitnessapp.framework.network.TokenInterceptor
 import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -22,22 +25,23 @@ object NetworkModule {
     fun providePersistentCookieJar(moshi: Moshi, @CookieSharedPrefs prefs: SharedPreferences):  {
         return (moshi, prefs)
     }*/
-
     @Singleton
     @Provides
-    fun provideGeneralOkHttpClient(
+    fun provideFoodClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,
-        connectionSpec: ConnectionSpec
+        connectionSpec: ConnectionSpec,
+        tokenInterceptor: TokenInterceptor
     ): OkHttpClient {
         val okHttpClient = OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .connectionSpecs(listOf(connectionSpec))
+            .addInterceptor(tokenInterceptor)
 
-        /*if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             okHttpClient.addNetworkInterceptor(httpLoggingInterceptor)
-        }*/
+        }
 
         return okHttpClient.build()
     }
@@ -60,6 +64,7 @@ object NetworkModule {
     @Provides
     fun provideMoshi(): Moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
+        .add(FoodNutrientTypeAdapter())
         .build()
 
     @Singleton

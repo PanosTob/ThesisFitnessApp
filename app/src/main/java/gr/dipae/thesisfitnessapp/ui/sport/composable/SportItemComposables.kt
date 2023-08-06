@@ -65,7 +65,7 @@ fun SportItem(
                 modifier = Modifier
                     .size(32.dp)
                     .aspectRatio(1f),
-                model = item.imageUrl.loadImageWithCrossfade(R.drawable.img_general_sport),
+                model = item.imageUrl.loadImageWithCrossfade(),
                 contentDescription = ""
             )
             ThesisFitnessBLAutoSizeText(text = item.name, maxFontSize = 16.sp, color = Color.Black)

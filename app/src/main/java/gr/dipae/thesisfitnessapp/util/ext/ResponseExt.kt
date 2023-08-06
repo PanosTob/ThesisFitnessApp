@@ -7,7 +7,13 @@ import com.google.firebase.firestore.ktx.toObject
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.tasks.await
+import retrofit2.Response
 import timber.log.Timber
+
+fun <T : Any> Response<T>.requireNotNull(): T {
+    require(isSuccessful && body() != null)
+    return body()!!
+}
 
 suspend inline fun <reified T> DocumentReference.getDocumentResponse(): T? {
     return get().await().toObject<T>()

@@ -98,7 +98,7 @@ android {
             resValue("string", "app_name", "Thesis Fitness DEV")
             buildConfigField("String", "GOOGLE_STORAGE_FIREBASE", "\"https://firebasestorage.googleapis.com/v0/b/thesis-fitness-app-8c2a1.appspot.com/o/\"")
             buildConfigField("String", "GOOGLE_STORAGE_FIREBASE_QUERY_PARAMS", "\"?alt=media&token=ccee9573-4e8e-4b78-9d0d-19bdb870556c\"")
-
+            buildConfigField("String", "FOOD_API_URL", "\"https://api.nal.usda.gov/fdc/\"")
             signingConfig = signingConfigs.getByName("debug")
         }
 
@@ -107,6 +107,7 @@ android {
             resValue("string", "app_name", "Thesis Fitness")
             buildConfigField("String", "GOOGLE_STORAGE_FIREBASE", "\"https://firebasestorage.googleapis.com/v0/b/thesis-fitness-app-8c2a1.appspot.com/o/\"")
             buildConfigField("String", "GOOGLE_STORAGE_FIREBASE_QUERY_PARAMS", "\"?alt=media&token=ccee9573-4e8e-4b78-9d0d-19bdb870556c\"")
+            buildConfigField("String", "FOOD_API_URL", "\"https://api.nal.usda.gov/fdc/\"")
 //            signingConfig = signingConfigs.getByName("release")
         }
     }

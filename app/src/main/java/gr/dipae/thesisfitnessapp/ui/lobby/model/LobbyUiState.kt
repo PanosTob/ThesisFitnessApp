@@ -9,7 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import gr.dipae.thesisfitnessapp.R
-import gr.dipae.thesisfitnessapp.ui.lobby.viewModel.LobbyViewModel
+import gr.dipae.thesisfitnessapp.ui.lobby.viewmodel.LobbyViewModel
 
 data class LobbyUiState(
     val topBarState: TopBarUiState = TopBarUiState(),

@@ -1,4 +1,4 @@
-package gr.dipae.thesisfitnessapp.ui.lobby.viewModel
+package gr.dipae.thesisfitnessapp.ui.lobby.viewmodel
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack

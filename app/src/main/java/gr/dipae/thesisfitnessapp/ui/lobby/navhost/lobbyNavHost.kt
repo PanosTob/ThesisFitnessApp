@@ -25,12 +25,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBMText
+import gr.dipae.thesisfitnessapp.ui.diet.foodselection.composable.foodSelectionScreen
+import gr.dipae.thesisfitnessapp.ui.diet.foodselection.composable.navigateToFoodSelection
 import gr.dipae.thesisfitnessapp.ui.diet.navigation.dietScreen
 import gr.dipae.thesisfitnessapp.ui.history.navigation.historyScreen
 import gr.dipae.thesisfitnessapp.ui.lobby.composable.LobbyBottomNavItem
 import gr.dipae.thesisfitnessapp.ui.lobby.home.navigation.HomeRoute
 import gr.dipae.thesisfitnessapp.ui.lobby.home.navigation.homeScreen
-import gr.dipae.thesisfitnessapp.ui.lobby.viewModel.LobbyViewModel
+import gr.dipae.thesisfitnessapp.ui.lobby.viewmodel.LobbyViewModel
 import gr.dipae.thesisfitnessapp.ui.onboarding.navigation.OnBoardingNavHostRoute
 import gr.dipae.thesisfitnessapp.ui.profile.navigation.profileScreen
 import gr.dipae.thesisfitnessapp.ui.sport.customize.navigation.navigateToSportCustomize
@@ -133,8 +135,11 @@ fun NavGraphBuilder.lobbyNavHost(
                             onSportSessionTimerStop = { stopStopWatch() }
                         )
                         dietScreen(
-                            onDietShown = { viewModel.showDietTopBar() }
+                            onDietShown = { viewModel.showDietTopBar() },
+                            onFoodSelectionFabClicked = { navController.navigateToFoodSelection() },
+                            onMacrosFabClicked = {}
                         )
+                        foodSelectionScreen()
                         profileScreen(
                             onProfileShown = { viewModel.showProfileTopBar() },
                             onLogout = { logoutUser() }

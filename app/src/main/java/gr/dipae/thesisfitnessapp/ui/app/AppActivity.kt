@@ -22,6 +22,7 @@ import gr.dipae.thesisfitnessapp.ui.app.composable.ActivityProgressContainer
 import gr.dipae.thesisfitnessapp.ui.base.BaseActivity
 import gr.dipae.thesisfitnessapp.ui.livedata.LoadingLiveData
 import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
+import gr.dipae.thesisfitnessapp.util.connectivity.ConnectivityStatus
 import kotlinx.coroutines.DelicateCoroutinesApi
 
 @ExperimentalPermissionsApi
@@ -53,6 +54,7 @@ class AppActivity : BaseActivity() {
         with(viewModel) {
             restartApp.observe(this@AppActivity, Observer(this@AppActivity::restartApp))
             recreateApp.observe(this@AppActivity, Observer(this@AppActivity::recreateApp))
+            networkLiveData.observe(this@AppActivity, Observer(this@AppActivity::onNetworkConnectivityChange))
             submitLanguageChange.observe(this@AppActivity, Observer(::submitLanguageChange))
             initiateGoogleSignInWindow.observe(this@AppActivity, Observer(::initiateGoogleSignInWindow))
             startStopWatch.observe(this@AppActivity, Observer(::startStopWatch))
@@ -67,6 +69,10 @@ class AppActivity : BaseActivity() {
 
     private fun recreateApp(unit: Unit) {
         recreate()
+    }
+
+    private fun onNetworkConnectivityChange(status: ConnectivityStatus) {
+//        binding.connectivityTxt.isVisible = status == ConnectivityStatus.DISCONNECTED
     }
 
     private fun submitLanguageChange(unit: Unit) {
