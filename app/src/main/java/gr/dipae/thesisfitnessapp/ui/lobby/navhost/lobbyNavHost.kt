@@ -27,6 +27,8 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBMText
 import gr.dipae.thesisfitnessapp.ui.diet.foodselection.composable.foodSelectionScreen
 import gr.dipae.thesisfitnessapp.ui.diet.foodselection.composable.navigateToFoodSelection
+import gr.dipae.thesisfitnessapp.ui.diet.macros.navigation.macrosDialog
+import gr.dipae.thesisfitnessapp.ui.diet.macros.navigation.navigateToMacrosDialog
 import gr.dipae.thesisfitnessapp.ui.diet.navigation.dietScreen
 import gr.dipae.thesisfitnessapp.ui.history.navigation.historyScreen
 import gr.dipae.thesisfitnessapp.ui.lobby.composable.LobbyBottomNavItem
@@ -137,9 +139,10 @@ fun NavGraphBuilder.lobbyNavHost(
                         dietScreen(
                             onDietShown = { viewModel.showDietTopBar() },
                             onFoodSelectionFabClicked = { navController.navigateToFoodSelection() },
-                            onMacrosFabClicked = {}
+                            onMacrosFabClicked = { navController.navigateToMacrosDialog() }
                         )
                         foodSelectionScreen()
+                        macrosDialog()
                         profileScreen(
                             onProfileShown = { viewModel.showProfileTopBar() },
                             onLogout = { logoutUser() }

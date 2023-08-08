@@ -48,6 +48,13 @@
     <!-- Diet Screen -->
     <string name="diet_title">Diet</string>
 
+    !-- Diet Macros Dialog -->
+    <string name="diet_macros_dialog_title">Enter any macronutrients intake you like</string>
+    <string name="diet_macros_dialog_protein_placeholder">Protein intake</string>
+    <string name="diet_macros_dialog_carbs_placeholder">Carbohydrates intake</string>
+    <string name="diet_macros_dialog_fats_placeholder">Fats intake</string>
+    <string name="diet_macros_dialog_water_placeholder">Water intake</string>
+
     <!-- Profile Screen -->
     <string name="profile_title">Profile</string>
     <string name="profile_logout_btn">Logout</string>
