@@ -34,7 +34,7 @@ data class RemoteDailyDiet(
     val carbohydrates: Double = 0.0,
     val fats: Double = 0.0,
     val proteins: Double = 0.0,
-    val waterML: Long = 0
+    val waterML: Double = 0.0
 ) {
     fun toDailyDiet(): DailyDiet =
         DailyDiet(

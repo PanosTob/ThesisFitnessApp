@@ -8,6 +8,7 @@ import gr.dipae.thesisfitnessapp.ui.diet.macros.composables.OnSaveClicked
 import gr.dipae.thesisfitnessapp.ui.theme.ColorDisabledButton
 
 data class MacrosDialogUiState(
+    val calories: MutableState<String> = mutableStateOf(""),
     val protein: MutableState<String> = mutableStateOf(""),
     val carbs: MutableState<String> = mutableStateOf(""),
     val fats: MutableState<String> = mutableStateOf(""),

@@ -54,6 +54,7 @@
     <string name="diet_macros_dialog_carbs_placeholder">Carbohydrates intake</string>
     <string name="diet_macros_dialog_fats_placeholder">Fats intake</string>
     <string name="diet_macros_dialog_water_placeholder">Water intake</string>
+    <string name="diet_macros_dialog_save_button">Save</string>
 
     <!-- Profile Screen -->
     <string name="profile_title">Profile</string>

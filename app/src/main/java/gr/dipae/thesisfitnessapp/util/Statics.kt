@@ -66,6 +66,7 @@ const val EXERCISES_COLLECTION = "exercises"
 const val SCANNED_FOODS_COLLECTION = "scannedFoods"
 
 const val DAY_SUMMARY_COLLECTION = "daySummaries"
+const val DAY_SUMMARY_DAILY_DIET = "dailyDiet"
 const val DAY_SUMMARY_SPORTS_DONE_COLLECTION = "activitiesDone"
 const val DAY_SUMMARY_WORKOUTS_DONE_COLLECTION = "workoutsDone"
 const val DAY_SUMMARY_WORKOUT_EXERCISES_DONE_COLLECTION = "exercises"

@@ -21,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
@@ -45,43 +44,45 @@ fun MacrosDialogContent(
     uiState: MacrosDialogUiState,
     onSaveClicked: OnSaveClicked
 ) {
+    val localFocusManager = LocalFocusManager.current
+
     Column(
         Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
+            .clickable { localFocusManager.clearFocus() }
             .padding(SpacingDefault_16dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(SpacingDefault_16dp)
     ) {
-        val localFocusManager = LocalFocusManager.current
         ThesisFitnessHLText(text = stringResource(id = R.string.diet_macros_dialog_title), fontSize = 22.sp)
 
         NutrientEditText(
-            focusManager = localFocusManager,
             nutrient = uiState.protein,
             placeholder = stringResource(id = R.string.diet_macros_dialog_protein_placeholder),
-            onNutrientTextChanged = { uiState.updateSaveButtonEnabledState() }
+            onNutrientTextChanged = { uiState.updateSaveButtonEnabledState() },
+            onDone = { localFocusManager.moveFocus(FocusDirection.Down) }
         )
 
         NutrientEditText(
-            focusManager = localFocusManager,
             nutrient = uiState.carbs,
             placeholder = stringResource(id = R.string.diet_macros_dialog_carbs_placeholder),
-            onNutrientTextChanged = { uiState.updateSaveButtonEnabledState() }
+            onNutrientTextChanged = { uiState.updateSaveButtonEnabledState() },
+            onDone = { localFocusManager.moveFocus(FocusDirection.Down) }
         )
 
         NutrientEditText(
-            focusManager = localFocusManager,
             nutrient = uiState.fats,
             placeholder = stringResource(id = R.string.diet_macros_dialog_fats_placeholder),
-            onNutrientTextChanged = { uiState.updateSaveButtonEnabledState() }
+            onNutrientTextChanged = { uiState.updateSaveButtonEnabledState() },
+            onDone = { localFocusManager.moveFocus(FocusDirection.Down) }
         )
 
         NutrientEditText(
-            focusManager = localFocusManager,
             nutrient = uiState.water,
             placeholder = stringResource(id = R.string.diet_macros_dialog_water_placeholder),
-            onNutrientTextChanged = { uiState.updateSaveButtonEnabledState() }
+            onNutrientTextChanged = { uiState.updateSaveButtonEnabledState() },
+            onDone = { localFocusManager.clearFocus() }
         )
 
         ThesisFitnessHLText(
@@ -98,7 +99,7 @@ fun MacrosDialogContent(
                     }
                 }
                 .padding(SpacingHalf_8dp),
-            text = stringResource(R.string.sport_start_button),
+            text = stringResource(R.string.diet_macros_dialog_save_button),
             fontSize = 32.sp,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.background
@@ -109,10 +110,10 @@ fun MacrosDialogContent(
 @Composable
 fun NutrientEditText(
     modifier: Modifier = Modifier,
-    focusManager: FocusManager,
     nutrient: MutableState<String>,
     placeholder: String,
     onNutrientTextChanged: (String) -> Unit,
+    onDone: () -> Unit
 ) {
     var nutrientValueText by remember(nutrient.value) {
         mutableStateOf(
@@ -146,6 +147,6 @@ fun NutrientEditText(
             onNutrientTextChanged(it.text)
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword, imeAction = ImeAction.Done),
-        keyboardActions = KeyboardActions(onDone = { focusManager.moveFocus(FocusDirection.Down) })
+        keyboardActions = KeyboardActions(onDone = { onDone() })
     )
 }

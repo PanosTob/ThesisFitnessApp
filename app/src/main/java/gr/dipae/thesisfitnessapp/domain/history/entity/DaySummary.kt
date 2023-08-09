@@ -14,7 +14,7 @@ data class DailyDiet(
     val carbohydrates: Double,
     val fats: Double,
     val proteins: Double,
-    val waterML: Long
+    val waterML: Double
 )
 
 data class SportDone(

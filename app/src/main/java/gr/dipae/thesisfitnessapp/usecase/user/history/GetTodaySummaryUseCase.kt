@@ -4,7 +4,7 @@ import gr.dipae.thesisfitnessapp.domain.history.entity.DaySummary
 import gr.dipae.thesisfitnessapp.domain.user.UserRepository
 import javax.inject.Inject
 
-class GetDaySummaryUseCase @Inject constructor(
+class GetTodaySummaryUseCase @Inject constructor(
     private val repository: UserRepository
 ) {
     suspend operator fun invoke(): DaySummary? {

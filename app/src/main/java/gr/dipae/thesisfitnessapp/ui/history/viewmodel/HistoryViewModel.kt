@@ -7,20 +7,21 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.history.mapper.HistoryUiMapper
 import gr.dipae.thesisfitnessapp.ui.history.model.HistoryUiState
-import gr.dipae.thesisfitnessapp.usecase.user.history.GetDaySummaryUseCase
+import gr.dipae.thesisfitnessapp.usecase.user.history.GetTodaySummaryUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
-    private val getDaySummaryUseCase: GetDaySummaryUseCase,
+    private val getTodaySummaryUseCase: GetTodaySummaryUseCase,
     private val historyUiMapper: HistoryUiMapper
 ) : BaseViewModel() {
 
     private val _uiState: MutableState<HistoryUiState?> = mutableStateOf(null)
     val uiState: State<HistoryUiState?> = _uiState
+
     fun init() {
         launchWithProgress {
-            _uiState.value = historyUiMapper(getDaySummaryUseCase())
+            _uiState.value = historyUiMapper(getTodaySummaryUseCase())
         }
     }
 }
