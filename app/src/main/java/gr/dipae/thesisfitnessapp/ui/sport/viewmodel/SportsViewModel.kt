@@ -8,11 +8,13 @@ import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.sport.mapper.SportsUiMapper
 import gr.dipae.thesisfitnessapp.ui.sport.model.SportsUiState
 import gr.dipae.thesisfitnessapp.usecase.sport.GetSportsUseCase
+import gr.dipae.thesisfitnessapp.usecase.user.sport.SetUserFavoriteSportsUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class SportsViewModel @Inject constructor(
     private val getSportsUseCase: GetSportsUseCase,
+    private val setUserFavoriteSportsUseCase: SetUserFavoriteSportsUseCase,
     private val sportsUiMapper: SportsUiMapper
 ) : BaseViewModel() {
 
@@ -23,5 +25,16 @@ class SportsViewModel @Inject constructor(
         launchWithProgress {
             _uiState.value = sportsUiMapper(getSportsUseCase())
         }
+    }
+
+    fun setFavoriteSports() {
+        launchWithProgress {
+            val favoriteSports = getUserNewSelectedFavoriteSports()
+            setUserFavoriteSportsUseCase(favoriteSports)
+        }
+    }
+
+    private fun getUserNewSelectedFavoriteSports(): List<String>? {
+        return _uiState.value?.sports?.filter { it.favorite.value }?.map { it.id }
     }
 }

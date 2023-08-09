@@ -33,6 +33,7 @@ import gr.dipae.thesisfitnessapp.util.SCANNED_FOODS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.USERS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.USER_DECLINED_SIGN_IN_COUNTER
 import gr.dipae.thesisfitnessapp.util.USER_EMAIL
+import gr.dipae.thesisfitnessapp.util.USER_FAVORITE_ACTIVITIES
 import gr.dipae.thesisfitnessapp.util.USER_NAME
 import gr.dipae.thesisfitnessapp.util.WIZARD_USER_DETAILS
 import gr.dipae.thesisfitnessapp.util.WORKOUTS_COLLECTION
@@ -206,6 +207,18 @@ class UserDataSourceImpl @Inject constructor(
             .document(userId)
             .collection(SCANNED_FOODS_COLLECTION)
             .getDocumentsResponse()
+    }
+
+    override suspend fun setFavoriteSportIds(favoritesSports: List<String>) {
+        val userId = getFirebaseUserId()
+        fireStore
+            .collection(USERS_COLLECTION)
+            .document(userId)
+            .set(
+                mapOf(
+                    USER_FAVORITE_ACTIVITIES to favoritesSports
+                )
+            ).await()
     }
 
     private fun getStartTimestampOfThisDay(): Long {

@@ -36,4 +36,5 @@ interface UserRepository {
     suspend fun getDaySummaryWorkoutExercisesDone(daySummaryId: String, workoutId: String): List<WorkoutExerciseDone>
     suspend fun getUserScannedFoods(): List<UserScannedFood>
     suspend fun getFavoriteSportIds(): List<String>
+    suspend fun setFavoriteSportIds(favoritesSports: List<String>)
 }

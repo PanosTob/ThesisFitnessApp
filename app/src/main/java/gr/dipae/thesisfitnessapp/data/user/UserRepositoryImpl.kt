@@ -110,4 +110,8 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getFavoriteSportIds(): List<String> {
         return dataSource.getFavoriteSportIds()
     }
+
+    override suspend fun setFavoriteSportIds(favoritesSports: List<String>) {
+        dataSource.setFavoriteSportIds(favoritesSports)
+    }
 }
