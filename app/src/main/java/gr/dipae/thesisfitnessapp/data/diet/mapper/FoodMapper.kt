@@ -12,7 +12,7 @@ class FoodMapper @Inject constructor() : Mapper {
         return foods.map {
             Food(
                 id = it.id.toString(),
-                name = it.name.toString(),
+                name = it.name.toString().trim(),
                 proteins = it.nutrients.mapNutrientValue(FoodNutrientType.Protein),
                 carbohydrates = it.nutrients.mapNutrientValue(FoodNutrientType.Carbohydrates),
                 fats = it.nutrients.mapNutrientValue(FoodNutrientType.Fats),

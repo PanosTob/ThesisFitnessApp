@@ -1,7 +1,11 @@
 package gr.dipae.thesisfitnessapp.ui.diet.foodselection.model
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+
 data class FoodSelectionUiState(
-    val foodList: List<FoodUiItem> = emptyList()
+    val foodList: MutableList<FoodUiItem> = mutableListOf(),
+    val page: MutableState<Int> = mutableStateOf(1),
 )
 
 data class FoodUiItem(

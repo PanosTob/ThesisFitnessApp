@@ -24,4 +24,11 @@ class FoodSelectionViewModel @Inject constructor(
             _uiState.value = foodSelectionUiMapper(getFoodListUseCase())
         }
     }
+
+    fun getFoodListNextPage() {
+        launchWithProgress {
+            _uiState.value.page.value += 1
+            _uiState.value.foodList.addAll(foodSelectionUiMapper.mapFoods((getFoodListUseCase(_uiState.value.page.value))))
+        }
+    }
 }

@@ -9,6 +9,10 @@ class GetFoodListUseCase @Inject constructor(
     private val dietRepository: DietRepository
 ) : UseCase {
     suspend operator fun invoke(page: Int = 1): List<Food> {
-        return dietRepository.getFoodList(page)
+        return try {
+            dietRepository.getFoodList(page)
+        } catch (ex: Exception) {
+            emptyList()
+        }
     }
 }

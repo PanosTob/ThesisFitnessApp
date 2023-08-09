@@ -10,11 +10,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.flowWithLifecycle
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBLText
 import gr.dipae.thesisfitnessapp.ui.base.compose.WidthAdjustedDivider
 import gr.dipae.thesisfitnessapp.ui.diet.foodselection.model.FoodSelectionUiState
@@ -22,19 +28,34 @@ import gr.dipae.thesisfitnessapp.ui.diet.foodselection.model.FoodUiItem
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
+import gr.dipae.thesisfitnessapp.util.composable.isScrolledToEnd
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filter
 
 private typealias OnFoodSelectionItemClicked = (FoodUiItem) -> Unit
 
 @Composable
 fun FoodSelectionContent(
     uiState: FoodSelectionUiState,
-    onFoodSelectionItemClicked: OnFoodSelectionItemClicked
+    onFoodSelectionItemClicked: OnFoodSelectionItemClicked,
+    onPageSizeReached: () -> Unit
 ) {
+    val lazyListScrollState = rememberLazyListState()
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(lazyListScrollState, lifecycleOwner) {
+        snapshotFlow { lazyListScrollState.isScrolledToEnd() }
+            .filter { it }
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collectLatest {
+                onPageSizeReached()
+            }
+    }
     LazyColumn(
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
             .padding(horizontal = SpacingCustom_24dp, vertical = SpacingDefault_16dp),
+        state = lazyListScrollState,
         verticalArrangement = Arrangement.spacedBy(SpacingHalf_8dp)
     ) {
         items(items = uiState.foodList, key = { item -> item.id }) { item ->
@@ -50,13 +71,18 @@ fun FoodSelectionItem(
     onFoodSelectionItemClicked: OnFoodSelectionItemClicked
 ) {
     Row(
-        Modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(5f)
-            .clickable {
-                onFoodSelectionItemClicked(item)
-            }
+            .aspectRatio(7f)
+            .clickable { onFoodSelectionItemClicked(item) },
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        ThesisFitnessBLText(text = item.name, fontSize = 22.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        ThesisFitnessBLText(
+            text = item.name,
+            fontSize = 22.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }

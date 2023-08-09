@@ -14,7 +14,7 @@ class FoodSelectionUiMapper @Inject constructor() : Mapper {
         )
     }
 
-    private fun mapFoods(foods: List<Food>): List<FoodUiItem> {
+    fun mapFoods(foods: List<Food>): MutableList<FoodUiItem> {
         return foods.map {
             FoodUiItem(
                 id = it.id,
@@ -26,6 +26,6 @@ class FoodSelectionUiMapper @Inject constructor() : Mapper {
                 water = it.water.toString(),
                 fiber = it.fiber.toString()
             )
-        }
+        }.toMutableList()
     }
 }

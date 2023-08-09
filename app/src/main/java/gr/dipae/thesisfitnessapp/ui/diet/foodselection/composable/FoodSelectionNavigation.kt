@@ -20,7 +20,8 @@ fun NavGraphBuilder.foodSelectionScreen() {
 
         FoodSelectionContent(
             uiState = viewModel.uiState.value,
-            onFoodSelectionItemClicked = {}
+            onFoodSelectionItemClicked = {},
+            onPageSizeReached = { viewModel.getFoodListNextPage() }
         )
     }
 }
