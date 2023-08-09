@@ -33,6 +33,7 @@ import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ifable
+import gr.dipae.thesisfitnessapp.ui.base.compose.noRippleClickable
 import gr.dipae.thesisfitnessapp.ui.diet.macros.model.MacrosDialogUiState
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
@@ -50,7 +51,7 @@ fun MacrosDialogContent(
         Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
-            .clickable { localFocusManager.clearFocus() }
+            .noRippleClickable { localFocusManager.clearFocus() }
             .padding(SpacingDefault_16dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(SpacingDefault_16dp)
