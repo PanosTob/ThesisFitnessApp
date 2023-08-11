@@ -38,6 +38,7 @@ fun NavGraphBuilder.sportCustomizeScreen(
                 .flowWithLifecycle(lifecycleOwner.lifecycle)
                 .collectLatest {
                     onStartClicked(it)
+                    viewModel.uiState.value?.navigateToSportSession?.value = null
                 }
         }
 

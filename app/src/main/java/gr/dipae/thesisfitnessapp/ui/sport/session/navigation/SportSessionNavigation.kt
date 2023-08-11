@@ -13,6 +13,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import gr.dipae.thesisfitnessapp.ui.sport.customize.navigation.SportCustomizeRoute
 import gr.dipae.thesisfitnessapp.ui.sport.session.composable.OnSportSessionTimerPause
 import gr.dipae.thesisfitnessapp.ui.sport.session.composable.OnSportSessionTimerResume
 import gr.dipae.thesisfitnessapp.ui.sport.session.composable.OnSportSessionTimerStop
@@ -20,7 +21,7 @@ import gr.dipae.thesisfitnessapp.ui.sport.session.composable.SportSessionContent
 import gr.dipae.thesisfitnessapp.ui.sport.session.viewmodel.SportSessionViewModel
 import gr.dipae.thesisfitnessapp.util.ext.getComposeNavigationArgs
 import gr.dipae.thesisfitnessapp.util.ext.replaceRouteStringWithArgumentPlaceholders
-import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
+import gr.dipae.thesisfitnessapp.util.ext.singleNavigateWithPopInclusive
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
@@ -89,7 +90,14 @@ fun NavGraphBuilder.sportSessionScreen(
 }
 
 fun NavController.navigateToSportSession(arguments: Triple<String, Boolean, String?>) {
-    singleNavigate(String.format(SportSessionRoute.replaceRouteStringWithArgumentPlaceholders(SportSessionArgumentKeys), arguments.first, arguments.second, arguments.third))
+    singleNavigateWithPopInclusive(
+        destinationRoute = String.format(
+            SportSessionRoute.replaceRouteStringWithArgumentPlaceholders(SportSessionArgumentKeys),
+            arguments.first,
+            arguments.second,
+            arguments.third
+        ), popRoute = SportCustomizeRoute
+    )
 }
 
 private fun sportCustomizeArguments(): List<NamedNavArgument> {
