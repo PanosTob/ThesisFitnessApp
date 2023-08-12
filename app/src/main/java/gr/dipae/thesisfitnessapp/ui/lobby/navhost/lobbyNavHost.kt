@@ -1,5 +1,6 @@
 package gr.dipae.thesisfitnessapp.ui.lobby.navhost
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,6 +51,7 @@ import gr.dipae.thesisfitnessapp.util.ext.singleNavigateWithPopInclusive
 
 internal const val LobbyNavHostRoute = "lobby_nav_host"
 
+@ExperimentalFoundationApi
 @ExperimentalPermissionsApi
 @ExperimentalComposeUiApi
 @ExperimentalMaterial3Api

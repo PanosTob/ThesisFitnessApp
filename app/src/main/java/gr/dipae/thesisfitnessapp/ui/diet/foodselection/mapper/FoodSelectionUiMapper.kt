@@ -1,5 +1,6 @@
 package gr.dipae.thesisfitnessapp.ui.diet.foodselection.mapper
 
+import androidx.compose.runtime.toMutableStateList
 import gr.dipae.thesisfitnessapp.data.Mapper
 import gr.dipae.thesisfitnessapp.domain.diet.entity.Food
 import gr.dipae.thesisfitnessapp.ui.diet.foodselection.model.FoodSelectionUiState
@@ -10,7 +11,7 @@ class FoodSelectionUiMapper @Inject constructor() : Mapper {
 
     operator fun invoke(foods: List<Food>): FoodSelectionUiState {
         return FoodSelectionUiState(
-            foodList = mapFoods(foods)
+            foodList = mapFoods(foods).toMutableStateList()
         )
     }
 

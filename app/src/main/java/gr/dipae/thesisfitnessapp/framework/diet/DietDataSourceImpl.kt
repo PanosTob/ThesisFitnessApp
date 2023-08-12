@@ -47,4 +47,10 @@ class DietDataSourceImpl @Inject constructor(
             )
             .await()
     }
+
+    override suspend fun searchFoodByName(foodNameQuery: String): List<RemoteFood> {
+        return withContext(Dispatchers.IO) {
+            api.getFoodByName(foodNameQuery).requireNotNull().foods
+        }
+    }
 }

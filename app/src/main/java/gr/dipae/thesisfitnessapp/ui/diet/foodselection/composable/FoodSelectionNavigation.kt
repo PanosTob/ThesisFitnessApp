@@ -1,5 +1,6 @@
 package gr.dipae.thesisfitnessapp.ui.diet.foodselection.composable
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -11,6 +12,7 @@ import gr.dipae.thesisfitnessapp.util.ext.singleNavigate
 
 internal const val FoodSelectionRoute = "food_selection"
 
+@ExperimentalFoundationApi
 @ExperimentalMaterial3Api
 fun NavGraphBuilder.foodSelectionScreen() {
     composable(FoodSelectionRoute) {
@@ -23,6 +25,8 @@ fun NavGraphBuilder.foodSelectionScreen() {
         FoodSelectionContent(
             uiState = viewModel.uiState.value,
             onFoodItemClicked = { viewModel.onFoodItemClicked(it) },
+            onSearchFood = { viewModel.onSearchFood(it) },
+            onClearSearch = { viewModel.onClearSearch() },
             onPageSizeReached = { viewModel.getFoodListNextPage() }
         )
 

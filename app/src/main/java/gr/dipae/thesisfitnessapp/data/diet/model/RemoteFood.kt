@@ -4,6 +4,10 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import gr.dipae.thesisfitnessapp.domain.diet.entity.FoodNutrientType
 
+@JsonClass(generateAdapter = true)
+data class RemoteSearchFoodResponse(
+    val foods: List<RemoteFood>
+)
 
 @JsonClass(generateAdapter = true)
 data class RemoteFood(

@@ -56,6 +56,9 @@
     <string name="diet_macros_dialog_water_placeholder">Water intake</string>
     <string name="diet_macros_dialog_save_button">Save</string>
 
+    <!-- Diet Food List -->
+    <string name="diet_food_list_search_bar_placeholder">Type the name of the food you are looking for</string>
+
     <!-- Diet Food Save Dialog -->
     <string name="diet_food_save_description">Enter the amount of grams you ate of this food</string>
 

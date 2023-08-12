@@ -5,8 +5,6 @@ import gr.dipae.thesisfitnessapp.domain.diet.entity.Food
 
 interface DietRepository {
     suspend fun getFoodList(page: Int): List<Food>
-    suspend fun setMacrosDaily(
-        dailyDietRequest: DailyDietRequest,
-        todaySummaryId: String?
-    )
+    suspend fun setMacrosDaily(dailyDietRequest: DailyDietRequest, todaySummaryId: String?)
+    suspend fun searchFoodByName(foodNameQuery: String): List<Food>
 }
