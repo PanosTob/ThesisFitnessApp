@@ -8,7 +8,7 @@ data class Food(
     val proteins: Double,
     val carbohydrates: Double,
     val fats: Double,
-    val calories: Double,
+    val calories: Long,
     val water: Double,
     val fiber: Double
 )

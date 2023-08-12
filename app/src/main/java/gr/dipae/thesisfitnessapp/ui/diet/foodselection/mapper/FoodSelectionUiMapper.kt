@@ -28,4 +28,18 @@ class FoodSelectionUiMapper @Inject constructor() : Mapper {
             )
         }.toMutableList()
     }
+
+    fun mapFoodNutrientsRequest(foodUiItem: FoodUiItem?): Food? {
+        foodUiItem ?: return null
+        return Food(
+            id = foodUiItem.id,
+            name = foodUiItem.name,
+            proteins = foodUiItem.proteins.toDoubleOrNull() ?: 0.0,
+            carbohydrates = foodUiItem.carbohydrates.toDoubleOrNull() ?: 0.0,
+            fats = foodUiItem.fats.toDoubleOrNull() ?: 0.0,
+            calories = foodUiItem.calories.toLongOrNull() ?: 0,
+            water = foodUiItem.water.toDoubleOrNull() ?: 0.0,
+            fiber = foodUiItem.fiber.toDoubleOrNull() ?: 0.0
+        )
+    }
 }

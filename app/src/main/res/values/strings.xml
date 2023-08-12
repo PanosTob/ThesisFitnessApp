@@ -48,13 +48,16 @@
     <!-- Diet Screen -->
     <string name="diet_title">Diet</string>
 
-    !-- Diet Macros Dialog -->
+    <!-- Diet Macros Dialog -->
     <string name="diet_macros_dialog_title">Enter any macronutrients intake you like</string>
     <string name="diet_macros_dialog_protein_placeholder">Protein intake</string>
     <string name="diet_macros_dialog_carbs_placeholder">Carbohydrates intake</string>
     <string name="diet_macros_dialog_fats_placeholder">Fats intake</string>
     <string name="diet_macros_dialog_water_placeholder">Water intake</string>
     <string name="diet_macros_dialog_save_button">Save</string>
+
+    <!-- Diet Food Save Dialog -->
+    <string name="diet_food_save_description">Enter the amount of grams you ate of this food</string>
 
     <!-- Profile Screen -->
     <string name="profile_title">Profile</string>

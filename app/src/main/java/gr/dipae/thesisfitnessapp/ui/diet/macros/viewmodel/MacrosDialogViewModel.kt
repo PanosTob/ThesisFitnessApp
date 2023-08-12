@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MacrosDialogViewModel @Inject constructor(
-    private val setMacrosDailyUseCase: SetMacrosDailyUseCase
+    private val setMacrosDailyUseCase: SetMacrosDailyUseCase,
 ) : BaseViewModel() {
 
     private val _uiState: MutableState<MacrosDialogUiState> = mutableStateOf(MacrosDialogUiState())
@@ -25,11 +25,11 @@ class MacrosDialogViewModel @Inject constructor(
         launchWithProgress {
             _uiState.value.apply {
                 setMacrosDailyUseCase(
-                    calories.value,
-                    protein.value,
-                    carbs.value,
-                    fats.value,
-                    water.value
+                    calories = (calories.value.toLongOrNull() ?: 0),
+                    protein = (protein.value.toDoubleOrNull() ?: 0.0),
+                    carbs = (carbs.value.toDoubleOrNull() ?: 0.0),
+                    fats = (fats.value.toDoubleOrNull() ?: 0.0),
+                    water = (water.value.toDoubleOrNull() ?: 0.0)
                 )
             }
         }

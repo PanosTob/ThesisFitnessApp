@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 data class FoodSelectionUiState(
     val foodList: MutableList<FoodUiItem> = mutableListOf(),
     val page: MutableState<Int> = mutableStateOf(1),
+    val selectedFoodItem: MutableState<FoodUiItem?> = mutableStateOf(null)
 )
 
 data class FoodUiItem(

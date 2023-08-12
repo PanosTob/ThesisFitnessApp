@@ -32,12 +32,12 @@ import gr.dipae.thesisfitnessapp.util.composable.isScrolledToEnd
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
 
-private typealias OnFoodSelectionItemClicked = (FoodUiItem) -> Unit
+private typealias OnFoodItemClicked = (FoodUiItem) -> Unit
 
 @Composable
 fun FoodSelectionContent(
     uiState: FoodSelectionUiState,
-    onFoodSelectionItemClicked: OnFoodSelectionItemClicked,
+    onFoodItemClicked: OnFoodItemClicked,
     onPageSizeReached: () -> Unit
 ) {
     val lazyListScrollState = rememberLazyListState()
@@ -59,7 +59,7 @@ fun FoodSelectionContent(
         verticalArrangement = Arrangement.spacedBy(SpacingHalf_8dp)
     ) {
         items(items = uiState.foodList, key = { item -> item.id }) { item ->
-            FoodSelectionItem(item) { }
+            FoodSelectionItem(item) { onFoodItemClicked(it) }
             WidthAdjustedDivider(Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.primary)
         }
     }
@@ -68,13 +68,13 @@ fun FoodSelectionContent(
 @Composable
 fun FoodSelectionItem(
     item: FoodUiItem,
-    onFoodSelectionItemClicked: OnFoodSelectionItemClicked
+    onFoodItemClicked: OnFoodItemClicked
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(7f)
-            .clickable { onFoodSelectionItemClicked(item) },
+            .clickable { onFoodItemClicked(item) },
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {

@@ -27,7 +27,6 @@ fun NavGraphBuilder.macrosDialog() {
         }
         MacrosDialogContent(
             uiState = viewModel.uiState.value,
-
             onSaveClicked = { viewModel.onSaveClicked() }
         )
     }
