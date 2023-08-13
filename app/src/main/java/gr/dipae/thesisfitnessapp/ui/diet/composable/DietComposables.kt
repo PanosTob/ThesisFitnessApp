@@ -187,7 +187,7 @@ fun NutritionProgressBar(
                 (180f * progressAnimation).coerceAtMost(180f),
                 useCenter = false,
                 size = Size(size.width, size.height * 2),
-                style = Stroke(SpacingCustom_24dp.toPx(), cap = StrokeCap.Round)
+                style = Stroke(SpacingCustom_24dp.toPx(), cap = StrokeCap.Square)
             )
         }
         ThesisFitnessHMAutoSizeText(modifier = Modifier
