@@ -2,6 +2,7 @@ package gr.dipae.thesisfitnessapp.data.user
 
 import android.content.Intent
 import android.content.IntentSender
+import gr.dipae.thesisfitnessapp.data.diet.model.DailyDietRequest
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteDaySummary
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteSportDone
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteWorkoutDone
@@ -37,4 +38,5 @@ interface UserDataSource {
     suspend fun getDaySummaryWorkoutExercisesDone(daySummaryId: String, workoutId: String): List<RemoteWorkoutExerciseDone>
     suspend fun getFavoriteSportIds(): List<String>
     suspend fun setFavoriteSportIds(favoritesSports: List<String>)
+    suspend fun setMacrosDaily(dailyDietRequest: DailyDietRequest, todaySummaryId: String?)
 }

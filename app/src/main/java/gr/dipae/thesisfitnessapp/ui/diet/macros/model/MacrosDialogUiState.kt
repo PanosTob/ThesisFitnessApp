@@ -13,7 +13,8 @@ data class MacrosDialogUiState(
     val carbs: MutableState<String> = mutableStateOf(""),
     val fats: MutableState<String> = mutableStateOf(""),
     val water: MutableState<String> = mutableStateOf(""),
-    val saveButton: MacrosDialogSaveButton = MacrosDialogSaveButton()
+    val saveButton: MacrosDialogSaveButton = MacrosDialogSaveButton(),
+    val saveCompleted: MutableState<Boolean> = mutableStateOf(false)
 ) {
     fun updateSaveButtonEnabledState() {
         saveButton.isEnabled.value = protein.value.isNotBlank() || carbs.value.isNotBlank() || fats.value.isNotBlank() || water.value.isNotBlank()

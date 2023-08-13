@@ -4,12 +4,12 @@ import com.google.firebase.firestore.PropertyName
 
 data class DailyDietRequest(
     val calories: Long,
-    @PropertyName(value = "proteinGrams")
+    @PropertyName(value = "protein")
     val protein: Double,
-    @PropertyName(value = "carbonhydrateGrams")
-    val carbs: Double,
-    @PropertyName(value = "fatGrams")
+    @PropertyName(value = "carbohydrates")
+    val carbohydrates: Double,
+    @PropertyName(value = "fats")
     val fats: Double,
-    @PropertyName(value = "waterML")
+    @PropertyName(value = "water")
     val water: Double
 )

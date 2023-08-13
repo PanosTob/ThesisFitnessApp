@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import gr.dipae.thesisfitnessapp.BuildConfig
+import gr.dipae.thesisfitnessapp.data.diet.typeadapter.FoodNutrientSearchTypeAdapter
 import gr.dipae.thesisfitnessapp.data.diet.typeadapter.FoodNutrientTypeAdapter
 import gr.dipae.thesisfitnessapp.framework.network.TokenInterceptor
 import okhttp3.ConnectionSpec
@@ -65,6 +66,7 @@ object NetworkModule {
     fun provideMoshi(): Moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
         .add(FoodNutrientTypeAdapter())
+        .add(FoodNutrientSearchTypeAdapter())
         .build()
 
     @Singleton

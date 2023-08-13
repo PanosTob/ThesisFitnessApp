@@ -2,6 +2,7 @@ package gr.dipae.thesisfitnessapp.domain.user
 
 import android.content.Intent
 import android.content.IntentSender
+import gr.dipae.thesisfitnessapp.data.diet.model.DailyDietRequest
 import gr.dipae.thesisfitnessapp.domain.history.entity.DaySummary
 import gr.dipae.thesisfitnessapp.domain.history.entity.SportDone
 import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutDone
@@ -31,6 +32,7 @@ interface UserRepository {
     suspend fun getUserWorkouts(): List<UserWorkout>
     suspend fun getUserWorkoutExercises(workoutId: String): List<UserWorkoutExercise>
     suspend fun getDaySummary(): DaySummary?
+    suspend fun setMacrosDaily(dailyDietRequest: DailyDietRequest, todaySummaryId: String?)
     suspend fun getDaySummarySportsDone(daySummaryId: String): List<SportDone>
     suspend fun getDaySummaryWorkoutsDone(daySummaryId: String): List<WorkoutDone>
     suspend fun getDaySummaryWorkoutExercisesDone(daySummaryId: String, workoutId: String): List<WorkoutExerciseDone>

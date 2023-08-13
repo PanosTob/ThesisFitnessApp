@@ -30,6 +30,7 @@ fun NavGraphBuilder.dietScreen(
         }
 
         DietContent(
+            uiState = viewModel.uiState.value,
             onFoodSelectionFabClicked = { onFoodSelectionFabClicked() },
             onMacrosFabClicked = { onMacrosFabClicked() }
         )

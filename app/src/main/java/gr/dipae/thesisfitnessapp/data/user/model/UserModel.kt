@@ -13,7 +13,8 @@ data class RemoteUser(
 )
 
 data class RemoteDietGoal(
-    val carbonhydrateGrams: Double? = 0.0,
+    val calories: Long = 0,
+    val carbohydrates: Double? = 0.0,
     val fatGrams: Double? = 0.0,
     val proteinGrams: Double? = 0.0,
     val waterML: Double? = 0.0

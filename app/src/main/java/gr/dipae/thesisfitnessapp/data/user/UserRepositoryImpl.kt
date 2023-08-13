@@ -2,6 +2,7 @@ package gr.dipae.thesisfitnessapp.data.user
 
 import android.content.Intent
 import android.content.IntentSender
+import gr.dipae.thesisfitnessapp.data.diet.model.DailyDietRequest
 import gr.dipae.thesisfitnessapp.data.user.mapper.UserMapper
 import gr.dipae.thesisfitnessapp.domain.history.entity.DaySummary
 import gr.dipae.thesisfitnessapp.domain.history.entity.SportDone
@@ -88,7 +89,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getDaySummary(): DaySummary? {
-        return userMapper(dataSource.getDaySummary())
+        return userMapper.mapDaySummary(dataSource.getDaySummary())
     }
 
     override suspend fun getDaySummarySportsDone(daySummaryId: String): List<SportDone> {
@@ -113,5 +114,9 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun setFavoriteSportIds(favoritesSports: List<String>) {
         dataSource.setFavoriteSportIds(favoritesSports)
+    }
+
+    override suspend fun setMacrosDaily(dailyDietRequest: DailyDietRequest, todaySummaryId: String?) {
+        dataSource.setMacrosDaily(dailyDietRequest, todaySummaryId)
     }
 }

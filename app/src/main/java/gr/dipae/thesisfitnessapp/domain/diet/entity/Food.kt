@@ -17,3 +17,8 @@ data class Food(
 enum class FoodNutrientType {
     Protein, Carbohydrates, Energy, Water, Fats, Fiber
 }
+
+@Keep
+enum class SearchFoodNutrientType {
+    Protein, Carbohydrates, Energy, Water, Fats, Fiber
+}

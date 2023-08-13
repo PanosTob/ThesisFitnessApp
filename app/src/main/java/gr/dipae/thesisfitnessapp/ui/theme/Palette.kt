@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 val lightColorsPalette = lightColorScheme(
     primary = ColorPrimary,
     secondary = ColorSecondary,
+    tertiary = ColorBottomNavBar,
     background = Color.White,
     surface = Color.Black,
     /*primary = primaryColor,
@@ -27,6 +28,7 @@ val darkColorsPalette = darkColorScheme(
     secondary = ColorSecondary,
     background = Color.Black,
     surface = Color.White,
+    tertiary = Color.White,
     /*primary = primaryColor,
     primaryVariant = primaryDarkColor,
     secondary = secondaryColor,

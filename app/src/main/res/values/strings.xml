@@ -47,9 +47,15 @@
 
     <!-- Diet Screen -->
     <string name="diet_title">Diet</string>
+    <string name="diet_nutrition_progress_bar_cal">Calories</string>
+    <string name="diet_nutrition_progress_bar_protein">Protein</string>
+    <string name="diet_nutrition_progress_bar_carb">Carbohydrates</string>
+    <string name="diet_nutrition_progress_bar_fats">Fats</string>
+    <string name="diet_nutrition_progress_bar_water">Water</string>
 
     <!-- Diet Macros Dialog -->
     <string name="diet_macros_dialog_title">Enter any macronutrients intake you like</string>
+    <string name="diet_macros_dialog_calories_placeholder">Caloric intake</string>
     <string name="diet_macros_dialog_protein_placeholder">Protein intake</string>
     <string name="diet_macros_dialog_carbs_placeholder">Carbohydrates intake</string>
     <string name="diet_macros_dialog_fats_placeholder">Fats intake</string>

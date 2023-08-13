@@ -8,12 +8,13 @@ import gr.dipae.thesisfitnessapp.domain.history.entity.SportDoneDetails
 import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutDone
 import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutExerciseDone
 import gr.dipae.thesisfitnessapp.util.ext.toDate
+import java.util.Date
 
 data class RemoteDaySummary(
     @DocumentId
     val id: String = "",
     val steps: Long = 0,
-    val dateTime: Long = 0,
+    val date: Date = Date(),
     val dailyDiet: RemoteDailyDiet = RemoteDailyDiet(),
     val sportsDone: List<RemoteSportDone> = emptyList(),
     val workoutsDone: List<RemoteWorkoutDone> = emptyList()
@@ -22,7 +23,7 @@ data class RemoteDaySummary(
         DaySummary(
             id = id,
             steps = steps,
-            dateTime = dateTime.toDate(),
+            dateTime = date.time.toDate(),
             dailyDiet = dailyDiet.toDailyDiet(),
             sportsDone = sportsDone.map { it.toSportDone() },
             workoutsDone = workoutsDone.map { it.toWorkoutDone() }
@@ -31,18 +32,18 @@ data class RemoteDaySummary(
 
 data class RemoteDailyDiet(
     val calories: Long = 0,
+    val protein: Double = 0.0,
     val carbohydrates: Double = 0.0,
     val fats: Double = 0.0,
-    val proteins: Double = 0.0,
-    val waterML: Double = 0.0
+    val water: Double = 0.0
 ) {
     fun toDailyDiet(): DailyDiet =
         DailyDiet(
             calories = calories,
             carbohydrates = carbohydrates,
             fats = fats,
-            proteins = proteins,
-            waterML = waterML
+            proteins = protein,
+            waterML = water
         )
 }
 

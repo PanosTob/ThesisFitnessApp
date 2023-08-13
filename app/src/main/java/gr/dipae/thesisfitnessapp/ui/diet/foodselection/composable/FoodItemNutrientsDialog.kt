@@ -73,8 +73,8 @@ fun FoodItemNutrientsDialog(
                     isEnabled = addButtonIsEnabled,
                     onSaveClicked = {
                         localFocusManager.clearFocus()
-                        onDismiss()
                         onSaveClicked(gramsValueText.text)
+                        onDismiss()
                     }
                 )
             }

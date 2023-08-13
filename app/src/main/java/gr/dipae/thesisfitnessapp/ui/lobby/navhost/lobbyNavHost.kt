@@ -144,7 +144,9 @@ fun NavGraphBuilder.lobbyNavHost(
                             onMacrosFabClicked = { navController.navigateToMacrosDialog() }
                         )
                         foodSelectionScreen()
-                        macrosDialog()
+                        macrosDialog(
+                            onSave = { navController.navigateUp() }
+                        )
                         profileScreen(
                             onProfileShown = { viewModel.showProfileTopBar() },
                             onLogout = { logoutUser() }

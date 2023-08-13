@@ -59,6 +59,13 @@ fun MacrosDialogContent(
         ThesisFitnessHLText(text = stringResource(id = R.string.diet_macros_dialog_title), fontSize = 22.sp)
 
         NutrientEditText(
+            nutrient = uiState.calories,
+            placeholder = stringResource(id = R.string.diet_macros_dialog_calories_placeholder),
+            onNutrientTextChanged = { uiState.updateSaveButtonEnabledState() },
+            onDone = { localFocusManager.moveFocus(FocusDirection.Down) }
+        )
+
+        NutrientEditText(
             nutrient = uiState.protein,
             placeholder = stringResource(id = R.string.diet_macros_dialog_protein_placeholder),
             onNutrientTextChanged = { uiState.updateSaveButtonEnabledState() },

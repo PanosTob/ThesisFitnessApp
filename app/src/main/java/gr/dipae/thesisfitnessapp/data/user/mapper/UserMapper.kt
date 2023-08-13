@@ -52,8 +52,7 @@ class UserMapper @Inject constructor(
         return userWorkoutExercises.map { it.toUserWorkoutExercise() }
     }
 
-    @JvmName(name = "4")
-    operator fun invoke(daySummary: RemoteDaySummary?): DaySummary? {
+    fun mapDaySummary(daySummary: RemoteDaySummary?): DaySummary? {
         return historyMapper(daySummary)
     }
 
@@ -79,7 +78,8 @@ class UserMapper @Inject constructor(
 
     private fun mapDietGoal(remoteDietGoal: RemoteDietGoal): DietGoal {
         return DietGoal(
-            carbohydrates = remoteDietGoal.carbonhydrateGrams ?: 0.0,
+            calories = remoteDietGoal.calories,
+            carbohydrates = remoteDietGoal.carbohydrates ?: 0.0,
             fats = remoteDietGoal.fatGrams ?: 0.0,
             protein = remoteDietGoal.proteinGrams ?: 0.0,
             waterML = remoteDietGoal.waterML ?: 0.0

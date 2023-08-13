@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.dipae.thesisfitnessapp.domain.diet.entity.SetDailyDietResult
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.diet.macros.model.MacrosDialogUiState
 import gr.dipae.thesisfitnessapp.usecase.diet.SetMacrosDailyUseCase
@@ -24,13 +25,17 @@ class MacrosDialogViewModel @Inject constructor(
     fun onSaveClicked() {
         launchWithProgress {
             _uiState.value.apply {
-                setMacrosDailyUseCase(
+                val result = setMacrosDailyUseCase(
                     calories = (calories.value.toLongOrNull() ?: 0),
                     protein = (protein.value.toDoubleOrNull() ?: 0.0),
                     carbs = (carbs.value.toDoubleOrNull() ?: 0.0),
                     fats = (fats.value.toDoubleOrNull() ?: 0.0),
                     water = (water.value.toDoubleOrNull() ?: 0.0)
                 )
+
+                if (result is SetDailyDietResult.Success) {
+                    saveCompleted.value = true
+                }
             }
         }
     }

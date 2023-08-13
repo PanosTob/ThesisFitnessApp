@@ -16,6 +16,7 @@ data class User(
 )
 
 data class DietGoal(
+    val calories: Long,
     val carbohydrates: Double,
     val fats: Double,
     val protein: Double,

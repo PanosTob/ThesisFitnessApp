@@ -7,8 +7,10 @@ import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException
+import gr.dipae.thesisfitnessapp.data.diet.model.DailyDietRequest
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteDaySummary
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteSportDone
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteWorkoutDone
@@ -23,6 +25,7 @@ import gr.dipae.thesisfitnessapp.di.module.qualifier.GeneralSharedPrefs
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
 import gr.dipae.thesisfitnessapp.framework.datastore.CustomPreferencesDataStore
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_COLLECTION
+import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_DAILY_DIET
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_DATE
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_SPORTS_DONE_COLLECTION
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_WORKOUTS_DONE_COLLECTION
@@ -45,6 +48,7 @@ import gr.dipae.thesisfitnessapp.util.ext.getMatchingDocument
 import gr.dipae.thesisfitnessapp.util.ext.set
 import kotlinx.coroutines.tasks.await
 import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 
 class UserDataSourceImpl @Inject constructor(
@@ -221,19 +225,37 @@ class UserDataSourceImpl @Inject constructor(
             ).await()
     }
 
-    private fun getStartTimestampOfThisDay(): Long {
+    override suspend fun setMacrosDaily(dailyDietRequest: DailyDietRequest, todaySummaryId: String?) {
+        val daySummaryCollection = fireStore
+            .collection(USERS_COLLECTION)
+            .document(getFirebaseUserId())
+            .collection(DAY_SUMMARY_COLLECTION)
+
+        val daySummaryDoc = if (todaySummaryId != null) daySummaryCollection.document(todaySummaryId) else daySummaryCollection.document()
+
+        daySummaryDoc
+            .set(
+                mapOf(
+                    DAY_SUMMARY_DATE to FieldValue.serverTimestamp(),
+                    DAY_SUMMARY_DAILY_DIET to dailyDietRequest
+                )
+            )
+            .await()
+    }
+
+    private fun getStartTimestampOfThisDay(): Date {
         return Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
-        }.timeInMillis
+        }.time
     }
 
-    private fun getEndTimeStampOfThisDay(): Long {
+    private fun getEndTimeStampOfThisDay(): Date {
         return Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 24)
+            set(Calendar.HOUR_OF_DAY, 23)
             set(Calendar.MINUTE, 59)
             set(Calendar.SECOND, 59)
-        }.timeInMillis
+        }.time
     }
 }
