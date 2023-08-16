@@ -9,6 +9,8 @@
 
     <!-- Wizard Screen -->
     <string name="wizard_name_label">Name</string>
+    <string name="wizard_body_weight_label">Body Weight</string>
+    <string name="wizard_step_goal_label">Daily Step Goal</string>
     <string name="wizard_daily_diet_step_title">Enter values for your daily goal marcos diet</string>
     <string name="wizard_calories_label">Calories</string>
     <string name="wizard_proteins_label">Proteins</string>
@@ -23,6 +25,8 @@
 
     <!-- Home Screen -->
     <string name="home_title">Home</string>
+    <string name="home_step_counter_label">Steps</string>
+    <string name="home_remaining_goal">remaining</string>
 
     <!-- Sports Screen -->
     <string name="sport_title">Activity</string>

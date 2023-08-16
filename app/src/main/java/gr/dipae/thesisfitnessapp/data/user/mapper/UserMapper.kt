@@ -33,6 +33,8 @@ class UserMapper @Inject constructor(
         return User(
             name = remoteUser.name,
             email = remoteUser.email,
+            imgUrl = remoteUser.imageUrl,
+            bodyWeight = remoteUser.bodyWeight,
             fitnessLevel = mapFitnessLevel(remoteUser.fitnessLevel),
             dietGoal = mapDietGoal(remoteUser.dietGoal),
             favoriteActivities = remoteUser.favoriteActivities,

@@ -56,6 +56,8 @@ const val USER_DIET_GOAL_CARBOHYDRATES = "carbohydrates"
 const val USER_DIET_GOAL_FATS = "fatGrams"
 const val USER_DIET_GOAL_PROTEIN = "proteinGrams"
 const val USER_DIET_GOAL_WATER = "waterML"
+const val USER_DAILY_STEP_GOAL = "dailyStepGoal"
+const val USER_BODY_WEIGHT_GOAL = "bodyWeight"
 
 const val SPORTS_COLLECTION = "activities"
 

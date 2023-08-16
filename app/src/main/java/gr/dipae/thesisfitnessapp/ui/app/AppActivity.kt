@@ -1,9 +1,15 @@
 package gr.dipae.thesisfitnessapp.ui.app
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
@@ -31,22 +37,41 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @AndroidEntryPoint
-class AppActivity : BaseActivity() {
+class AppActivity : BaseActivity(), SensorEventListener {
 
     private val viewModel: AppViewModel by viewModels()
 
     private var googleSignInIntentListener: ActivityResultLauncher<IntentSenderRequest>? = null
 
+    private var sensorManager: SensorManager? = null
+    private var running = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupObservers()
         registerGoogleSignInIntentListener()
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         setContent {
             ThesisFitnessAppTheme(statusBarColor = Color.Black) {
                 ActivityProgressContainer(progressDisplayed = LoadingLiveData.observeAsState(false).value) {
                     AppNavHost(viewModel)
                 }
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        running = true
+        val stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+
+
+        if (stepSensor == null) {
+            // This will give a toast message to the user if there is no sensor in the device
+            Toast.makeText(this, "No sensor detected on this device", Toast.LENGTH_SHORT).show()
+        } else {
+            // Rate suitable for the user interface
+            sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
         }
     }
 
@@ -117,4 +142,12 @@ class AppActivity : BaseActivity() {
             startActivity(intent)
         }
     }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (running) {
+            viewModel.updateStepCounter(event!!.values[0].toLong())
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 }

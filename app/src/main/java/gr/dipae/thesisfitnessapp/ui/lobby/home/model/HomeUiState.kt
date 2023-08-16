@@ -5,9 +5,17 @@ import androidx.compose.runtime.mutableStateOf
 
 data class HomeUiState(
     val selectedBottomNavItemIndex: MutableState<Int> = mutableStateOf(0),
-    val userDetails: UserDetailsUiItem
+    val userDetails: UserDetailsUiItem,
+    val userActivityTracking: UserActivityTrackingUiItem = UserActivityTrackingUiItem()
 )
 
 data class UserDetailsUiItem(
-    val username: String
+    val username: String,
+    val imageUrl: String,
+    val bodyWeight: String
+)
+
+data class UserActivityTrackingUiItem(
+    val stepCounter: MutableState<String> = mutableStateOf(""),
+    val caloricBurn: MutableState<String> = mutableStateOf("")
 )

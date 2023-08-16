@@ -12,6 +12,7 @@ import gr.dipae.thesisfitnessapp.domain.user.entity.User
 import gr.dipae.thesisfitnessapp.domain.user.workout.entity.UserWorkout
 import gr.dipae.thesisfitnessapp.domain.user.workout.entity.UserWorkoutExercise
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
+import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
     suspend fun isUserSignedIn(): Boolean
@@ -25,6 +26,9 @@ interface UserRepository {
     fun getGoogleSignInBlockedTime(): Long
     fun setGoogleSignInBlockedTime()
     fun setGoogleSignInDenialCount(count: Int)
+    suspend fun getUserIsRunning(): Flow<Boolean>
+    suspend fun getStepCounter(): Flow<Long>
+    suspend fun updateStepCounterValue(stepCounterValue: Long)
     suspend fun resetGoogleSignInDenialCount()
     suspend fun getUserWizardDetails(): UserWizardDetails?
     suspend fun setUserWizardDetails(userWizardDetails: UserWizardDetails)

@@ -2,14 +2,12 @@ package gr.dipae.thesisfitnessapp.ui.app
 
 import android.content.Intent
 import android.content.IntentSender
-import android.os.Bundle
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.NavOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gr.dipae.thesisfitnessapp.domain.session.SessionHandler
 import gr.dipae.thesisfitnessapp.domain.user.login.SignInResult
@@ -19,6 +17,7 @@ import gr.dipae.thesisfitnessapp.ui.app.model.PoDHelper
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.livedata.NetworkLiveData
 import gr.dipae.thesisfitnessapp.ui.livedata.SingleLiveEvent
+import gr.dipae.thesisfitnessapp.usecase.app.UpdateStepCounterUseCase
 import gr.dipae.thesisfitnessapp.usecase.login.DisableGoogleSignIfUserDenialsExceedsLimitUseCase
 import gr.dipae.thesisfitnessapp.usecase.login.LogoutUserUseCase
 import gr.dipae.thesisfitnessapp.usecase.login.SignInUserUseCase
@@ -37,11 +36,9 @@ class AppViewModel @Inject constructor(
     private val podHelper: PoDHelper,
     private val signInUserUseCase: SignInUserUseCase,
     private val logoutUserUseCase: LogoutUserUseCase,
-    private val disableGoogleSignIfUserDenialsExceedsLimitUseCase: DisableGoogleSignIfUserDenialsExceedsLimitUseCase
+    private val disableGoogleSignIfUserDenialsExceedsLimitUseCase: DisableGoogleSignIfUserDenialsExceedsLimitUseCase,
+    private val updateStepCounterUseCase: UpdateStepCounterUseCase
 ) : BaseViewModel() {
-
-    private val _navigateId = SingleLiveEvent<Triple<Int, Bundle?, NavOptions?>>()
-    val navigateId: LiveData<Triple<Int, Bundle?, NavOptions?>> = _navigateId
 
     private val _restartApp = SingleLiveEvent<Unit>()
     val restartApp: LiveData<Unit> = _restartApp
@@ -107,6 +104,12 @@ class AppViewModel @Inject constructor(
                 return@launchWithProgress
             }
             _appUiState.value.navigateToWizard.value = true
+        }
+    }
+
+    fun updateStepCounter(newStepCounterValue: Long) {
+        launch {
+            updateStepCounterUseCase(newStepCounterValue)
         }
     }
 

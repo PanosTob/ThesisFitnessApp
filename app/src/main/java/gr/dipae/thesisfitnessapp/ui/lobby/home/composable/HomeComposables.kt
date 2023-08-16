@@ -18,9 +18,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
@@ -48,10 +50,12 @@ fun HomeContent(
                 .fillMaxWidth()
                 .aspectRatio(3f), horizontalArrangement = Arrangement.spacedBy(SpacingDefault_16dp), verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
+            AsyncImage(
                 modifier = Modifier
                     .weight(0.4f)
-                    .fillMaxHeight(), painter = painterResource(id = R.drawable.img_generic_face), contentDescription = ""
+                    .fillMaxHeight(),
+                model = uiState.userDetails.imageUrl,
+                contentDescription = ""
             )
             Column(modifier = Modifier.weight(0.6f), verticalArrangement = Arrangement.spacedBy(SpacingHalf_8dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 ThesisFitnessHLAutoSizeText(
@@ -59,14 +63,48 @@ fun HomeContent(
                         .weight(0.5f)
                         .fillMaxWidth(), text = uiState.userDetails.username, maxFontSize = 38.sp, color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center
                 )
-                Row(modifier = Modifier.weight(0.5f), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
+                /*Row(modifier = Modifier.weight(0.5f), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
                     HomeUserDetailItem("64kg", R.drawable.ic_scale)
                     HomeUserDetailItem("35%", R.drawable.ic_muscle)
                     HomeUserDetailItem("12%", R.drawable.ic_weight)
-                }
+                }*/
             }
         }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(3f),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .aspectRatio(4f)
+            ) {
+                ThesisFitnessBLAutoSizeText(text = stringResource(id = R.string.wizard_calories_label), maxLines = 1)
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f), painter = painterResource(id = R.drawable.ic_caloric_burn), contentDescription = ""
+                )
+                ThesisFitnessBLAutoSizeText(text = uiState.userActivityTracking.caloricBurn.value, maxLines = 1)
+                ThesisFitnessBLAutoSizeText(text = stringResource(id = R.string.home_remaining_goal), maxLines = 1)
+            }
 
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .aspectRatio(4f)
+            ) {
+                ThesisFitnessBLAutoSizeText(text = stringResource(id = R.string.home_step_counter_label), maxLines = 1)
+                Image(
+                    modifier = Modifier
+                        .fillMaxHeight(), painter = painterResource(id = R.drawable.ic_steps_track), contentDescription = ""
+                )
+                ThesisFitnessBLAutoSizeText(text = uiState.userActivityTracking.stepCounter.value, maxLines = 1)
+                ThesisFitnessBLAutoSizeText(text = stringResource(id = R.string.home_remaining_goal), maxLines = 1)
+            }
+        }
     }
 }
 
@@ -95,7 +133,7 @@ fun HomeContentPreview() {
     ThesisFitnessAppTheme {
         HomeContent(
             HomeUiState(
-                userDetails = UserDetailsUiItem(username = "Panagiotis Toumpas")
+                userDetails = UserDetailsUiItem(username = "Panagiotis Toumpas", imageUrl = "", bodyWeight = "")
             )
         )
     }

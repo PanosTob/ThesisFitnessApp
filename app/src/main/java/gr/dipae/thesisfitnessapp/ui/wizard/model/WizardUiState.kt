@@ -10,8 +10,9 @@ import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
 import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondary
 import gr.dipae.thesisfitnessapp.ui.wizard.composable.WizardDailyDietStep
 import gr.dipae.thesisfitnessapp.ui.wizard.composable.WizardFavoriteActivitiesStep
-import gr.dipae.thesisfitnessapp.ui.wizard.composable.WizardFitnessLevelStep
 import gr.dipae.thesisfitnessapp.ui.wizard.composable.WizardNameStep
+import gr.dipae.thesisfitnessapp.ui.wizard.composable.WizardStepGoal
+import gr.dipae.thesisfitnessapp.ui.wizard.composable.WizardWeightStep
 import gr.dipae.thesisfitnessapp.util.USER_DIET_GOAL_CALORIES
 import gr.dipae.thesisfitnessapp.util.USER_DIET_GOAL_CARBOHYDRATES
 import gr.dipae.thesisfitnessapp.util.USER_DIET_GOAL_FATS
@@ -22,8 +23,10 @@ data class WizardUiState(
     val wizardSteps: Int,
     val usernameState: MutableState<String> = mutableStateOf(""),
     val fitnessLevels: List<FitnessLevelUiItem>,
+    val bodyWeightState: MutableState<String> = mutableStateOf(""),
     val sports: List<WizardSportUiItem>,
     val dailyDietGoal: DietGoalUiItem,
+    val wizardStepGoal: WizardStepGoalUiItem,
     val wizardPageIndexState: MutableState<Int> = mutableStateOf(0),
     val finishButtonEnabled: MutableState<Boolean> = mutableStateOf(false),
     val goToDashboardState: MutableState<Boolean> = mutableStateOf(false)
@@ -36,9 +39,10 @@ data class WizardUiState(
     fun WizardPageContent(pageIndex: Int) {
         return when (pageIndex) {
             0 -> WizardNameStep(usernameState)
-            1 -> WizardFitnessLevelStep(fitnessLevels = fitnessLevels) { onSelectFitnessLevel(it) }
-            2 -> WizardFavoriteActivitiesStep(sports)
-            3 -> WizardDailyDietStep(dailyDietGoal)
+            1 -> WizardWeightStep(bodyWeightState)
+            2 -> WizardStepGoal(wizardStepGoal)
+            3 -> WizardFavoriteActivitiesStep(sports)
+            4 -> WizardDailyDietStep(dailyDietGoal)
             else -> Unit
         }
     }
@@ -63,13 +67,15 @@ data class WizardUiState(
             name = usernameState.value,
             fitnessLevel = selectedFitnessLevel,
             favoriteActivities = favoriteSports.map { "/activities/$it" },
+            bodyWeightKg = bodyWeightState.value.toFloatOrNull(),
             dietGoal = mapOf(
                 USER_DIET_GOAL_CARBOHYDRATES to dailyDietGoal.caloriesState.value.toLongOrNull(),
                 USER_DIET_GOAL_FATS to dailyDietGoal.fatsState.value.toLongOrNull(),
                 USER_DIET_GOAL_PROTEIN to dailyDietGoal.proteinsState.value.toLongOrNull(),
                 USER_DIET_GOAL_CALORIES to dailyDietGoal.caloriesState.value.toLongOrNull(),
                 USER_DIET_GOAL_WATER to dailyDietGoal.waterMLState.value.toLongOrNull()
-            )
+            ),
+            dailyStepGoal = wizardStepGoal.goalAmount.value.toLongOrNull() ?: 0L
         )
     }
 }
@@ -84,6 +90,10 @@ data class WizardSportUiItem(
     val color: Color
         get() = if (selected.value) ColorSecondary else Color.White
 }
+
+data class WizardStepGoalUiItem(
+    val goalAmount: MutableState<String> = mutableStateOf("")
+)
 
 data class DietGoalUiItem(
     val caloriesState: MutableState<String> = mutableStateOf(""),

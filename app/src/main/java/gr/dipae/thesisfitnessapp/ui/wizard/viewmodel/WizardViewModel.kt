@@ -32,11 +32,9 @@ class WizardViewModel @Inject constructor(
 
     fun saveWizardDetails() {
         launchWithProgress {
-            _uiState.value?.apply {
-                val result = setUserFitnessProfileUseCase(uiState.value?.toUserDetails())
-                if (result is FirebaseWriteDocumentResult.Success) {
-                    goToDashboardState.value = true
-                }
+            val result = setUserFitnessProfileUseCase()
+            if (result is FirebaseWriteDocumentResult.Success) {
+                _uiState.value?.goToDashboardState?.value = true
             }
         }
     }

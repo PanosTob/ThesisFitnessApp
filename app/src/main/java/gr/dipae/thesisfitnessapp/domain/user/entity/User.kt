@@ -7,6 +7,8 @@ import gr.dipae.thesisfitnessapp.domain.workout.entity.Workout
 data class User(
     val name: String,
     val email: String,
+    val imgUrl: String,
+    val bodyWeight: Double,
     val fitnessLevel: FitnessLevel,
     val dietGoal: DietGoal,
     val favoriteActivities: List<String>,

@@ -12,6 +12,7 @@ import gr.dipae.thesisfitnessapp.data.user.model.RemoteUser
 import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkout
 import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkoutExercise
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
+import kotlinx.coroutines.flow.Flow
 
 interface UserDataSource {
     suspend fun isUserSignedIn(): Boolean
@@ -25,6 +26,9 @@ interface UserDataSource {
     fun getGoogleSignInBlockedTime(): Long
     fun setGoogleSignInBlockedTime()
     fun setGoogleSignInDenialCount(count: Int)
+    suspend fun getUserIsRunning(): Flow<Boolean>
+    suspend fun getStepCounter(): Flow<Long>
+    suspend fun updateStepCounterValue(stepCounterValue: Long)
     suspend fun resetGoogleSignInDenialCount()
     suspend fun getUserWizardDetails(): UserWizardDetails?
     suspend fun setUserWizardDetails(wizardDetails: UserWizardDetails)

@@ -14,6 +14,7 @@ import gr.dipae.thesisfitnessapp.domain.user.entity.User
 import gr.dipae.thesisfitnessapp.domain.user.workout.entity.UserWorkout
 import gr.dipae.thesisfitnessapp.domain.user.workout.entity.UserWorkoutExercise
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -60,8 +61,20 @@ class UserRepositoryImpl @Inject constructor(
         return dataSource.setGoogleSignInBlockedTime()
     }
 
+    override suspend fun getStepCounter(): Flow<Long> {
+        return dataSource.getStepCounter()
+    }
+
+    override suspend fun updateStepCounterValue(stepCounterValue: Long) {
+        return dataSource.updateStepCounterValue(stepCounterValue)
+    }
+
     override fun setGoogleSignInDenialCount(count: Int) {
         return dataSource.setGoogleSignInDenialCount(count)
+    }
+
+    override suspend fun getUserIsRunning(): Flow<Boolean> {
+        return dataSource.getUserIsRunning()
     }
 
     override suspend fun resetGoogleSignInDenialCount() {

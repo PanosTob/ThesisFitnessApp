@@ -7,6 +7,8 @@ data class RemoteUser(
     val id: String = "",
     val name: String = "unknown name",
     val email: String = "unknown email",
+    val imageUrl: String = "",
+    val bodyWeight: Double = 0.0,
     val fitnessLevel: String = "",
     val favoriteActivities: List<String> = emptyList(),
     val dietGoal: RemoteDietGoal = RemoteDietGoal()

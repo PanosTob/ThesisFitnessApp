@@ -20,7 +20,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -31,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -53,7 +53,9 @@ import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
 import gr.dipae.thesisfitnessapp.ui.wizard.model.DietGoalUiItem
 import gr.dipae.thesisfitnessapp.ui.wizard.model.FitnessLevelUiItem
 import gr.dipae.thesisfitnessapp.ui.wizard.model.WizardSportUiItem
+import gr.dipae.thesisfitnessapp.ui.wizard.model.WizardStepGoalUiItem
 import gr.dipae.thesisfitnessapp.ui.wizard.model.WizardUiState
+import gr.dipae.thesisfitnessapp.util.composable.DigitOnlyEditText
 import gr.dipae.thesisfitnessapp.util.ext.loadImageWithCrossfade
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -140,11 +142,24 @@ fun WizardContent(
 @Composable
 fun WizardNameStep(usernameState: MutableState<String>) {
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-        TextField(
-            value = usernameState.value,
-            onValueChange = { usernameState.value = it },
+        DigitOnlyEditText(
+            valueString = usernameState.value,
+            onTextValueChanged = { usernameState.value = it },
             label = {
                 ThesisFitnessLLText(text = stringResource(R.string.wizard_name_label))
+            }
+        )
+    }
+}
+
+@Composable
+fun WizardWeightStep(bodyWeightState: MutableState<String>) {
+    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+        DigitOnlyEditText(
+            valueString = bodyWeightState.value,
+            onTextValueChanged = { bodyWeightState.value = it },
+            label = {
+                ThesisFitnessLLText(text = stringResource(R.string.wizard_body_weight_label))
             }
         )
     }
@@ -165,6 +180,19 @@ fun WizardFitnessLevelStep(fitnessLevels: List<FitnessLevelUiItem>, onSelectFitn
                 maxFontSize = 26.sp
             )
         }
+    }
+}
+
+@Composable
+fun WizardStepGoal(stepGoalState: WizardStepGoalUiItem) {
+    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+        DigitOnlyEditText(
+            valueString = stepGoalState.goalAmount.value,
+            onTextValueChanged = { stepGoalState.goalAmount.value = it },
+            label = {
+                ThesisFitnessLLText(text = stringResource(R.string.wizard_step_goal_label))
+            }
+        )
     }
 }
 
@@ -203,40 +231,51 @@ fun WizardDailyDietStep(dailyDietGoal: DietGoalUiItem) {
             .verticalScroll(rememberScrollState()), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(SpacingDefault_16dp)
     ) {
         ThesisFitnessHLAutoSizeText(text = stringResource(id = R.string.wizard_daily_diet_step_title), color = MaterialTheme.colorScheme.primary, maxFontSize = 26.sp)
-        TextField(
-            value = dailyDietGoal.caloriesState.value,
-            onValueChange = { dailyDietGoal.caloriesState.value = it },
+
+        val focusManager = LocalFocusManager.current
+        DigitOnlyEditText(
+            valueString = dailyDietGoal.caloriesState.value,
+            onTextValueChanged = { dailyDietGoal.caloriesState.value = it },
             label = {
                 ThesisFitnessLLText(text = stringResource(R.string.wizard_calories_label))
-            }
+            },
+            focusManager = focusManager
         )
-        TextField(
-            value = dailyDietGoal.proteinsState.value,
-            onValueChange = { dailyDietGoal.proteinsState.value = it },
+
+        DigitOnlyEditText(
+            valueString = dailyDietGoal.proteinsState.value,
+            onTextValueChanged = { dailyDietGoal.proteinsState.value = it },
             label = {
                 ThesisFitnessLLText(text = stringResource(R.string.wizard_proteins_label))
-            }
+            },
+            focusManager = focusManager
         )
-        TextField(
-            value = dailyDietGoal.carbohydratesState.value,
-            onValueChange = { dailyDietGoal.carbohydratesState.value = it },
+
+        DigitOnlyEditText(
+            valueString = dailyDietGoal.carbohydratesState.value,
+            onTextValueChanged = { dailyDietGoal.carbohydratesState.value = it },
             label = {
                 ThesisFitnessLLText(text = stringResource(R.string.wizard_carbs_label))
-            }
+            },
+            focusManager = focusManager
         )
-        TextField(
-            value = dailyDietGoal.fatsState.value,
-            onValueChange = { dailyDietGoal.fatsState.value = it },
+
+        DigitOnlyEditText(
+            valueString = dailyDietGoal.fatsState.value,
+            onTextValueChanged = { dailyDietGoal.fatsState.value = it },
             label = {
                 ThesisFitnessLLText(text = stringResource(R.string.wizard_fats_label))
-            }
+            },
+            focusManager = focusManager
         )
-        TextField(
-            value = dailyDietGoal.waterMLState.value,
-            onValueChange = { dailyDietGoal.waterMLState.value = it },
+
+        DigitOnlyEditText(
+            valueString = dailyDietGoal.waterMLState.value,
+            onTextValueChanged = { dailyDietGoal.waterMLState.value = it },
             label = {
                 ThesisFitnessLLText(text = stringResource(R.string.wizard_water_label))
-            }
+            },
+            focusManager = focusManager
         )
     }
 }
@@ -248,9 +287,10 @@ fun WizardContentPreview() {
     ThesisFitnessAppTheme {
         WizardContent(
             uiState = WizardUiState(
-                wizardSteps = 4,
+                wizardSteps = 5,
                 fitnessLevels = FitnessLevel.values().map { FitnessLevelUiItem(fitnessLevel = it) },
                 sports = listOf(WizardSportUiItem(id = "1", name = "Swimming", imageUrl = "", parameters = listOf())),
+                wizardStepGoal = WizardStepGoalUiItem(),
                 dailyDietGoal = DietGoalUiItem()
             )
         )

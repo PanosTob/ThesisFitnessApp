@@ -8,6 +8,8 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.components.SingletonComponent
 import gr.dipae.thesisfitnessapp.data.user.UserDataSource
 import gr.dipae.thesisfitnessapp.data.user.UserRepositoryImpl
+import gr.dipae.thesisfitnessapp.data.user.broadcast.AccelerometerBroadcast
+import gr.dipae.thesisfitnessapp.data.user.broadcast.StepCounterBroadcast
 import gr.dipae.thesisfitnessapp.data.user.login.broadcast.LoginBroadcast
 import gr.dipae.thesisfitnessapp.domain.user.UserRepository
 import gr.dipae.thesisfitnessapp.framework.user.UserDataSourceImpl
@@ -18,6 +20,16 @@ object UserModule {
     @Provides
     fun provideLoginBroadCast(): LoginBroadcast {
         return LoginBroadcast.getInstance()
+    }
+
+    @Provides
+    fun provideStepCounterBroadcast(): StepCounterBroadcast {
+        return StepCounterBroadcast.getInstance()
+    }
+
+    @Provides
+    fun provideAccelerometerBroadcast(): AccelerometerBroadcast {
+        return AccelerometerBroadcast.getInstance()
     }
 }
 

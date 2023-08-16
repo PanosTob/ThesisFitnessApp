@@ -16,6 +16,8 @@ import gr.dipae.thesisfitnessapp.data.history.model.RemoteSportDone
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteWorkoutDone
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteWorkoutExerciseDone
 import gr.dipae.thesisfitnessapp.data.user.UserDataSource
+import gr.dipae.thesisfitnessapp.data.user.broadcast.AccelerometerBroadcast
+import gr.dipae.thesisfitnessapp.data.user.broadcast.StepCounterBroadcast
 import gr.dipae.thesisfitnessapp.data.user.diet.model.RemoteUserScannedFood
 import gr.dipae.thesisfitnessapp.data.user.login.broadcast.LoginBroadcast
 import gr.dipae.thesisfitnessapp.data.user.model.RemoteUser
@@ -46,6 +48,8 @@ import gr.dipae.thesisfitnessapp.util.ext.getDocumentResponse
 import gr.dipae.thesisfitnessapp.util.ext.getDocumentsResponse
 import gr.dipae.thesisfitnessapp.util.ext.getMatchingDocument
 import gr.dipae.thesisfitnessapp.util.ext.set
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.tasks.await
 import java.util.Calendar
 import java.util.Date
@@ -59,7 +63,9 @@ class UserDataSourceImpl @Inject constructor(
     private val dataStore: CustomPreferencesDataStore,
     @GeneralSharedPrefs private val sharedPrefs: SharedPreferences,
     private val fireStore: FirebaseFirestore,
-    private val loginBroadcast: LoginBroadcast
+    private val loginBroadcast: LoginBroadcast,
+    private val stepCounterBroadCast: StepCounterBroadcast,
+    private val userAccelerometerBroadCast: AccelerometerBroadcast
 ) : UserDataSource {
     override suspend fun initializeGoogleSignIn(): IntentSender {
         return oneTapClient.beginSignIn(googleSignInRequest).await().pendingIntent.intentSender
@@ -111,6 +117,18 @@ class UserDataSourceImpl @Inject constructor(
 
     override fun setGoogleSignInDenialCount(count: Int) {
         sharedPrefs[USER_DECLINED_SIGN_IN_COUNTER] = count
+    }
+
+    override suspend fun getUserIsRunning(): Flow<Boolean> {
+        return userAccelerometerBroadCast.isRunning
+    }
+
+    override suspend fun getStepCounter(): Flow<Long> {
+        return stepCounterBroadCast.stepCounterValue.filterNotNull()
+    }
+
+    override suspend fun updateStepCounterValue(stepCounterValue: Long) {
+        stepCounterBroadCast.updateStepCounter(stepCounterValue)
     }
 
     override suspend fun resetGoogleSignInDenialCount() {
