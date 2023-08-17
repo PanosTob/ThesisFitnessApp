@@ -13,12 +13,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
@@ -64,6 +68,32 @@ fun NavGraphBuilder.lobbyNavHost(
     composable(LobbyNavHostRoute) {
         val viewModel: LobbyViewModel = hiltViewModel()
         val navController = rememberNavController()
+        val lifecycleOwner = LocalLifecycleOwner.current
+
+        DisposableEffect(lifecycleOwner) {
+            val observer = LifecycleEventObserver { _, event ->
+                when (event) {
+                    Lifecycle.Event.ON_RESUME -> {
+                        viewModel.startMonitoringMovement()
+                    }
+
+                    Lifecycle.Event.ON_STOP -> {
+                        viewModel.stopMonitoringMovement()
+                    }
+
+                    Lifecycle.Event.ON_DESTROY -> {
+                        viewModel.stopMonitoringMovement()
+                    }
+
+                    else -> Unit
+                }
+            }
+
+            lifecycleOwner.lifecycle.addObserver(observer)
+            onDispose {
+                lifecycleOwner.lifecycle.removeObserver(observer)
+            }
+        }
 
         viewModel.uiState.value.apply {
             Scaffold(

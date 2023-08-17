@@ -18,10 +18,18 @@ import gr.dipae.thesisfitnessapp.ui.lobby.model.TopBarActionUiItem
 import gr.dipae.thesisfitnessapp.ui.profile.navigation.ProfileRoute
 import gr.dipae.thesisfitnessapp.ui.sport.navigation.SportsRoute
 import gr.dipae.thesisfitnessapp.ui.workout.navigation.WorkoutRoute
+import gr.dipae.thesisfitnessapp.usecase.app.StartAccelerometerUseCase
+import gr.dipae.thesisfitnessapp.usecase.app.StartMonitoringStepsUseCase
+import gr.dipae.thesisfitnessapp.usecase.app.StopAccelerometerUseCase
+import gr.dipae.thesisfitnessapp.usecase.app.StopMonitoringStepsUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class LobbyViewModel @Inject constructor(
+    private val startMonitoringStepsUseCase: StartMonitoringStepsUseCase,
+    private val startAccelerometerUseCase: StartAccelerometerUseCase,
+    private val stopMonitoringStepsUseCase: StopMonitoringStepsUseCase,
+    private val stopAccelerometerUseCase: StopAccelerometerUseCase
 ) : BaseViewModel() {
 
     private val _uiState: MutableState<LobbyUiState> = mutableStateOf(LobbyUiState())
@@ -69,6 +77,16 @@ class LobbyViewModel @Inject constructor(
 
     fun updateTopBarTitle(route: String) {
         _uiState.value.topBarState.titleRes.value = routeTitles[route] ?: R.string.empty
+    }
+
+    fun startMonitoringMovement() {
+        startMonitoringStepsUseCase()
+        startAccelerometerUseCase()
+    }
+
+    fun stopMonitoringMovement() {
+        stopMonitoringStepsUseCase()
+        stopAccelerometerUseCase()
     }
 
     companion object {

@@ -26,9 +26,12 @@ interface UserRepository {
     fun getGoogleSignInBlockedTime(): Long
     fun setGoogleSignInBlockedTime()
     fun setGoogleSignInDenialCount(count: Int)
+    fun startAccelerometer()
+    fun startMonitoringSteps()
+    fun stopAccelerometer()
+    fun stopMonitoringSteps()
     suspend fun getUserIsRunning(): Flow<Boolean>
     suspend fun getStepCounter(): Flow<Long>
-    suspend fun updateStepCounterValue(stepCounterValue: Long)
     suspend fun resetGoogleSignInDenialCount()
     suspend fun getUserWizardDetails(): UserWizardDetails?
     suspend fun setUserWizardDetails(userWizardDetails: UserWizardDetails)

@@ -1,10 +1,12 @@
 package gr.dipae.thesisfitnessapp.di.module.core
 
+import android.content.Context
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import gr.dipae.thesisfitnessapp.data.user.UserDataSource
 import gr.dipae.thesisfitnessapp.data.user.UserRepositoryImpl
@@ -23,13 +25,13 @@ object UserModule {
     }
 
     @Provides
-    fun provideStepCounterBroadcast(): StepCounterBroadcast {
-        return StepCounterBroadcast.getInstance()
+    fun provideStepCounterBroadcast(@ApplicationContext context: Context): StepCounterBroadcast {
+        return StepCounterBroadcast(context)
     }
 
     @Provides
-    fun provideAccelerometerBroadcast(): AccelerometerBroadcast {
-        return AccelerometerBroadcast.getInstance()
+    fun provideAccelerometerBroadcast(@ApplicationContext context: Context): AccelerometerBroadcast {
+        return AccelerometerBroadcast(context)
     }
 }
 

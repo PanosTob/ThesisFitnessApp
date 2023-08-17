@@ -65,8 +65,16 @@ class UserRepositoryImpl @Inject constructor(
         return dataSource.getStepCounter()
     }
 
-    override suspend fun updateStepCounterValue(stepCounterValue: Long) {
-        return dataSource.updateStepCounterValue(stepCounterValue)
+    override fun startMonitoringSteps() {
+        return dataSource.startMonitoringSteps()
+    }
+
+    override fun stopAccelerometer() {
+        return dataSource.stopAccelerometer()
+    }
+
+    override fun stopMonitoringSteps() {
+        return dataSource.stopMonitoringSteps()
     }
 
     override fun setGoogleSignInDenialCount(count: Int) {
@@ -75,6 +83,10 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getUserIsRunning(): Flow<Boolean> {
         return dataSource.getUserIsRunning()
+    }
+
+    override fun startAccelerometer() {
+        return dataSource.startAccelerometer()
     }
 
     override suspend fun resetGoogleSignInDenialCount() {

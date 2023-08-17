@@ -46,7 +46,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun calculateCaloricBurn(bodyWeight: Double): Float {
-        return bodyWeight.toFloat() * if (userIsRunning) 0.4f else 0.2f * 76.2f / 100000.0f
+    private fun calculateCaloricBurn(bodyWeight: Double): Double {
+        return bodyWeight * if (userIsRunning) METRIC_RUNNING_FACTOR else METRIC_WALKING_FACTOR * 76.2 / 100000.0
+    }
+
+    companion object {
+        const val METRIC_RUNNING_FACTOR = 1.02784823
+        const val METRIC_WALKING_FACTOR = 0.708
     }
 }

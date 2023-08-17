@@ -17,7 +17,6 @@ import gr.dipae.thesisfitnessapp.ui.app.model.PoDHelper
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.livedata.NetworkLiveData
 import gr.dipae.thesisfitnessapp.ui.livedata.SingleLiveEvent
-import gr.dipae.thesisfitnessapp.usecase.app.UpdateStepCounterUseCase
 import gr.dipae.thesisfitnessapp.usecase.login.DisableGoogleSignIfUserDenialsExceedsLimitUseCase
 import gr.dipae.thesisfitnessapp.usecase.login.LogoutUserUseCase
 import gr.dipae.thesisfitnessapp.usecase.login.SignInUserUseCase
@@ -36,8 +35,7 @@ class AppViewModel @Inject constructor(
     private val podHelper: PoDHelper,
     private val signInUserUseCase: SignInUserUseCase,
     private val logoutUserUseCase: LogoutUserUseCase,
-    private val disableGoogleSignIfUserDenialsExceedsLimitUseCase: DisableGoogleSignIfUserDenialsExceedsLimitUseCase,
-    private val updateStepCounterUseCase: UpdateStepCounterUseCase
+    private val disableGoogleSignIfUserDenialsExceedsLimitUseCase: DisableGoogleSignIfUserDenialsExceedsLimitUseCase
 ) : BaseViewModel() {
 
     private val _restartApp = SingleLiveEvent<Unit>()
@@ -104,12 +102,6 @@ class AppViewModel @Inject constructor(
                 return@launchWithProgress
             }
             _appUiState.value.navigateToWizard.value = true
-        }
-    }
-
-    fun updateStepCounter(newStepCounterValue: Long) {
-        launch {
-            updateStepCounterUseCase(newStepCounterValue)
         }
     }
 

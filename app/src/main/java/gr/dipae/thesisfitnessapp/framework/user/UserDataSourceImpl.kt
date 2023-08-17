@@ -119,16 +119,28 @@ class UserDataSourceImpl @Inject constructor(
         sharedPrefs[USER_DECLINED_SIGN_IN_COUNTER] = count
     }
 
+    override fun startAccelerometer() {
+        userAccelerometerBroadCast.startMonitoringAccelerometer()
+    }
+
+    override fun startMonitoringSteps() {
+        stepCounterBroadCast.startMonitoringSteps()
+    }
+
+    override fun stopAccelerometer() {
+        userAccelerometerBroadCast.clear()
+    }
+
+    override fun stopMonitoringSteps() {
+        stepCounterBroadCast.clear()
+    }
+
     override suspend fun getUserIsRunning(): Flow<Boolean> {
         return userAccelerometerBroadCast.isRunning
     }
 
     override suspend fun getStepCounter(): Flow<Long> {
         return stepCounterBroadCast.stepCounterValue.filterNotNull()
-    }
-
-    override suspend fun updateStepCounterValue(stepCounterValue: Long) {
-        stepCounterBroadCast.updateStepCounter(stepCounterValue)
     }
 
     override suspend fun resetGoogleSignInDenialCount() {
