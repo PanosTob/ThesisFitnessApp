@@ -1,6 +1,8 @@
 package gr.dipae.thesisfitnessapp.ui.sport.navigation
 
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -15,16 +17,43 @@ typealias OnSportSelected = (String) -> Unit
 
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.sportsScreen(
-    onSportsShown: () -> Unit,
+    onSportsShown: (() -> Unit, () -> Unit, Boolean) -> Unit,
     onSportSelected: OnSportSelected
 ) {
     composable(SportsRoute) {
         val viewModel: SportsViewModel = hiltViewModel()
 
+        val toolBarState = remember {
+            mutableStateOf(true)
+        }
+
         LaunchedEffect(key1 = Unit) {
             viewModel.init()
-            onSportsShown()
+
+            onSportsShown(
+                {
+                    toolBarState.value = false
+                },
+                {
+                    toolBarState.value = true
+                },
+                toolBarState.value
+            )
         }
+
+        LaunchedEffect(key1 = toolBarState.value)
+        {
+            onSportsShown(
+                {
+                    toolBarState.value = false
+                },
+                {
+                    toolBarState.value = true
+                },
+                toolBarState.value
+            )
+        }
+
 
         viewModel.uiState.value?.let { uiState ->
             SportsContent(
