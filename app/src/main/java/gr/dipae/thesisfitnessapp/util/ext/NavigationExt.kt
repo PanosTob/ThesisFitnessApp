@@ -22,6 +22,22 @@ fun NavController.singleNavigateWithPopInclusive(destinationRoute: String, popRo
     }
 }
 
+fun NavController.popToCurrentScreen(destinationRoute: String) {
+    if (currentDestination?.route != destinationRoute) {
+        navigate(destinationRoute) {
+            currentDestination?.route?.let { screen_route ->
+                popUpTo(screen_route) {
+                    saveState = true
+                    inclusive = true
+                }
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+}
+
+
 fun NavOptions.Builder.slideNavOptions(): NavOptions.Builder {
     return setEnterAnim(R.anim.slide_in_right)
         .setExitAnim(R.anim.slide_out_left)

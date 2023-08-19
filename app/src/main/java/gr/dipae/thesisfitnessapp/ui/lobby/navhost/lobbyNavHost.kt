@@ -51,6 +51,7 @@ import gr.dipae.thesisfitnessapp.ui.sport.session.navigation.sportSessionScreen
 import gr.dipae.thesisfitnessapp.ui.theme.ColorBottomNavBar
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.workout.navigation.workoutScreen
+import gr.dipae.thesisfitnessapp.util.ext.popToCurrentScreen
 import gr.dipae.thesisfitnessapp.util.ext.singleNavigateWithPopInclusive
 
 internal const val LobbyNavHostRoute = "lobby_nav_host"
@@ -192,7 +193,7 @@ fun NavGraphBuilder.lobbyNavHost(
                         ) {
                             bottomAppBarItems.value.forEach {
                                 LobbyBottomNavItem(item = it) {
-                                    navController.singleNavigateWithPopInclusive(it.route, HomeRoute)
+                                    navController.popToCurrentScreen(it.route)
                                     onBottomAppBarItemSelection(it)
                                     viewModel.updateTopBarTitle(it.route)
                                 }
