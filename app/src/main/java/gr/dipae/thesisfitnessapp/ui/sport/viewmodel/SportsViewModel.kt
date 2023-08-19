@@ -27,6 +27,10 @@ class SportsViewModel @Inject constructor(
         }
     }
 
+    fun updateEditState(editState: Boolean) {
+        _uiState.value?.sports?.forEach { it.editable.value = editState }
+    }
+
     fun setFavoriteSports() {
         launchWithProgress {
             val favoriteSports = getUserNewSelectedFavoriteSports()

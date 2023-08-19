@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBLAutoSizeText
+import gr.dipae.thesisfitnessapp.ui.base.compose.dashedBorder
 import gr.dipae.thesisfitnessapp.ui.sport.model.SportUiItem
 import gr.dipae.thesisfitnessapp.ui.sport.navigation.OnSportSelected
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
@@ -36,15 +37,23 @@ fun SportItem(
     onSportSelected: OnSportSelected
 ) {
     val background = MaterialTheme.colorScheme.primary
-    Box(Modifier
-        .fillMaxWidth()
-        .aspectRatio(1.3f)
-        .graphicsLayer {
-            shape = RoundedCornerShape(SpacingDefault_16dp)
-            clip = true
-        }
-        .drawBehind { drawRect(color = background) }
-        .clickable { item.determineClickAction { onSportSelected(it) } }) {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .aspectRatio(1.3f)
+            .dashedBorder(
+                width = 2.dp,
+                color = Color.Red,
+                shape = RoundedCornerShape(SpacingDefault_16dp),
+                on = 4.dp,
+                off = 4.dp
+            )
+            .graphicsLayer {
+                shape = RoundedCornerShape(SpacingDefault_16dp)
+                clip = true
+            }
+            .drawBehind { drawRect(color = background) }
+            .clickable { item.determineClickAction { onSportSelected(it) } }) {
         if (item.favorite.value) {
             Icon(
                 modifier = Modifier

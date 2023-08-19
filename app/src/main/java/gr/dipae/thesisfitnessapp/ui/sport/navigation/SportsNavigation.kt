@@ -23,34 +23,26 @@ fun NavGraphBuilder.sportsScreen(
     composable(SportsRoute) {
         val viewModel: SportsViewModel = hiltViewModel()
 
-        val toolBarState = remember {
-            mutableStateOf(true)
+        val editState = remember {
+            mutableStateOf(false)
         }
 
         LaunchedEffect(key1 = Unit) {
             viewModel.init()
-
-            onSportsShown(
-                {
-                    toolBarState.value = false
-                },
-                {
-                    toolBarState.value = true
-                },
-                toolBarState.value
-            )
         }
 
-        LaunchedEffect(key1 = toolBarState.value)
+        LaunchedEffect(key1 = editState.value)
         {
             onSportsShown(
                 {
-                    toolBarState.value = false
+                    viewModel.updateEditState(true)
+                    editState.value = true
                 },
                 {
-                    toolBarState.value = true
+                    viewModel.updateEditState(false)
+                    editState.value = false
                 },
-                toolBarState.value
+                editState.value
             )
         }
 

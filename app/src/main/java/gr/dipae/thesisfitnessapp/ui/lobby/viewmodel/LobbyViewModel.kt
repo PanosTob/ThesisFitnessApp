@@ -41,9 +41,9 @@ class LobbyViewModel @Inject constructor(
 
     fun showSportsTopBar(onEditClicked: () -> Unit, onEditDoneClicked: () -> Unit, statusBarState: Boolean) {
         if (statusBarState) {
-            _uiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_edit, onEditClicked), TopBarActionUiItem(R.drawable.ic_calendar))
-        } else {
             _uiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_add, onEditDoneClicked), TopBarActionUiItem(R.drawable.ic_calendar))
+        } else {
+            _uiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_edit, onEditClicked), TopBarActionUiItem(R.drawable.ic_calendar))
         }
     }
 
