@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException
 import gr.dipae.thesisfitnessapp.data.diet.model.DailyDietRequest
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteDaySummary
@@ -47,6 +48,7 @@ import gr.dipae.thesisfitnessapp.util.USER_EMAIL
 import gr.dipae.thesisfitnessapp.util.USER_FAVORITE_ACTIVITIES
 import gr.dipae.thesisfitnessapp.util.USER_IMG_URL
 import gr.dipae.thesisfitnessapp.util.USER_NAME
+import gr.dipae.thesisfitnessapp.util.USER_SPORT_CHALLENGES
 import gr.dipae.thesisfitnessapp.util.WORKOUTS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.base.GoogleAuthenticationException
 import gr.dipae.thesisfitnessapp.util.ext.get
@@ -280,13 +282,48 @@ class UserDataSourceImpl @Inject constructor(
 
     override suspend fun setFavoriteSportIds(favoritesSports: List<String>) {
         val userId = getFirebaseUserId()
+        val challenges = getUserCompletedChallenges() + getFavoriteSportsChallenges(favoritesSports).map {
+            RemoteUserSportChallenge(
+                challengeId = it.id,
+                activityId = it.activityId,
+                activityName = it.activityName,
+                activityImgUrl = it.activityImgUrl,
+                goal = RemoteUserSportChallengeDetails(
+                    type = it.goal.type,
+                    value = it.goal.value
+                ),
+                done = false,
+                progress = 0.0
+            )
+        }
+
         fireStore
             .collection(USERS_COLLECTION)
             .document(userId)
             .set(
                 mapOf(
-                    USER_FAVORITE_ACTIVITIES to favoritesSports
-                )
+                    USER_FAVORITE_ACTIVITIES to favoritesSports,
+                    USER_SPORT_CHALLENGES to challenges
+                ),
+                SetOptions.merge()
+            ).await()
+    }
+
+    private suspend fun getUserCompletedChallenges(): List<RemoteUserSportChallenge> {
+        return getUser()?.challenges?.filter { it.done } ?: emptyList()
+    }
+
+    override suspend fun setUserNewSportChallenges(favoritesSports: List<String>) {
+        val userId = getFirebaseUserId()
+        val challenges = getFavoriteSportsChallenges(favoritesSports)
+        fireStore
+            .collection(USERS_COLLECTION)
+            .document(userId)
+            .set(
+                mapOf(
+                    USER_SPORT_CHALLENGES to challenges
+                ),
+                SetOptions.merge()
             ).await()
     }
 
@@ -310,9 +347,13 @@ class UserDataSourceImpl @Inject constructor(
 
     private suspend fun getFavoriteSportsChallenges(favoriteActivitiesIds: List<String>): List<RemoteSportChallenges> {
         val sportChallenges = fireStore.collection(SPORT_CHALLENGES_COLLECTION).getDocumentsResponse<RemoteSportChallenges>().filter { favoriteActivitiesIds.contains(it.activityId) }
-        fireStore.collection(SPORTS_COLLECTION).getDocumentsResponse<RemoteSport>().forEach { sport ->
-            sportChallenges.find { it.activityId == sport.id }?.activityImgUrl = sport.imageUrl
+
+        val sports = fireStore.collection(SPORTS_COLLECTION).getDocumentsResponse<RemoteSport>()
+
+        sportChallenges.onEach { challenge ->
+            challenge.activityImgUrl = sports.find { it.id == challenge.activityId }?.imageUrl ?: ""
         }
+        //img_walking.png
         return sportChallenges
     }
 

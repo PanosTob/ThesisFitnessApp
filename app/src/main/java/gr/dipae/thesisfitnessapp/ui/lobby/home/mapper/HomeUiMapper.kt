@@ -28,7 +28,7 @@ class HomeUiMapper @Inject constructor() : Mapper {
                 stepsTracking = UserMovementTrackingUiItem(remaining = mutableStateOf(user?.dailyStepsGoal?.toString() ?: "")),
                 caloriesTracking = UserMovementTrackingUiItem(remaining = mutableStateOf(user?.dailyCaloricBurnGoal?.toString() ?: ""))
             ),
-            sportChallenges = mapUserSportChallenges(user?.sportChallenges)
+            sportChallenges = mapUserSportChallenges(user?.sportChallenges).sortedBy { it.sportId }
         )
     }
 

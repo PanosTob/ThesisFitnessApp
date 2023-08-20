@@ -139,6 +139,10 @@ class UserRepositoryImpl @Inject constructor(
         dataSource.setFavoriteSportIds(favoritesSports)
     }
 
+    override suspend fun setUserNewSportChallenges(favoritesSports: List<String>) {
+        dataSource.setUserNewSportChallenges(favoritesSports)
+    }
+
     override suspend fun setMacrosDaily(dailyDietRequest: DailyDietRequest, todaySummaryId: String?) {
         dataSource.setMacrosDaily(dailyDietRequest, todaySummaryId)
     }

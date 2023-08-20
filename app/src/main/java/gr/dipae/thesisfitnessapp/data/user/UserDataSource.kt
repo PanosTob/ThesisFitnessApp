@@ -45,5 +45,6 @@ interface UserDataSource {
     suspend fun getDaySummaryWorkoutExercisesDone(daySummaryId: String, workoutId: String): List<RemoteWorkoutExerciseDone>
     suspend fun getFavoriteSportIds(): List<String>
     suspend fun setFavoriteSportIds(favoritesSports: List<String>)
+    suspend fun setUserNewSportChallenges(favoritesSports: List<String>)
     suspend fun setMacrosDaily(dailyDietRequest: DailyDietRequest, todaySummaryId: String?)
 }

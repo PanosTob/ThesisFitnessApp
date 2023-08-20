@@ -46,4 +46,5 @@ interface UserRepository {
     suspend fun getUserScannedFoods(): List<UserScannedFood>
     suspend fun getFavoriteSportIds(): List<String>
     suspend fun setFavoriteSportIds(favoritesSports: List<String>)
+    suspend fun setUserNewSportChallenges(favoritesSports: List<String>)
 }

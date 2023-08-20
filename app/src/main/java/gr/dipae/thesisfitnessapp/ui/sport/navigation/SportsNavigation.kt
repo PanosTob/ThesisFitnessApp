@@ -39,6 +39,7 @@ fun NavGraphBuilder.sportsScreen(
                     editState.value = true
                 },
                 {
+                    viewModel.setFavoriteSports()
                     viewModel.updateEditState(false)
                     editState.value = false
                 },

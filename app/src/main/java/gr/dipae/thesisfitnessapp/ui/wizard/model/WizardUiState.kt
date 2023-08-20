@@ -54,6 +54,7 @@ data class WizardUiState(
         if (wizardPageIndexState.value == wizardSteps - 1) {
             usernameState.value.isNotBlank() &&
                     sports.any { it.selected.value } &&
+                    bodyDetails.bodyWeightState.value.isNotBlank() &&
                     wizardTrackingMovementGoal.dailyStepGoal.value.isNotBlank() &&
                     wizardTrackingMovementGoal.dailyCaloricBurnGoal.value.isNotBlank()
         } else {
