@@ -13,6 +13,7 @@ data class HomeUiState(
 data class UserSportChallengeUiItem(
     val sportId: String,
     val sportName: String,
+    val sportImgUrl: String,
     val goalName: String,
     val goalValue: String,
     val completed: Boolean,

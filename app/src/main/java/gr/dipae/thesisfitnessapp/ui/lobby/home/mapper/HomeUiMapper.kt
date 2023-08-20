@@ -39,6 +39,7 @@ class HomeUiMapper @Inject constructor() : Mapper {
             UserSportChallengeUiItem(
                 sportId = it.sportId,
                 sportName = it.sportName,
+                sportImgUrl = it.sportImgUrl,
                 goalName = it.goal.name,
                 goalValue = it.goal.value.toString(),
                 progress = it.progress.toFloat(),

@@ -18,12 +18,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import gr.dipae.thesisfitnessapp.R
+import gr.dipae.thesisfitnessapp.ui.base.compose.HorizontalSpacerHalf
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHMAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerHalf
@@ -34,6 +37,7 @@ import gr.dipae.thesisfitnessapp.ui.theme.ColorGold
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
 import gr.dipae.thesisfitnessapp.ui.theme.openSansFontFamily
+import gr.dipae.thesisfitnessapp.util.ext.loadImageWithCrossfade
 
 @Composable
 fun HomeSportChallenges(
@@ -82,12 +86,17 @@ fun HomeSportChallenge(
             }
         }
 
-        ThesisFitnessHMAutoSizeText(
+        Row(
             modifier = Modifier
-                .align(Alignment.TopEnd),
-            text = item.sportName,
-            color = Color.White
-        )
+                .align(Alignment.TopEnd)
+        ) {
+            ThesisFitnessHMAutoSizeText(
+                text = item.sportName,
+                color = Color.White
+            )
+            HorizontalSpacerHalf()
+            AsyncImage(modifier = Modifier.fillMaxWidth(0.1f), model = item.sportImgUrl.loadImageWithCrossfade(), contentDescription = "", colorFilter = ColorFilter.tint(Color.White))
+        }
         if (item.completed) {
             Icon(
                 modifier = Modifier
