@@ -6,7 +6,7 @@ data class UserWizardDetails(
     val bodyWeight: Double?,
     val muscleMassPercent: Double?,
     val bodyFatPercent: Double?,
-    val favoriteActivities: List<String>,
+    val favoriteActivitiesIds: List<String>,
     val dietGoal: Map<String, Long?>,
     val dailyStepsGoal: Long,
     val dailyCaloricBurnGoal: Long

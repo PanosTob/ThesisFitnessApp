@@ -12,10 +12,11 @@ data class RemoteUser(
     val muscleMassPercent: Double = 0.0,
     val bodyFatPercent: Double = 0.0,
     val fitnessLevel: String = "",
-    val favoriteActivities: List<String> = emptyList(),
+    val favoriteActivitiesIds: List<String> = emptyList(),
     val dailyStepsGoal: Long = 0,
     val dailyCaloricBurnGoal: Long = 0,
-    val dietGoal: RemoteDietGoal = RemoteDietGoal()
+    val dietGoal: RemoteDietGoal = RemoteDietGoal(),
+    val challenges: List<RemoteUserSportChallenge> = emptyList()
 )
 
 data class RemoteDietGoal(
@@ -34,8 +35,17 @@ data class RemoteUserUpdateRequest(
     val bodyWeight: Double?,
     val muscleMassPercent: Double?,
     val bodyFatPercent: Double?,
-    val favoriteActivities: List<String>,
+    val favoriteActivitiesIds: List<String>,
     val dietGoal: Map<String, Long?>,
     val dailyStepsGoal: Long,
-    val dailyCaloricBurnGoal: Long
+    val dailyCaloricBurnGoal: Long,
+    val challenges: List<RemoteUserSportChallenge>
+)
+
+data class RemoteUserSportChallenge(
+    val challengeId: String = "",
+    val activityId: String = "",
+    val activityName: String = "",
+    val done: Boolean = false,
+    val progress: Double = 0.0
 )

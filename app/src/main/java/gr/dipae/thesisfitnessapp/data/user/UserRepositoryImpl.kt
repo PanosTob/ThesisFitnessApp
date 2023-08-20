@@ -9,6 +9,7 @@ import gr.dipae.thesisfitnessapp.domain.history.entity.SportDone
 import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutDone
 import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutExerciseDone
 import gr.dipae.thesisfitnessapp.domain.user.UserRepository
+import gr.dipae.thesisfitnessapp.domain.user.challenges.entity.UserSportChallenge
 import gr.dipae.thesisfitnessapp.domain.user.diet.entity.UserScannedFood
 import gr.dipae.thesisfitnessapp.domain.user.entity.User
 import gr.dipae.thesisfitnessapp.domain.user.workout.entity.UserWorkout
@@ -35,6 +36,11 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getUser(): User? {
         return userMapper(dataSource.getUser())
+    }
+
+    override suspend fun getUserSportChallenges(): List<UserSportChallenge> {
+//        return sportChallengesMapper(dataSource.getUserSportChallenges())
+        return listOf()
     }
 
     override suspend fun getUserDetailsLocally(): User? {

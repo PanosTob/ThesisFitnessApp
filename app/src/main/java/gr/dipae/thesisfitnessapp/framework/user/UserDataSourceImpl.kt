@@ -18,9 +18,11 @@ import gr.dipae.thesisfitnessapp.data.history.model.RemoteWorkoutExerciseDone
 import gr.dipae.thesisfitnessapp.data.user.UserDataSource
 import gr.dipae.thesisfitnessapp.data.user.broadcast.AccelerometerBroadcast
 import gr.dipae.thesisfitnessapp.data.user.broadcast.StepCounterBroadcast
+import gr.dipae.thesisfitnessapp.data.user.challenges.model.RemoteSportChallenges
 import gr.dipae.thesisfitnessapp.data.user.diet.model.RemoteUserScannedFood
 import gr.dipae.thesisfitnessapp.data.user.login.broadcast.LoginBroadcast
 import gr.dipae.thesisfitnessapp.data.user.model.RemoteUser
+import gr.dipae.thesisfitnessapp.data.user.model.RemoteUserSportChallenge
 import gr.dipae.thesisfitnessapp.data.user.model.RemoteUserUpdateRequest
 import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkout
 import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkoutExercise
@@ -35,6 +37,7 @@ import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_WORKOUT_EXERCISES_DONE_COLLECT
 import gr.dipae.thesisfitnessapp.util.EXERCISES_COLLECTION
 import gr.dipae.thesisfitnessapp.util.GOOGLE_SIGN_IN_BLOCKED_TIME
 import gr.dipae.thesisfitnessapp.util.SCANNED_FOODS_COLLECTION
+import gr.dipae.thesisfitnessapp.util.SPORT_CHALLENGES_COLLECTION
 import gr.dipae.thesisfitnessapp.util.USERS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.USER_DECLINED_SIGN_IN_COUNTER
 import gr.dipae.thesisfitnessapp.util.USER_EMAIL
@@ -102,6 +105,11 @@ class UserDataSourceImpl @Inject constructor(
         return fireStore.collection(USERS_COLLECTION).document(firebaseUserId).getDocumentResponse<RemoteUser>()
     }
 
+    override suspend fun getUserSportChallenges(): List<RemoteUserSportChallenge>? {
+        val firebaseUserId = getFirebaseUserId()
+        return fireStore.collection(USERS_COLLECTION).document(firebaseUserId).getDocumentResponse<RemoteUser>()?.challenges
+    }
+
     override suspend fun getUserDetailsLocally(): RemoteUser? {
         //TODO IMPLEMENT WITH REMOTEUSER ENTITY FOR DATADASE
         return null
@@ -149,6 +157,16 @@ class UserDataSourceImpl @Inject constructor(
     }
 
     override suspend fun setUserFitnessProfile(wizardDetails: UserWizardDetails) {
+        val challenges = getFavoriteSportsChallenges(wizardDetails.favoriteActivitiesIds).map {
+            RemoteUserSportChallenge(
+                challengeId = it.id,
+                activityId = it.activityId,
+                activityName = it.activityName,
+                done = false,
+                progress = 0.0
+            )
+        }
+
         getUser()?.let {
             fireStore.collection(USERS_COLLECTION).document(getFirebaseUserId()).set(
                 RemoteUserUpdateRequest(
@@ -159,10 +177,11 @@ class UserDataSourceImpl @Inject constructor(
                     bodyWeight = wizardDetails.bodyWeight,
                     muscleMassPercent = wizardDetails.muscleMassPercent,
                     bodyFatPercent = wizardDetails.bodyFatPercent,
-                    favoriteActivities = wizardDetails.favoriteActivities,
+                    favoriteActivitiesIds = wizardDetails.favoriteActivitiesIds,
                     dailyStepsGoal = wizardDetails.dailyStepsGoal,
                     dailyCaloricBurnGoal = wizardDetails.dailyCaloricBurnGoal,
-                    dietGoal = wizardDetails.dietGoal
+                    dietGoal = wizardDetails.dietGoal,
+                    challenges = challenges
                 )
             )
         }
@@ -239,7 +258,7 @@ class UserDataSourceImpl @Inject constructor(
         return fireStore
             .collection(USERS_COLLECTION)
             .document(getFirebaseUserId())
-            .getDocumentResponse<RemoteUser>()?.favoriteActivities?.map { it.removePrefix("/activities/") } ?: emptyList()
+            .getDocumentResponse<RemoteUser>()?.favoriteActivitiesIds?.map { it.removePrefix("/activities/") } ?: emptyList()
     }
 
     override suspend fun getUserScannedFoods(): List<RemoteUserScannedFood> {
@@ -279,6 +298,10 @@ class UserDataSourceImpl @Inject constructor(
                 )
             )
             .await()
+    }
+
+    private suspend fun getFavoriteSportsChallenges(favoriteActivitiesIds: List<String>): List<RemoteSportChallenges> {
+        return fireStore.collection(SPORT_CHALLENGES_COLLECTION).getDocumentsResponse<RemoteSportChallenges>().filter { favoriteActivitiesIds.contains(it.activityId) }
     }
 
     private fun getStartTimestampOfThisDay(): Date {

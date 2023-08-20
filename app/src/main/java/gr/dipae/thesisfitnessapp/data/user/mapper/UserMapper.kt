@@ -41,7 +41,7 @@ class UserMapper @Inject constructor(
             dailyStepsGoal = remoteUser.dailyStepsGoal,
             dailyCaloricBurnGoal = remoteUser.dailyCaloricBurnGoal,
             dietGoal = mapDietGoal(remoteUser.dietGoal),
-            favoriteActivities = remoteUser.favoriteActivities,
+            favoriteActivities = remoteUser.favoriteActivitiesIds,
             daySummaries = emptyList(),
             scannedFoods = emptyList(),
             workouts = emptyList()
@@ -100,4 +100,16 @@ class UserMapper @Inject constructor(
             else -> FitnessLevel.Unknown
         }
     }
+
+    /*private fun mapUserSportChallenges(remoteUserSportChallenges: List<RemoteUserSportChallenge>?): List<UserSportChallenge>? {
+        remoteUserSportChallenges ?: return null
+        return remoteUserSportChallenges.map {
+            UserSportChallenge(
+                sportId = it.activityId,
+                sportName = it.activityName,
+                goal = it.,
+                completed: Boolean
+            )
+        }
+    }*/
 }

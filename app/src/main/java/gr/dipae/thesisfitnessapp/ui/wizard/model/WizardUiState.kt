@@ -66,7 +66,7 @@ data class WizardUiState(
         return UserWizardDetails(
             name = usernameState.value,
             fitnessLevel = selectedFitnessLevel,
-            favoriteActivities = sports.filter { it.selected.value }.map { "/activities/${it.id}" },
+            favoriteActivitiesIds = sports.filter { it.selected.value }.map { it.id },
             bodyWeight = bodyDetails.bodyWeightState.value.toDoubleOrNull(),
             muscleMassPercent = bodyDetails.muscleMassPercentState.value.toDoubleOrNull(),
             bodyFatPercent = bodyDetails.bodyFatPercentState.value.toDoubleOrNull(),

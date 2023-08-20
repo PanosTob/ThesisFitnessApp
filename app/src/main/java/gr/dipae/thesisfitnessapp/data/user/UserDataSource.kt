@@ -9,6 +9,7 @@ import gr.dipae.thesisfitnessapp.data.history.model.RemoteWorkoutDone
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteWorkoutExerciseDone
 import gr.dipae.thesisfitnessapp.data.user.diet.model.RemoteUserScannedFood
 import gr.dipae.thesisfitnessapp.data.user.model.RemoteUser
+import gr.dipae.thesisfitnessapp.data.user.model.RemoteUserSportChallenge
 import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkout
 import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkoutExercise
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
@@ -19,6 +20,7 @@ interface UserDataSource {
     suspend fun initializeGoogleSignIn(): IntentSender
     suspend fun signInUser(googleSignInData: Intent)
     suspend fun getUser(): RemoteUser?
+    suspend fun getUserSportChallenges(): List<RemoteUserSportChallenge>?
     suspend fun getUserDetailsLocally(): RemoteUser?
     suspend fun logoutUser()
     suspend fun registerUser()

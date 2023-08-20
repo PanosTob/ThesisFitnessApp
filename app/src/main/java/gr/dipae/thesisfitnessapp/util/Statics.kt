@@ -80,3 +80,5 @@ const val ACTIVITIES_DONE_ACTIVITY_ID = "activityId"
 const val ACTIVITIES_DONE_DETAILS_FIELD = "details"
 
 const val ACTIVITY_STATISTICS = "activityStatistics"
+
+const val SPORT_CHALLENGES_COLLECTION = "activityChallenges"

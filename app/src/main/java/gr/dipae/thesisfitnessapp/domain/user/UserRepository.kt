@@ -7,6 +7,7 @@ import gr.dipae.thesisfitnessapp.domain.history.entity.DaySummary
 import gr.dipae.thesisfitnessapp.domain.history.entity.SportDone
 import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutDone
 import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutExerciseDone
+import gr.dipae.thesisfitnessapp.domain.user.challenges.entity.UserSportChallenge
 import gr.dipae.thesisfitnessapp.domain.user.diet.entity.UserScannedFood
 import gr.dipae.thesisfitnessapp.domain.user.entity.User
 import gr.dipae.thesisfitnessapp.domain.user.workout.entity.UserWorkout
@@ -19,6 +20,7 @@ interface UserRepository {
     suspend fun initializeGoogleSignIn(): IntentSender
     suspend fun signInUser(googleSignInData: Intent)
     suspend fun getUser(): User?
+    suspend fun getUserSportChallenges(): List<UserSportChallenge>
     suspend fun getUserDetailsLocally(): User?
     suspend fun logoutUser()
     suspend fun registerUser()
