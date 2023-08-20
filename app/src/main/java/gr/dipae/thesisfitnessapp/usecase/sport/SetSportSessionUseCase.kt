@@ -30,7 +30,7 @@ class SetSportSessionUseCase @Inject constructor(
             getChallengeByParameterType(userSportChallenges, SportParameterType.Duration)?.let { durationChallenge ->
                 setUserSportChallengeProgressUseCase(
                     challengeId = durationChallenge.id,
-                    progress = durationChallenge.progress + (durationMinutes / durationChallenge.goal.value).toDoubleWithSpecificDecimals(2)
+                    progress = (durationChallenge.progress + (durationMinutes / durationChallenge.goal.value)).toDoubleWithSpecificDecimals(2)
                 )
             }
             getChallengeByParameterType(userSportChallenges, SportParameterType.Distance)?.let { distanceChallenge ->

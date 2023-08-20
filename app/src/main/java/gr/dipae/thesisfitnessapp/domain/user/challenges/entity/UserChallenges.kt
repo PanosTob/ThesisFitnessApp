@@ -16,5 +16,5 @@ data class UserSportChallenge(
 data class SportChallenge(
     val name: String,
     val type: SportParameterType,
-    val value: Double
+    val value: Long
 )

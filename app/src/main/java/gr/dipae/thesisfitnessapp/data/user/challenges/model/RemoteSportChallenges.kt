@@ -13,5 +13,5 @@ data class RemoteSportChallenges(
 
 data class RemoteChallengeGoal(
     val type: String = "",
-    val value: Double = 0.0
+    val value: Long = 0
 )
