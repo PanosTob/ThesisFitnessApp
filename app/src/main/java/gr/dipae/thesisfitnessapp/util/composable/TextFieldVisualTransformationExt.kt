@@ -28,9 +28,10 @@ fun DigitOnlyEditText(
     label: @Composable () -> Unit = {},
     placeholder: @Composable () -> Unit = {},
     visualTransformation: VisualTransformation = VisualTransformation.None,
+    allowDecimals: Boolean = false,
     onTextValueChanged: (String) -> Unit
 ) {
-    val validationPattern = remember { Regex("^\\d+\$") }
+    val validationPattern = remember { if (allowDecimals) Regex("^\\d+\\.?\\d*\$") else Regex("^\\d+\$") }
     var tfValue by remember(valueString) { mutableStateOf(TextFieldValue(text = valueString, selection = TextRange(valueString.length))) }
     TextField(
         modifier = modifier,
@@ -51,7 +52,43 @@ fun DigitOnlyEditText(
             }
         },
         visualTransformation = visualTransformation,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword, imeAction = ImeAction.Done),
+        keyboardOptions = KeyboardOptions(keyboardType = if (allowDecimals) KeyboardType.Decimal else KeyboardType.NumberPassword, imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+    )
+}
+
+@Composable
+fun LettersOnlyEditText(
+    valueString: String,
+    modifier: Modifier = Modifier,
+    focusManager: FocusManager = LocalFocusManager.current,
+    label: @Composable () -> Unit = {},
+    placeholder: @Composable () -> Unit = {},
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    onTextValueChanged: (String) -> Unit
+) {
+    val validationPattern = remember { Regex("^([Α-Ωα-ωΆΈΉΊΌΎΏάέήίΐϊόύΰϋώ ]|[A-Za-z ])+\$") }
+    var tfValue by remember(valueString) { mutableStateOf(TextFieldValue(text = valueString, selection = TextRange(valueString.length))) }
+    TextField(
+        modifier = modifier,
+        value = tfValue,
+        label = label,
+        placeholder = placeholder,
+        onValueChange = {
+            when {
+                it.text.isBlank() -> {
+                    tfValue = TextFieldValue("")
+                    onTextValueChanged("")
+                }
+
+                it.text.matches(validationPattern) -> {
+                    tfValue = it
+                    onTextValueChanged(it.text.trim())
+                }
+            }
+        },
+        visualTransformation = visualTransformation,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
     )
 }

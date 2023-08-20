@@ -46,7 +46,6 @@ fun NavGraphBuilder.wizardScreen(
         viewModel.uiState.value?.let {
             WizardContent(
                 uiState = it,
-                onNextStep = { viewModel.onNextStep() },
                 onFinishWizard = { viewModel.saveWizardDetails() }
             )
         }

@@ -24,6 +24,7 @@ import gr.dipae.thesisfitnessapp.ui.onboarding.navigation.OnBoardingNavHostRoute
 import gr.dipae.thesisfitnessapp.ui.onboarding.navigation.onBoardingNavHost
 import gr.dipae.thesisfitnessapp.ui.welcome.navigation.LoginRoute
 import gr.dipae.thesisfitnessapp.ui.wizard.navigation.navigateToWizard
+import gr.dipae.thesisfitnessapp.ui.wizard.navigation.wizardScreen
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
@@ -78,6 +79,10 @@ fun AppNavHost(
                 stopStopWatch = { viewModel.stopStopWatch() },
                 logoutUser = { viewModel.logoutUser() }
             )
+
+            wizardScreen {
+                navController.navigateToLobbyNavHost()
+            }
         }
     }
 }

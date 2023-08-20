@@ -1,10 +1,12 @@
 package gr.dipae.thesisfitnessapp.ui.lobby.home.mapper
 
-import gr.dipae.thesisfitnessapp.BuildConfig
+import androidx.compose.runtime.mutableStateOf
 import gr.dipae.thesisfitnessapp.data.Mapper
 import gr.dipae.thesisfitnessapp.domain.user.entity.User
 import gr.dipae.thesisfitnessapp.ui.lobby.home.model.HomeUiState
 import gr.dipae.thesisfitnessapp.ui.lobby.home.model.UserDetailsUiItem
+import gr.dipae.thesisfitnessapp.ui.lobby.home.model.UserMovementTrackingUiItem
+import gr.dipae.thesisfitnessapp.ui.lobby.home.model.UserMovementTrackingUiItems
 import javax.inject.Inject
 
 class HomeUiMapper @Inject constructor() : Mapper {
@@ -13,8 +15,16 @@ class HomeUiMapper @Inject constructor() : Mapper {
         return HomeUiState(
             userDetails = UserDetailsUiItem(
                 username = user?.name ?: "",
-                imageUrl = "${BuildConfig.GOOGLE_STORAGE_FIREBASE}${user?.imgUrl}${BuildConfig.GOOGLE_STORAGE_FIREBASE_QUERY_PARAMS}",
-                bodyWeight = user?.bodyWeight?.toString() ?: ""
+                imageUrl = "${user?.imgUrl}",
+                bodyWeight = user?.let { "${user.bodyWeight}kg" } ?: "",
+                bodyFatPercent = user?.let { "${user.bodyFatPercent}%" } ?: "",
+                muscleMassPercent = user?.let { "${user.muscleMassPercent}%" } ?: "",
+                dailyStepGoal = user?.dailyStepsGoal ?: 0,
+                dailyCaloricBurnGoal = user?.dailyCaloricBurnGoal ?: 0
+            ),
+            userMovementTracking = UserMovementTrackingUiItems(
+                stepsTracking = UserMovementTrackingUiItem(remaining = mutableStateOf(user?.dailyStepsGoal?.toString() ?: "")),
+                caloriesTracking = UserMovementTrackingUiItem(remaining = mutableStateOf(user?.dailyCaloricBurnGoal?.toString() ?: ""))
             )
         )
     }

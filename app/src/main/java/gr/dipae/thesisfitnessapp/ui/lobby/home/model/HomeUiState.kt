@@ -6,16 +6,26 @@ import androidx.compose.runtime.mutableStateOf
 data class HomeUiState(
     val selectedBottomNavItemIndex: MutableState<Int> = mutableStateOf(0),
     val userDetails: UserDetailsUiItem,
-    val userActivityTracking: UserActivityTrackingUiItem = UserActivityTrackingUiItem()
+    val userMovementTracking: UserMovementTrackingUiItems
 )
 
 data class UserDetailsUiItem(
     val username: String,
     val imageUrl: String,
-    val bodyWeight: String
+    val bodyWeight: String,
+    val muscleMassPercent: String,
+    val bodyFatPercent: String,
+    val dailyStepGoal: Long,
+    val dailyCaloricBurnGoal: Long
 )
 
-data class UserActivityTrackingUiItem(
-    val stepCounter: MutableState<String> = mutableStateOf(""),
-    val caloricBurn: MutableState<String> = mutableStateOf("")
+data class UserMovementTrackingUiItems(
+    val stepsTracking: UserMovementTrackingUiItem,
+    val caloriesTracking: UserMovementTrackingUiItem
+)
+
+
+data class UserMovementTrackingUiItem(
+    val fulfillmentPercentage: MutableState<Float> = mutableStateOf(0f),
+    val remaining: MutableState<String>
 )

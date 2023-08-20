@@ -45,17 +45,18 @@ import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHMAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessLLText
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerDefault
 import gr.dipae.thesisfitnessapp.ui.theme.ColorDisabledButton
-import gr.dipae.thesisfitnessapp.ui.theme.ColorPrimary
 import gr.dipae.thesisfitnessapp.ui.theme.ColorSecondary
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDouble_32dp
 import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
+import gr.dipae.thesisfitnessapp.ui.wizard.model.BodyDetailsUiItem
 import gr.dipae.thesisfitnessapp.ui.wizard.model.DietGoalUiItem
 import gr.dipae.thesisfitnessapp.ui.wizard.model.FitnessLevelUiItem
 import gr.dipae.thesisfitnessapp.ui.wizard.model.WizardSportUiItem
-import gr.dipae.thesisfitnessapp.ui.wizard.model.WizardStepGoalUiItem
+import gr.dipae.thesisfitnessapp.ui.wizard.model.WizardTrackingMovementGoal
 import gr.dipae.thesisfitnessapp.ui.wizard.model.WizardUiState
 import gr.dipae.thesisfitnessapp.util.composable.DigitOnlyEditText
+import gr.dipae.thesisfitnessapp.util.composable.LettersOnlyEditText
 import gr.dipae.thesisfitnessapp.util.ext.loadImageWithCrossfade
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -67,13 +68,12 @@ typealias OnNextStep = () -> Unit
 @Composable
 fun WizardContent(
     uiState: WizardUiState,
-    onNextStep: OnNextStep = {},
     onFinishWizard: OnFinishWizard = {}
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = ColorPrimary)
+            .background(color = MaterialTheme.colorScheme.background)
             .padding(horizontal = SpacingDefault_16dp, vertical = SpacingDouble_32dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -89,6 +89,7 @@ fun WizardContent(
                     uiState.finishButtonEnabled.value = it
                 }
         }
+        val focusManager = LocalFocusManager.current
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -106,6 +107,7 @@ fun WizardContent(
                     disabledContentColor = MaterialTheme.colorScheme.primary
                 ),
                 onClick = {
+                    focusManager.clearFocus()
                     if (uiState.wizardPageIndexState.value == uiState.wizardSteps - 1) {
                         onFinishWizard()
                     } else {
@@ -126,7 +128,6 @@ fun WizardContent(
             pageCount = uiState.wizardSteps
         ) { page ->
             uiState.WizardPageContent(page)
-            onNextStep()
         }
         HorizontalPagerIndicator(
             modifier = Modifier
@@ -142,7 +143,7 @@ fun WizardContent(
 @Composable
 fun WizardNameStep(usernameState: MutableState<String>) {
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-        DigitOnlyEditText(
+        LettersOnlyEditText(
             valueString = usernameState.value,
             onTextValueChanged = { usernameState.value = it },
             label = {
@@ -153,14 +154,33 @@ fun WizardNameStep(usernameState: MutableState<String>) {
 }
 
 @Composable
-fun WizardWeightStep(bodyWeightState: MutableState<String>) {
+fun WizardWeightStep(bodyDetails: BodyDetailsUiItem) {
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
         DigitOnlyEditText(
-            valueString = bodyWeightState.value,
-            onTextValueChanged = { bodyWeightState.value = it },
+            valueString = bodyDetails.bodyWeightState.value,
+            onTextValueChanged = { bodyDetails.bodyWeightState.value = it },
             label = {
                 ThesisFitnessLLText(text = stringResource(R.string.wizard_body_weight_label))
-            }
+            },
+            allowDecimals = true
+        )
+        VerticalSpacerDefault()
+        DigitOnlyEditText(
+            valueString = bodyDetails.muscleMassPercentState.value,
+            onTextValueChanged = { bodyDetails.muscleMassPercentState.value = it },
+            label = {
+                ThesisFitnessLLText(text = stringResource(R.string.wizard_muscle_mass_label))
+            },
+            allowDecimals = true
+        )
+        VerticalSpacerDefault()
+        DigitOnlyEditText(
+            valueString = bodyDetails.bodyFatPercentState.value,
+            onTextValueChanged = { bodyDetails.bodyFatPercentState.value = it },
+            label = {
+                ThesisFitnessLLText(text = stringResource(R.string.wizard_body_fat_label))
+            },
+            allowDecimals = true
         )
     }
 }
@@ -184,13 +204,22 @@ fun WizardFitnessLevelStep(fitnessLevels: List<FitnessLevelUiItem>, onSelectFitn
 }
 
 @Composable
-fun WizardStepGoal(stepGoalState: WizardStepGoalUiItem) {
+fun WizardStepGoal(wizardTrackingMovementGoal: WizardTrackingMovementGoal) {
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
         DigitOnlyEditText(
-            valueString = stepGoalState.goalAmount.value,
-            onTextValueChanged = { stepGoalState.goalAmount.value = it },
+            valueString = wizardTrackingMovementGoal.dailyStepGoal.value,
+            onTextValueChanged = { wizardTrackingMovementGoal.dailyStepGoal.value = it },
             label = {
                 ThesisFitnessLLText(text = stringResource(R.string.wizard_step_goal_label))
+            }
+        )
+        VerticalSpacerDefault()
+
+        DigitOnlyEditText(
+            valueString = wizardTrackingMovementGoal.dailyCaloricBurnGoal.value,
+            onTextValueChanged = { wizardTrackingMovementGoal.dailyCaloricBurnGoal.value = it },
+            label = {
+                ThesisFitnessLLText(text = stringResource(R.string.wizard_caloric_burn_goal_label))
             }
         )
     }
@@ -290,8 +319,9 @@ fun WizardContentPreview() {
                 wizardSteps = 5,
                 fitnessLevels = FitnessLevel.values().map { FitnessLevelUiItem(fitnessLevel = it) },
                 sports = listOf(WizardSportUiItem(id = "1", name = "Swimming", imageUrl = "", parameters = listOf())),
-                wizardStepGoal = WizardStepGoalUiItem(),
-                dailyDietGoal = DietGoalUiItem()
+                wizardTrackingMovementGoal = WizardTrackingMovementGoal(),
+                dailyDietGoal = DietGoalUiItem(),
+                bodyDetails = BodyDetailsUiItem()
             )
         )
     }

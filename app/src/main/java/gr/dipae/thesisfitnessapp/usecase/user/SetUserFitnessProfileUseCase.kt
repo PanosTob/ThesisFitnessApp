@@ -2,18 +2,17 @@ package gr.dipae.thesisfitnessapp.usecase.user
 
 import gr.dipae.thesisfitnessapp.domain.app.entity.FirebaseWriteDocumentResult
 import gr.dipae.thesisfitnessapp.domain.user.UserRepository
+import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
 import gr.dipae.thesisfitnessapp.usecase.UseCase
-import gr.dipae.thesisfitnessapp.usecase.wizard.GetUserWizardDetailsLocallyUseCase
 import javax.inject.Inject
 
 class SetUserFitnessProfileUseCase @Inject constructor(
-    private val repository: UserRepository,
-    private val getUserWizardDetailsLocallyUseCase: GetUserWizardDetailsLocallyUseCase
+    private val repository: UserRepository
 ) : UseCase {
 
-    suspend operator fun invoke(): FirebaseWriteDocumentResult {
+    suspend operator fun invoke(userWizardDetails: UserWizardDetails?): FirebaseWriteDocumentResult {
         return try {
-            val userWizardDetails = getUserWizardDetailsLocallyUseCase() ?: return FirebaseWriteDocumentResult.Failure
+            userWizardDetails ?: return FirebaseWriteDocumentResult.Failure
 
             repository.setUserFitnessProfile(userWizardDetails)
             FirebaseWriteDocumentResult.Success

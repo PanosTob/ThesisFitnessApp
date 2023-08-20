@@ -21,11 +21,11 @@ import gr.dipae.thesisfitnessapp.data.user.broadcast.StepCounterBroadcast
 import gr.dipae.thesisfitnessapp.data.user.diet.model.RemoteUserScannedFood
 import gr.dipae.thesisfitnessapp.data.user.login.broadcast.LoginBroadcast
 import gr.dipae.thesisfitnessapp.data.user.model.RemoteUser
+import gr.dipae.thesisfitnessapp.data.user.model.RemoteUserUpdateRequest
 import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkout
 import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkoutExercise
 import gr.dipae.thesisfitnessapp.di.module.qualifier.GeneralSharedPrefs
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
-import gr.dipae.thesisfitnessapp.framework.datastore.CustomPreferencesDataStore
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_COLLECTION
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_DAILY_DIET
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_DATE
@@ -39,8 +39,8 @@ import gr.dipae.thesisfitnessapp.util.USERS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.USER_DECLINED_SIGN_IN_COUNTER
 import gr.dipae.thesisfitnessapp.util.USER_EMAIL
 import gr.dipae.thesisfitnessapp.util.USER_FAVORITE_ACTIVITIES
+import gr.dipae.thesisfitnessapp.util.USER_IMG_URL
 import gr.dipae.thesisfitnessapp.util.USER_NAME
-import gr.dipae.thesisfitnessapp.util.WIZARD_USER_DETAILS
 import gr.dipae.thesisfitnessapp.util.WORKOUTS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.base.GoogleAuthenticationException
 import gr.dipae.thesisfitnessapp.util.ext.get
@@ -60,7 +60,6 @@ class UserDataSourceImpl @Inject constructor(
     private val oneTapClient: SignInClient,
     private val auth: FirebaseAuth,
 //    private val db: AppDatabase,
-    private val dataStore: CustomPreferencesDataStore,
     @GeneralSharedPrefs private val sharedPrefs: SharedPreferences,
     private val fireStore: FirebaseFirestore,
     private val loginBroadcast: LoginBroadcast,
@@ -87,7 +86,8 @@ class UserDataSourceImpl @Inject constructor(
             .set(
                 hashMapOf(
                     USER_EMAIL to auth.currentUser?.email,
-                    USER_NAME to auth.currentUser?.displayName
+                    USER_NAME to auth.currentUser?.displayName,
+                    USER_IMG_URL to auth.currentUser?.photoUrl
                 )
             ).await()
     }
@@ -148,16 +148,24 @@ class UserDataSourceImpl @Inject constructor(
         loginBroadcast.refreshGoogleSignInEnabledState(true)
     }
 
-    override suspend fun setUserWizardDetails(wizardDetails: UserWizardDetails) {
-        dataStore.set(WIZARD_USER_DETAILS, wizardDetails)
-    }
-
-    override suspend fun getUserWizardDetails(): UserWizardDetails? {
-        return dataStore.get(WIZARD_USER_DETAILS)
-    }
-
     override suspend fun setUserFitnessProfile(wizardDetails: UserWizardDetails) {
-        fireStore.collection(USERS_COLLECTION).document(getFirebaseUserId()).set(wizardDetails)
+        getUser()?.let {
+            fireStore.collection(USERS_COLLECTION).document(getFirebaseUserId()).set(
+                RemoteUserUpdateRequest(
+                    name = wizardDetails.name,
+                    email = it.email,
+                    imgUrl = it.imgUrl,
+                    fitnessLevel = null,
+                    bodyWeight = wizardDetails.bodyWeight,
+                    muscleMassPercent = wizardDetails.muscleMassPercent,
+                    bodyFatPercent = wizardDetails.bodyFatPercent,
+                    favoriteActivities = wizardDetails.favoriteActivities,
+                    dailyStepsGoal = wizardDetails.dailyStepsGoal,
+                    dailyCaloricBurnGoal = wizardDetails.dailyCaloricBurnGoal,
+                    dietGoal = wizardDetails.dietGoal
+                )
+            )
+        }
     }
 
     override fun setGoogleSignInBlockedTime() {

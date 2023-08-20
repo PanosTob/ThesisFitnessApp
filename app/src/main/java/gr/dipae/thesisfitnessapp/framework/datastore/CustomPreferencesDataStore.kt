@@ -11,10 +11,6 @@ import gr.dipae.thesisfitnessapp.util.ext.toJson
 import kotlinx.coroutines.flow.singleOrNull
 import javax.inject.Inject
 
-//Data store available Keys
-object PreferencesKey {
-}
-
 class CustomPreferencesDataStore @Inject constructor(
     val dataStore: DataStore<Preferences>,
     val moshi: Moshi

@@ -32,10 +32,8 @@ class HomeViewModel @Inject constructor(
         launch {
             getStepCounterUseCase().collectLatest {
                 _uiState.value?.apply {
-                    userActivityTracking.stepCounter.value = it.toString()
-                    userDetails.bodyWeight.toDoubleOrNull()?.let { bodyWeight ->
-                        userActivityTracking.caloricBurn.value += calculateCaloricBurn(bodyWeight)
-                    }
+                    handleStepsTracking(it)
+                    handleCaloriesTracking(it)
                 }
             }
         }
@@ -46,12 +44,31 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun calculateCaloricBurn(bodyWeight: Double): Double {
-        return bodyWeight * if (userIsRunning) METRIC_RUNNING_FACTOR else METRIC_WALKING_FACTOR * 76.2 / 100000.0
+    private fun handleStepsTracking(stepsDone: Long) {
+        _uiState.value?.apply {
+            userMovementTracking.stepsTracking.remaining.value = (userDetails.dailyStepGoal - stepsDone).toString()
+            userMovementTracking.stepsTracking.fulfillmentPercentage.value = (stepsDone / userDetails.dailyStepGoal).toFloat()
+        }
+    }
+
+    private fun handleCaloriesTracking(stepsDone: Long) {
+        _uiState.value?.apply {
+            val bodyWeight = userDetails.bodyWeight.toDoubleOrNull() ?: return
+
+            val caloriesBurned = calculateCaloricBurnOfOneStep(stepsDone, bodyWeight)
+            userMovementTracking.caloriesTracking.remaining.value = (userDetails.dailyCaloricBurnGoal - caloriesBurned).toString()
+            userMovementTracking.caloriesTracking.fulfillmentPercentage.value += (caloriesBurned / userDetails.dailyCaloricBurnGoal).toFloat()
+        }
+    }
+
+    private fun calculateCaloricBurnOfOneStep(stepsDone: Long, bodyWeight: Double): Double {
+        return stepsDone * (bodyWeight * if (userIsRunning) METRIC_RUNNING_FACTOR else METRIC_WALKING_FACTOR * AVERAGE_STEP_LENGTH / TEN_THOUSAND_STEPS)
     }
 
     companion object {
         const val METRIC_RUNNING_FACTOR = 1.02784823
         const val METRIC_WALKING_FACTOR = 0.708
+        const val AVERAGE_STEP_LENGTH = 76.2
+        const val TEN_THOUSAND_STEPS = 100000
     }
 }

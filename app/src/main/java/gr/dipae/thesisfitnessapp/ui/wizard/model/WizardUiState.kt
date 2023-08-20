@@ -23,24 +23,22 @@ data class WizardUiState(
     val wizardSteps: Int,
     val usernameState: MutableState<String> = mutableStateOf(""),
     val fitnessLevels: List<FitnessLevelUiItem>,
-    val bodyWeightState: MutableState<String> = mutableStateOf(""),
+    val bodyDetails: BodyDetailsUiItem = BodyDetailsUiItem(),
     val sports: List<WizardSportUiItem>,
     val dailyDietGoal: DietGoalUiItem,
-    val wizardStepGoal: WizardStepGoalUiItem,
+    val wizardTrackingMovementGoal: WizardTrackingMovementGoal = WizardTrackingMovementGoal(),
     val wizardPageIndexState: MutableState<Int> = mutableStateOf(0),
     val finishButtonEnabled: MutableState<Boolean> = mutableStateOf(false),
     val goToDashboardState: MutableState<Boolean> = mutableStateOf(false)
 ) {
     private val selectedFitnessLevel = fitnessLevels.find { it.isSelectedState.value }?.fitnessLevel?.name ?: FitnessLevel.Unknown.name
 
-    private val favoriteSports = sports.filter { it.selected.value }.map { it.id }
-
     @Composable
     fun WizardPageContent(pageIndex: Int) {
         return when (pageIndex) {
             0 -> WizardNameStep(usernameState)
-            1 -> WizardWeightStep(bodyWeightState)
-            2 -> WizardStepGoal(wizardStepGoal)
+            1 -> WizardWeightStep(bodyDetails)
+            2 -> WizardStepGoal(wizardTrackingMovementGoal)
             3 -> WizardFavoriteActivitiesStep(sports)
             4 -> WizardDailyDietStep(dailyDietGoal)
             else -> Unit
@@ -54,8 +52,10 @@ data class WizardUiState(
 
     fun isFinishButtonEnabled(): Boolean =
         if (wizardPageIndexState.value == wizardSteps - 1) {
-            (usernameState.value.isNotBlank() && fitnessLevels.any { it.isSelectedState.value }) &&
-                    (sports.any { it.selected.value })
+            usernameState.value.isNotBlank() &&
+                    sports.any { it.selected.value } &&
+                    wizardTrackingMovementGoal.dailyStepGoal.value.isNotBlank() &&
+                    wizardTrackingMovementGoal.dailyCaloricBurnGoal.value.isNotBlank()
         } else {
             true
         }
@@ -66,8 +66,10 @@ data class WizardUiState(
         return UserWizardDetails(
             name = usernameState.value,
             fitnessLevel = selectedFitnessLevel,
-            favoriteActivities = favoriteSports.map { "/activities/$it" },
-            bodyWeightKg = bodyWeightState.value.toFloatOrNull(),
+            favoriteActivities = sports.filter { it.selected.value }.map { "/activities/${it.id}" },
+            bodyWeight = bodyDetails.bodyWeightState.value.toDoubleOrNull(),
+            muscleMassPercent = bodyDetails.muscleMassPercentState.value.toDoubleOrNull(),
+            bodyFatPercent = bodyDetails.bodyFatPercentState.value.toDoubleOrNull(),
             dietGoal = mapOf(
                 USER_DIET_GOAL_CARBOHYDRATES to dailyDietGoal.caloriesState.value.toLongOrNull(),
                 USER_DIET_GOAL_FATS to dailyDietGoal.fatsState.value.toLongOrNull(),
@@ -75,10 +77,17 @@ data class WizardUiState(
                 USER_DIET_GOAL_CALORIES to dailyDietGoal.caloriesState.value.toLongOrNull(),
                 USER_DIET_GOAL_WATER to dailyDietGoal.waterMLState.value.toLongOrNull()
             ),
-            dailyStepGoal = wizardStepGoal.goalAmount.value.toLongOrNull() ?: 0L
+            dailyStepsGoal = wizardTrackingMovementGoal.dailyStepGoal.value.toLongOrNull() ?: 0L,
+            dailyCaloricBurnGoal = wizardTrackingMovementGoal.dailyCaloricBurnGoal.value.toLongOrNull() ?: 0L,
         )
     }
 }
+
+data class BodyDetailsUiItem(
+    val bodyWeightState: MutableState<String> = mutableStateOf(""),
+    val muscleMassPercentState: MutableState<String> = mutableStateOf(""),
+    val bodyFatPercentState: MutableState<String> = mutableStateOf(""),
+)
 
 data class WizardSportUiItem(
     val id: String,
@@ -91,8 +100,9 @@ data class WizardSportUiItem(
         get() = if (selected.value) ColorSecondary else Color.White
 }
 
-data class WizardStepGoalUiItem(
-    val goalAmount: MutableState<String> = mutableStateOf("")
+data class WizardTrackingMovementGoal(
+    val dailyStepGoal: MutableState<String> = mutableStateOf(""),
+    val dailyCaloricBurnGoal: MutableState<String> = mutableStateOf(""),
 )
 
 data class DietGoalUiItem(

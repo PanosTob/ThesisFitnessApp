@@ -93,14 +93,6 @@ class UserRepositoryImpl @Inject constructor(
         dataSource.resetGoogleSignInDenialCount()
     }
 
-    override suspend fun getUserWizardDetails(): UserWizardDetails? {
-        return dataSource.getUserWizardDetails()
-    }
-
-    override suspend fun setUserWizardDetails(userWizardDetails: UserWizardDetails) {
-        dataSource.setUserWizardDetails(userWizardDetails)
-    }
-
     override suspend fun setUserFitnessProfile(userWizardDetails: UserWizardDetails) {
         dataSource.setUserFitnessProfile(userWizardDetails)
     }

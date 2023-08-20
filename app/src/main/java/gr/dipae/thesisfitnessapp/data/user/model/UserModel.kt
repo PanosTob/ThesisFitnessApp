@@ -7,10 +7,14 @@ data class RemoteUser(
     val id: String = "",
     val name: String = "unknown name",
     val email: String = "unknown email",
-    val imageUrl: String = "",
+    val imgUrl: String = "",
     val bodyWeight: Double = 0.0,
+    val muscleMassPercent: Double = 0.0,
+    val bodyFatPercent: Double = 0.0,
     val fitnessLevel: String = "",
     val favoriteActivities: List<String> = emptyList(),
+    val dailyStepsGoal: Long = 0,
+    val dailyCaloricBurnGoal: Long = 0,
     val dietGoal: RemoteDietGoal = RemoteDietGoal()
 )
 
@@ -20,4 +24,18 @@ data class RemoteDietGoal(
     val fatGrams: Double? = 0.0,
     val proteinGrams: Double? = 0.0,
     val waterML: Double? = 0.0
+)
+
+data class RemoteUserUpdateRequest(
+    val name: String,
+    val email: String,
+    val imgUrl: String,
+    val fitnessLevel: String?,
+    val bodyWeight: Double?,
+    val muscleMassPercent: Double?,
+    val bodyFatPercent: Double?,
+    val favoriteActivities: List<String>,
+    val dietGoal: Map<String, Long?>,
+    val dailyStepsGoal: Long,
+    val dailyCaloricBurnGoal: Long
 )
