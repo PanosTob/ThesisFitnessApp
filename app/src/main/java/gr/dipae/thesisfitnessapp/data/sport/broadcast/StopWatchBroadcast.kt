@@ -2,14 +2,15 @@ package gr.dipae.thesisfitnessapp.data.sport.broadcast
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class StopWatchBroadcast {
 
     private val _stopWatchMillisPassed: MutableStateFlow<Long> = MutableStateFlow(0)
     val stopWatchMillisPassed = _stopWatchMillisPassed.asStateFlow()
 
-    suspend fun refreshStopWatchMillisPassed(millis: Long) {
-        _stopWatchMillisPassed.emit(millis)
+    fun refreshStopWatchMillisPassed(millis: Long) {
+        _stopWatchMillisPassed.update { millis }
     }
 
     fun clear() {

@@ -115,6 +115,11 @@ class UserDataSourceImpl @Inject constructor(
         return fireStore.collection(USERS_COLLECTION).document(firebaseUserId).getDocumentResponse<RemoteUser>()?.challenges
     }
 
+    override suspend fun getUserSportChallengesBySportId(sportId: String): List<RemoteUserSportChallenge>? {
+        val firebaseUserId = getFirebaseUserId()
+        return fireStore.collection(USERS_COLLECTION).document(firebaseUserId).getDocumentResponse<RemoteUser>()?.challenges?.filter { it.activityId == sportId }
+    }
+
     override suspend fun getUserDetailsLocally(): RemoteUser? {
         //TODO IMPLEMENT WITH REMOTEUSER ENTITY FOR DATADASE
         return null
@@ -325,6 +330,37 @@ class UserDataSourceImpl @Inject constructor(
                 ),
                 SetOptions.merge()
             ).await()
+    }
+
+    override suspend fun setUserSportChallengeProgress(challengeId: String, progress: Double) {
+        getUser()?.let { user ->
+            val userChallenges = user.challenges.toMutableList()
+
+            userChallenges.find { it.challengeId == challengeId }?.let { matchedChallenge ->
+                userChallenges.remove(matchedChallenge)
+                userChallenges.add(
+                    RemoteUserSportChallenge(
+                        challengeId = matchedChallenge.challengeId,
+                        activityId = matchedChallenge.activityId,
+                        activityName = matchedChallenge.activityName,
+                        activityImgUrl = matchedChallenge.activityImgUrl,
+                        goal = RemoteUserSportChallengeDetails(type = matchedChallenge.goal.type, value = matchedChallenge.goal.value),
+                        done = progress == 1.0,
+                        progress = progress
+                    )
+                )
+            }
+
+            fireStore
+                .collection(USERS_COLLECTION)
+                .document(getFirebaseUserId())
+                .set(
+                    mapOf(
+                        USER_SPORT_CHALLENGES to userChallenges
+                    ),
+                    SetOptions.merge()
+                ).await()
+        }
     }
 
     override suspend fun setMacrosDaily(dailyDietRequest: DailyDietRequest, todaySummaryId: String?) {

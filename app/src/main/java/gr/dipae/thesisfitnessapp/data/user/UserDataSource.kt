@@ -21,6 +21,7 @@ interface UserDataSource {
     suspend fun signInUser(googleSignInData: Intent)
     suspend fun getUser(): RemoteUser?
     suspend fun getUserSportChallenges(): List<RemoteUserSportChallenge>?
+    suspend fun getUserSportChallengesBySportId(sportId: String): List<RemoteUserSportChallenge>?
     suspend fun getUserDetailsLocally(): RemoteUser?
     suspend fun logoutUser()
     suspend fun registerUser()
@@ -46,5 +47,6 @@ interface UserDataSource {
     suspend fun getFavoriteSportIds(): List<String>
     suspend fun setFavoriteSportIds(favoritesSports: List<String>)
     suspend fun setUserNewSportChallenges(favoritesSports: List<String>)
+    suspend fun setUserSportChallengeProgress(challengeId: String, progress: Double)
     suspend fun setMacrosDaily(dailyDietRequest: DailyDietRequest, todaySummaryId: String?)
 }

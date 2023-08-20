@@ -13,7 +13,7 @@ import gr.dipae.thesisfitnessapp.ui.sport.session.mapper.SportSessionUiMapper
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.ContinuationState
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.SportSessionUiState
 import gr.dipae.thesisfitnessapp.ui.sport.session.navigation.SportSessionArgumentKeys
-import gr.dipae.thesisfitnessapp.usecase.sport.CalculateTravelledDistanceUseCase
+import gr.dipae.thesisfitnessapp.usecase.sport.CalculateTravelledDistanceMetersUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.CalculateUserPaceUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.GetSportParameterNavigationArgumentUseCase
 import gr.dipae.thesisfitnessapp.usecase.sport.GetSportSessionBreakTimerDurationLiveUseCase
@@ -41,7 +41,7 @@ class SportSessionViewModel @Inject constructor(
     private val getUserPreviousLocationUseCase: GetUserPreviousLocationUseCase,
     private val setUserPreviousLocationUseCase: SetUserPreviousLocationUseCase,
     private val setSportSessionDistanceUseCase: SetSportSessionDistanceUseCase,
-    private val calculateTravelledDistanceUseCase: CalculateTravelledDistanceUseCase,
+    private val calculateTravelledDistanceMetersUseCase: CalculateTravelledDistanceMetersUseCase,
     private val calculateUserPaceUseCase: CalculateUserPaceUseCase,
     private val getSportSessionDistanceLiveUseCase: GetSportSessionDistanceLiveUseCase,
     private val getUserMapRouteUseCase: GetUserMapRouteUseCase,
@@ -64,6 +64,8 @@ class SportSessionViewModel @Inject constructor(
     private var jobOfCollectingDuration: Job? = null
     private var jobOfCollectingBreak: Job? = null
     private var jobOfCollectionUserLocation: Job? = null
+
+    private var sportDuration = 0L
     override fun onCleared() {
         stopSportSessionBreakTimerUseCase()
         _uiState.value?.backToSports?.value = true
@@ -104,6 +106,7 @@ class SportSessionViewModel @Inject constructor(
                 iconRes.value = R.drawable.ic_play
             }
             _uiState.value?.stopBtnEnabled?.value = false
+            _uiState.value?.mapState?.userRoute?.value = getUserMapRouteUseCase()
         }
     }
 
@@ -113,7 +116,9 @@ class SportSessionViewModel @Inject constructor(
     }
 
     private fun showContent() {
-        subscribeToLocationUpdates()
+        if (sportHasMap == true) {
+            subscribeToLocationUpdates()
+        }
         _uiState.value?.showContent?.value = true
         _uiState.value?.playStateBtn?.iconRes?.value = R.drawable.ic_pause
         _uiState.value?.stopBtnEnabled?.value = true
@@ -124,7 +129,6 @@ class SportSessionViewModel @Inject constructor(
             jobOfCollectionUserLocation = launch {
                 getUserLocationUseCase().collectLatest {
                     mapState.userLocation.value = it
-                    mapState.userRoute.value = getUserMapRouteUseCase()
                     handleDistanceAndPace(it)
 
                     setUserPreviousLocationUseCase(it)
@@ -135,12 +139,13 @@ class SportSessionViewModel @Inject constructor(
 
     private suspend fun handleDistanceAndPace(userLocation: LatLng) {
         _uiState.value?.apply {
-            val travelledDistance = calculateTravelledDistanceUseCase(getUserPreviousLocationUseCase(), userLocation, getSportSessionDistanceLiveUseCase().value)
-            val distanceTwoDecimals = travelledDistance.toDoubleWithSpecificDecimals(2)
+            val travelledDistance = calculateTravelledDistanceMetersUseCase(getUserPreviousLocationUseCase(), userLocation, getSportSessionDistanceLiveUseCase().value)
+            val distanceTwoDecimals = (travelledDistance.toDouble() / 1000).toDoubleWithSpecificDecimals(2)
             distance.value = "${if (distanceTwoDecimals == 0.0) 0 else distanceTwoDecimals} km/h"
 
             setSportSessionDistanceUseCase(travelledDistance)
-            pace.value = "${calculateUserPaceUseCase(getSportSessionDurationLiveUseCase().value, travelledDistance)} min/km"
+            sportDuration = getSportSessionDurationLiveUseCase().value
+            pace.value = "${calculateUserPaceUseCase(sportDuration, distanceTwoDecimals)} min/km"
         }
     }
 
@@ -169,11 +174,14 @@ class SportSessionViewModel @Inject constructor(
     fun onSessionFinish() {
         launchWithProgress {
             sportId?.apply {
+                val distance = getSportSessionDistanceLiveUseCase().value
+                val breakTime = getSportSessionBreakTimerDurationLiveUseCase().value
+
                 jobOfCollectingDuration?.cancel()
                 jobOfCollectingBreak?.cancel()
                 jobOfCollectionUserLocation?.cancel()
 
-                val response = setSportSessionUseCase(sportId, sportParameter)
+                val response = setSportSessionUseCase(sportId, sportParameter, sportDuration, distance, breakTime)
                 if (response is SportSessionSaveResult.Success) {
                     _uiState.value?.backToSports?.value = true
                 }

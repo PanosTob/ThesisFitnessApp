@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +33,6 @@ import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHMAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerHalf
 import gr.dipae.thesisfitnessapp.ui.diet.composable.ArcProgressBar
 import gr.dipae.thesisfitnessapp.ui.lobby.home.model.UserSportChallengeUiItem
-import gr.dipae.thesisfitnessapp.ui.theme.ColorDividerGrey
 import gr.dipae.thesisfitnessapp.ui.theme.ColorGold
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
@@ -60,7 +60,7 @@ fun HomeSportChallenge(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(3f)
-            .border(BorderStroke(2.dp, ColorDividerGrey), RoundedCornerShape(SpacingHalf_8dp))
+            .border(BorderStroke(2.dp, item.color), RoundedCornerShape(SpacingHalf_8dp))
             .clip(RoundedCornerShape(SpacingHalf_8dp))
             .padding(SpacingDefault_16dp)
     ) {
@@ -73,7 +73,7 @@ fun HomeSportChallenge(
                     .fillMaxHeight(),
                 progress = item.progress,
                 amount = item.goalValue,
-                color = Color.White
+                color = item.color
             )
             Column(
                 Modifier
@@ -92,10 +92,15 @@ fun HomeSportChallenge(
         ) {
             ThesisFitnessHMAutoSizeText(
                 text = item.sportName,
-                color = Color.White
+                color = MaterialTheme.colorScheme.surface
             )
             HorizontalSpacerHalf()
-            AsyncImage(modifier = Modifier.fillMaxWidth(0.1f), model = item.sportImgUrl.loadImageWithCrossfade(), contentDescription = "", colorFilter = ColorFilter.tint(Color.White))
+            AsyncImage(
+                modifier = Modifier.fillMaxWidth(0.1f),
+                model = item.sportImgUrl.loadImageWithCrossfade(),
+                contentDescription = "",
+                colorFilter = ColorFilter.tint(item.color)
+            )
         }
         if (item.completed) {
             Icon(

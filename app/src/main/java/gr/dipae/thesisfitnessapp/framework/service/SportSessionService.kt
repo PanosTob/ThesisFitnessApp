@@ -14,9 +14,6 @@ import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.data.sport.broadcast.StopWatchBroadcast
 import gr.dipae.thesisfitnessapp.framework.sport.location.SportSessionLocationProvider
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.Timer
 import javax.inject.Inject
@@ -106,9 +103,7 @@ class SportSessionService : Service() {
     }
 
     private fun updateSportSessionStopWatch() {
-        GlobalScope.launch(Dispatchers.IO) {
-            stopWatchBroadcast.refreshStopWatchMillisPassed(duration.inWholeMilliseconds)
-        }
+        stopWatchBroadcast.refreshStopWatchMillisPassed(duration.inWholeMilliseconds)
     }
 
     private fun pauseTimer() {

@@ -60,5 +60,17 @@ class SportSessionLocationProvider(private val context: Context) {
         client.removeLocationUpdates(locationCallback)
         _userRoute.add(mutableListOf())
     }
+
+    companion object {
+
+        @Volatile
+        private var INSTANCE: SportSessionLocationProvider? = null
+
+        fun getInstance(context: Context): SportSessionLocationProvider {
+            return INSTANCE ?: synchronized(this) {
+                SportSessionLocationProvider(context).also { INSTANCE = it }
+            }
+        }
+    }
 }
 

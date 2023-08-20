@@ -43,6 +43,10 @@ class UserRepositoryImpl @Inject constructor(
         return listOf()
     }
 
+    override suspend fun getUserSportChallengesBySportId(sportId: String): List<UserSportChallenge> {
+        return userMapper.mapUserSportChallenges(dataSource.getUserSportChallengesBySportId(sportId))
+    }
+
     override suspend fun getUserDetailsLocally(): User? {
         return userMapper(dataSource.getUserDetailsLocally())
     }
@@ -141,6 +145,10 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun setUserNewSportChallenges(favoritesSports: List<String>) {
         dataSource.setUserNewSportChallenges(favoritesSports)
+    }
+
+    override suspend fun setUserSportChallengeProgress(challengeId: String, progress: Double) {
+        dataSource.setUserSportChallengeProgress(challengeId, progress)
     }
 
     override suspend fun setMacrosDaily(dailyDietRequest: DailyDietRequest, todaySummaryId: String?) {

@@ -34,8 +34,17 @@ class SportSessionDataSourceImpl @Inject constructor(
 
     private fun getFirebaseUserId() = firebaseAuth.currentUser?.uid ?: throw FirebaseNoSignedInUserException("")
 
-    override suspend fun setSportSession(sportDoneRequest: SportSessionRequest, parameters: List<SportParameterRequest>) {
-        val todaySummaryDocument = initializeTodaySummary()
+    override suspend fun setSportSession(todaySummaryId: String?, sportDoneRequest: SportSessionRequest, parameters: List<SportParameterRequest>) {
+        val todaySummaryDocument = if (todaySummaryId.isNullOrBlank()) {
+            initializeTodaySummary()
+        } else {
+            fireStore
+                .collection(USERS_COLLECTION)
+                .document(getFirebaseUserId())
+                .collection(DAY_SUMMARY_COLLECTION)
+                .document(todaySummaryId)
+        }
+
         val activityDoneDocument = initializeActivityDone(todaySummaryDocument, sportDoneRequest)
         parameters.forEach {
             activityDoneDocument.collection(ACTIVITY_STATISTICS).document().set(it).await()
@@ -92,11 +101,11 @@ class SportSessionDataSourceImpl @Inject constructor(
         return stopWatchBroadcast.stopWatchMillisPassed
     }
 
-    override fun getSportSessionDistanceLive(): StateFlow<Double> {
+    override fun getSportSessionDistanceLive(): StateFlow<Long> {
         return sportSessionBroadcast.sportDistance
     }
 
-    override suspend fun setSportSessionDistance(distance: Double) {
+    override suspend fun setSportSessionDistance(distance: Long) {
         sportSessionBroadcast.refreshSportDistance(distance)
     }
 

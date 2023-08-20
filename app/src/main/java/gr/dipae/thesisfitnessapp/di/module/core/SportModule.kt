@@ -42,7 +42,7 @@ object SportSessionModule {
 
     @Provides
     fun provideSportLocationProvider(@ApplicationContext context: Context): SportSessionLocationProvider {
-        return SportSessionLocationProvider(context)
+        return SportSessionLocationProvider.getInstance(context)
     }
 
     @Provides

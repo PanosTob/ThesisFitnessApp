@@ -108,11 +108,12 @@ class UserMapper @Inject constructor(
         }
     }
 
-    private fun mapUserSportChallenges(remoteUserSportChallenges: List<RemoteUserSportChallenge>?): List<UserSportChallenge> {
+    fun mapUserSportChallenges(remoteUserSportChallenges: List<RemoteUserSportChallenge>?): List<UserSportChallenge> {
         remoteUserSportChallenges ?: return emptyList()
 
         return remoteUserSportChallenges.map {
             UserSportChallenge(
+                id = it.challengeId,
                 sportId = it.activityId,
                 sportName = it.activityName,
                 sportImgUrl = "${BuildConfig.GOOGLE_STORAGE_FIREBASE}${it.activityImgUrl}${BuildConfig.GOOGLE_STORAGE_FIREBASE_QUERY_PARAMS}",

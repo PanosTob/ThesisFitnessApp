@@ -151,11 +151,13 @@ fun NavGraphBuilder.lobbyNavHost(
                             onWorkoutShown = { viewModel.showWorkoutTopBar() }
                         )
                         sportsScreen(
-                            onSportsShown = viewModel::showSportsTopBar,
+                            onSportsShown = viewModel::handleBarsForSports,
                             onSportSelected = { navController.navigateToSportCustomize(it) }
                         )
                         sportCustomizeScreen(
-                            onSportCustomizeShown = { viewModel.showInnerLoginTopBar() },
+                            onSportCustomizeShown = {
+                                viewModel.handleBarsForInnerDestination()
+                            },
                             onStartClicked = { navController.navigateToSportSession(it) }
                         )
                         sportSessionScreen(

@@ -7,7 +7,6 @@ import gr.dipae.thesisfitnessapp.data.sport.session.model.SportSessionRequest
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameterType
 import gr.dipae.thesisfitnessapp.domain.sport.session.entity.SportParameterArgument
-import gr.dipae.thesisfitnessapp.util.ext.toDoubleWithSpecificDecimals
 import javax.inject.Inject
 
 class SportSessionMapper @Inject constructor(
@@ -21,11 +20,11 @@ class SportSessionMapper @Inject constructor(
         )
     }
 
-    operator fun invoke(distance: Double, duration: Long, goalParameter: Pair<SportParameter?, Boolean>): List<SportParameterRequest> {
+    operator fun invoke(distance: Long, duration: Long, goalParameter: Pair<SportParameter?, Boolean>): List<SportParameterRequest> {
         return listOf(
             SportParameterRequest(
                 name = "distance",
-                value = distance.toDoubleWithSpecificDecimals(2),
+                value = distance,
                 achieved = goalParameter.first?.type is SportParameterType.Distance && goalParameter.second
             ),
             SportParameterRequest(

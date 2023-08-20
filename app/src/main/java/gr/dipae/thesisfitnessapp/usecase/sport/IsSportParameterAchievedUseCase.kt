@@ -6,16 +6,13 @@ import javax.inject.Inject
 
 class IsSportParameterAchievedUseCase @Inject constructor() {
 
-    operator fun invoke(goalParameter: SportParameter?, distance: Double, duration: Long): Boolean {
+    operator fun invoke(goalParameter: SportParameter?, distance: Long, duration: Long): Boolean {
         return when (goalParameter?.type) {
-            is SportParameterType.Distance -> (distance * 1000).toLong() <= goalParameter.value
-            is SportParameterType.Duration -> convertMillisToMinutes(duration) >= goalParameter.value
+            is SportParameterType.Distance -> distance <= goalParameter.value
+            is SportParameterType.Duration -> duration >= goalParameter.value
             SportParameterType.Unknown -> false
             else -> false
         }
     }
 
-    private fun convertMillisToMinutes(durationMillis: Long): Int {
-        return ((durationMillis / (1000 * 60)).mod(60))
-    }
 }

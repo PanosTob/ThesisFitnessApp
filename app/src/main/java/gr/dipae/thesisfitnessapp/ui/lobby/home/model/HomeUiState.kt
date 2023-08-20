@@ -2,6 +2,7 @@ package gr.dipae.thesisfitnessapp.ui.lobby.home.model
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.Color
 
 data class HomeUiState(
     val selectedBottomNavItemIndex: MutableState<Int> = mutableStateOf(0),
@@ -17,7 +18,8 @@ data class UserSportChallengeUiItem(
     val goalName: String,
     val goalValue: String,
     val completed: Boolean,
-    val progress: Float
+    val progress: Float,
+    val color: Color
 )
 
 data class UserDetailsUiItem(

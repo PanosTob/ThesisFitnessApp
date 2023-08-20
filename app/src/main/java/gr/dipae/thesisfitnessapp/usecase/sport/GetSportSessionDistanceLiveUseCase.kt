@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetSportSessionDistanceLiveUseCase @Inject constructor(
     private val repository: SportSessionRepository
 ) : UseCase {
-    operator fun invoke(): StateFlow<Double> {
+    operator fun invoke(): StateFlow<Long> {
         return repository.getSportSessionDistanceLive()
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -27,7 +28,20 @@ fun NavGraphBuilder.sportsScreen(
             mutableStateOf(false)
         }
 
-        LaunchedEffect(key1 = Unit) {
+        val lifecycleOwner = LocalLifecycleOwner.current
+        LaunchedEffect(key1 = lifecycleOwner.lifecycle) {
+            onSportsShown(
+                {
+                    viewModel.updateEditState(true)
+                    editState.value = true
+                },
+                {
+                    viewModel.setFavoriteSports()
+                    viewModel.updateEditState(false)
+                    editState.value = false
+                },
+                editState.value
+            )
             viewModel.init()
         }
 

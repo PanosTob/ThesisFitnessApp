@@ -4,6 +4,7 @@ import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameterType
 
 
 data class UserSportChallenge(
+    val id: String,
     val sportId: String,
     val sportName: String,
     val sportImgUrl: String,

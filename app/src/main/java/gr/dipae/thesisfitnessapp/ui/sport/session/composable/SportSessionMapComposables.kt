@@ -2,6 +2,9 @@ package gr.dipae.thesisfitnessapp.ui.sport.session.composable
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -32,14 +35,18 @@ fun SportSessionMapContent(
     if (showContent && mapState.userLocation.value != null) {
         val cameraPositionState = sportSessionCameraPosition(mapState.userLocation.value)
 
+        val route by remember(mapState.userRoute.value) {
+            mutableStateOf(mapState.userRoute.value)
+        }
+
         GoogleMap(
             modifier = modifier,
             cameraPositionState = cameraPositionState,
             properties = MapProperties(isMyLocationEnabled = true),
             uiSettings = MapUiSettings(mapToolbarEnabled = false),
             content = {
-                mapState.userRoute.value.forEach {
-                    Polyline(points = it, color = Color.Black)
+                route.forEach { routeSegment ->
+                    Polyline(points = routeSegment, color = Color.Black)
                 }
             }
         )

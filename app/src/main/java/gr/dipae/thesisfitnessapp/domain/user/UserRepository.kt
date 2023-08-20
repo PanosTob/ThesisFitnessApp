@@ -21,6 +21,7 @@ interface UserRepository {
     suspend fun signInUser(googleSignInData: Intent)
     suspend fun getUser(): User?
     suspend fun getUserSportChallenges(): List<UserSportChallenge>
+    suspend fun getUserSportChallengesBySportId(sportId: String): List<UserSportChallenge>
     suspend fun getUserDetailsLocally(): User?
     suspend fun logoutUser()
     suspend fun registerUser()
@@ -47,4 +48,5 @@ interface UserRepository {
     suspend fun getFavoriteSportIds(): List<String>
     suspend fun setFavoriteSportIds(favoritesSports: List<String>)
     suspend fun setUserNewSportChallenges(favoritesSports: List<String>)
+    suspend fun setUserSportChallengeProgress(challengeId: String, progress: Double)
 }

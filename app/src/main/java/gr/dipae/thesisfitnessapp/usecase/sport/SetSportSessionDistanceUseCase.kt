@@ -7,7 +7,7 @@ import javax.inject.Inject
 class SetSportSessionDistanceUseCase @Inject constructor(
     private val sportsRepository: SportSessionRepository
 ) : UseCase {
-    suspend operator fun invoke(distance: Double) {
+    suspend operator fun invoke(distance: Long) {
         sportsRepository.setSportSessionDistance(distance)
     }
 }
