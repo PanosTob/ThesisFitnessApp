@@ -38,6 +38,7 @@ fun SportItem(
     onSportSelected: OnSportSelected
 ) {
     val background = MaterialTheme.colorScheme.primary
+    val outlineColor = MaterialTheme.colorScheme.outline
     Box(
         Modifier
             .fillMaxWidth()
@@ -45,7 +46,7 @@ fun SportItem(
             .ifable(item.editable.value) {
                 dashedBorder(
                     width = 2.dp,
-                    color = Color.Red,
+                    color = outlineColor,
                     shape = RoundedCornerShape(SpacingDefault_16dp),
                     on = 4.dp,
                     off = 4.dp
@@ -66,6 +67,7 @@ fun SportItem(
                     .aspectRatio(1f)
                     .align(Alignment.TopEnd),
                 painter = painterResource(id = R.drawable.ic_favorite),
+                tint = MaterialTheme.colorScheme.outline,
                 contentDescription = ""
             )
         }

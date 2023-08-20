@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
@@ -90,31 +91,36 @@ fun NutritionProgressBars(
     ) {
         NutritionProgressBarRow(
             nutritionProgressBars.caloriesBar,
-            R.string.diet_nutrition_progress_bar_cal
+            R.string.diet_nutrition_progress_bar_cal,
+            color = Color.Red
         )
 
         WidthAdjustedDivider(Modifier.fillMaxWidth(1f), color = MaterialTheme.colorScheme.primary)
         NutritionProgressBarRow(
             nutritionProgressBars.proteinBar,
-            R.string.diet_nutrition_progress_bar_protein
+            R.string.diet_nutrition_progress_bar_protein,
+            color = Color.Magenta
         )
 
         WidthAdjustedDivider(Modifier.fillMaxWidth(1f), color = MaterialTheme.colorScheme.primary)
         NutritionProgressBarRow(
             nutritionProgressBars.carbsBar,
-            R.string.diet_nutrition_progress_bar_carb
+            R.string.diet_nutrition_progress_bar_carb,
+            color = Color.Yellow
         )
 
         WidthAdjustedDivider(Modifier.fillMaxWidth(1f), color = MaterialTheme.colorScheme.primary)
         NutritionProgressBarRow(
             nutritionProgressBars.fatsBar,
-            R.string.diet_nutrition_progress_bar_fats
+            R.string.diet_nutrition_progress_bar_fats,
+            color = Color.LightGray
         )
 
         WidthAdjustedDivider(Modifier.fillMaxWidth(1f), color = MaterialTheme.colorScheme.primary)
         NutritionProgressBarRow(
             nutritionProgressBars.waterBar,
-            R.string.diet_nutrition_progress_bar_water
+            R.string.diet_nutrition_progress_bar_water,
+            color = Color.Cyan
         )
     }
 }
@@ -122,7 +128,8 @@ fun NutritionProgressBars(
 @Composable
 fun NutritionProgressBarRow(
     progressBarItem: NutritionProgressBarUiItem,
-    titleRes: Int
+    titleRes: Int,
+    color: Color
 ) {
     Row(
         modifier = Modifier
@@ -133,7 +140,8 @@ fun NutritionProgressBarRow(
             modifier = Modifier
                 .weight(0.4f)
                 .fillMaxHeight(),
-            progressBarItem
+            progressBarItem = progressBarItem,
+            color = color
         )
         Column(
             Modifier
@@ -142,7 +150,7 @@ fun NutritionProgressBarRow(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom
         ) {
-            ThesisFitnessHMAutoSizeText(text = stringResource(id = titleRes))
+            ThesisFitnessHMAutoSizeText(text = stringResource(id = titleRes), color = color)
         }
     }
 }
@@ -150,7 +158,8 @@ fun NutritionProgressBarRow(
 @Composable
 fun NutritionProgressBar(
     modifier: Modifier,
-    progressBarItem: NutritionProgressBarUiItem
+    progressBarItem: NutritionProgressBarUiItem,
+    color: Color
 ) {
     Box(
         modifier = modifier,
@@ -171,7 +180,6 @@ fun NutritionProgressBar(
                 style = Stroke(SpacingCustom_24dp.toPx(), cap = StrokeCap.Square)
             )
         }
-        val primaryColor = MaterialTheme.colorScheme.primary
         val progressAnimation by animateFloatAsState(
             targetValue = progressBarItem.progressTowardsGoal,
             animationSpec = tween(3000, 500)
@@ -182,7 +190,7 @@ fun NutritionProgressBar(
                 .aspectRatio(2f)
         ) {
             drawArc(
-                primaryColor,
+                color,
                 -180f,
                 (180f * progressAnimation).coerceAtMost(180f),
                 useCenter = false,
@@ -190,9 +198,15 @@ fun NutritionProgressBar(
                 style = Stroke(SpacingCustom_24dp.toPx(), cap = StrokeCap.Square)
             )
         }
-        ThesisFitnessHMAutoSizeText(modifier = Modifier
-            .fillMaxWidth(0.8f)
-            .padding(bottom = SpacingQuarter_4dp), text = progressBarItem.amount, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        ThesisFitnessHMAutoSizeText(
+            modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .padding(bottom = SpacingQuarter_4dp),
+            text = progressBarItem.amount,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = color
+        )
     }
 }
 
