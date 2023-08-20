@@ -35,7 +35,7 @@ interface UserDataSource {
     suspend fun getUserIsRunning(): Flow<Boolean>
     suspend fun getStepCounter(): Flow<Long>
     suspend fun resetGoogleSignInDenialCount()
-    suspend fun setUserFitnessProfile(wizardDetails: UserWizardDetails)
+    suspend fun setUserProfileDetails(wizardDetails: UserWizardDetails)
     suspend fun getUserWorkouts(): List<RemoteUserWorkout>
     suspend fun getUserWorkoutExercises(workoutId: String): List<RemoteUserWorkoutExercise>
     suspend fun getUserScannedFoods(): List<RemoteUserScannedFood>

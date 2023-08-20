@@ -6,7 +6,17 @@ import androidx.compose.runtime.mutableStateOf
 data class HomeUiState(
     val selectedBottomNavItemIndex: MutableState<Int> = mutableStateOf(0),
     val userDetails: UserDetailsUiItem,
+    val sportChallenges: List<UserSportChallengeUiItem>,
     val userMovementTracking: UserMovementTrackingUiItems
+)
+
+data class UserSportChallengeUiItem(
+    val sportId: String,
+    val sportName: String,
+    val goalName: String,
+    val goalValue: String,
+    val completed: Boolean,
+    val progress: Float
 )
 
 data class UserDetailsUiItem(

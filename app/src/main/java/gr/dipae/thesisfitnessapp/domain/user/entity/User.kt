@@ -2,6 +2,7 @@ package gr.dipae.thesisfitnessapp.domain.user.entity
 
 import gr.dipae.thesisfitnessapp.domain.diet.entity.Food
 import gr.dipae.thesisfitnessapp.domain.history.entity.DaySummary
+import gr.dipae.thesisfitnessapp.domain.user.challenges.entity.UserSportChallenge
 import gr.dipae.thesisfitnessapp.domain.workout.entity.Workout
 
 data class User(
@@ -18,7 +19,8 @@ data class User(
     val favoriteActivities: List<String>,
     val daySummaries: List<DaySummary>,
     val scannedFoods: List<Food>,
-    val workouts: List<Workout>
+    val workouts: List<Workout>,
+    val sportChallenges: List<UserSportChallenge>
 )
 
 data class DietGoal(

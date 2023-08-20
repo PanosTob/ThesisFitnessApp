@@ -35,7 +35,7 @@ interface UserRepository {
     suspend fun getUserIsRunning(): Flow<Boolean>
     suspend fun getStepCounter(): Flow<Long>
     suspend fun resetGoogleSignInDenialCount()
-    suspend fun setUserFitnessProfile(userWizardDetails: UserWizardDetails)
+    suspend fun setUserProfileDetails(userWizardDetails: UserWizardDetails)
     suspend fun getUserWorkouts(): List<UserWorkout>
     suspend fun getUserWorkoutExercises(workoutId: String): List<UserWorkoutExercise>
     suspend fun getDaySummary(): DaySummary?

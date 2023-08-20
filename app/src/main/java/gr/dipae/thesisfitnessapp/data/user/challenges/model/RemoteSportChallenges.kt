@@ -7,10 +7,11 @@ data class RemoteSportChallenges(
     val id: String = "",
     val activityId: String = "",
     val activityName: String = "",
+    var activityImgUrl: String = "",
     val goal: RemoteChallengeGoal = RemoteChallengeGoal()
 )
 
 data class RemoteChallengeGoal(
     val type: String = "",
-    val value: Long = 0
+    val value: Double = 0.0
 )

@@ -9,13 +9,13 @@ import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.wizard.mapper.WizardUiMapper
 import gr.dipae.thesisfitnessapp.ui.wizard.model.WizardUiState
 import gr.dipae.thesisfitnessapp.usecase.sport.GetSportsUseCase
-import gr.dipae.thesisfitnessapp.usecase.user.SetUserFitnessProfileUseCase
+import gr.dipae.thesisfitnessapp.usecase.user.SetUserProfileDetailsUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class WizardViewModel @Inject constructor(
     private val getSportsUseCase: GetSportsUseCase,
-    private val setUserFitnessProfileUseCase: SetUserFitnessProfileUseCase,
+    private val setUserProfileDetailsUseCase: SetUserProfileDetailsUseCase,
     private val wizardUiMapper: WizardUiMapper
 ) : BaseViewModel() {
 
@@ -30,7 +30,7 @@ class WizardViewModel @Inject constructor(
 
     fun saveWizardDetails() {
         launchWithProgress {
-            val result = setUserFitnessProfileUseCase(uiState.value?.toUserDetails())
+            val result = setUserProfileDetailsUseCase(uiState.value?.toUserDetails())
             if (result is FirebaseWriteDocumentResult.Success) {
                 _uiState.value?.goToDashboardState?.value = true
             }

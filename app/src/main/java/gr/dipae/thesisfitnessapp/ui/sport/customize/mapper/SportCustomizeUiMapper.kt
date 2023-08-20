@@ -10,7 +10,9 @@ import gr.dipae.thesisfitnessapp.ui.sport.customize.model.SportCustomizeUiState
 import gr.dipae.thesisfitnessapp.ui.sport.customize.model.SportParameterUiItem
 import javax.inject.Inject
 
-class SportCustomizeUiMapper @Inject constructor() : Mapper {
+class SportCustomizeUiMapper @Inject constructor(
+    private val sportsMapper: SportsMapper
+) : Mapper {
 
     operator fun invoke(sport: Sport?): SportCustomizeUiState {
         val sportParameters = mapSportParameters(sport?.parameters)
@@ -41,7 +43,7 @@ class SportCustomizeUiMapper @Inject constructor() : Mapper {
                 name = it.name.replace(nameFirstLetter, nameFirstLetter.uppercaseChar()),
                 unitSuffix = unitSuffix,
                 placeholder = placeholder,
-                iconRes = parameterIconMap[it.name] ?: -1
+                iconRes = parameterIconMap[it.name.lowercase()] ?: -1
             )
         }
     }
@@ -52,7 +54,7 @@ class SportCustomizeUiMapper @Inject constructor() : Mapper {
         val parameterValue = parameter.parameterValue.value.toLongOrNull() ?: return null
         return SportParameter(
             name = parameter.name,
-            type = SportsMapper.sportParameterTypesMap[parameter.name] ?: SportParameterType.Unknown,
+            type = sportsMapper.mapSportParameterType(parameter.name),
             value = parameterValue
         )
     }

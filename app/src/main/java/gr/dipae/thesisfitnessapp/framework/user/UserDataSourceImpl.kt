@@ -15,6 +15,7 @@ import gr.dipae.thesisfitnessapp.data.history.model.RemoteDaySummary
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteSportDone
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteWorkoutDone
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteWorkoutExerciseDone
+import gr.dipae.thesisfitnessapp.data.sport.model.RemoteSport
 import gr.dipae.thesisfitnessapp.data.user.UserDataSource
 import gr.dipae.thesisfitnessapp.data.user.broadcast.AccelerometerBroadcast
 import gr.dipae.thesisfitnessapp.data.user.broadcast.StepCounterBroadcast
@@ -23,6 +24,7 @@ import gr.dipae.thesisfitnessapp.data.user.diet.model.RemoteUserScannedFood
 import gr.dipae.thesisfitnessapp.data.user.login.broadcast.LoginBroadcast
 import gr.dipae.thesisfitnessapp.data.user.model.RemoteUser
 import gr.dipae.thesisfitnessapp.data.user.model.RemoteUserSportChallenge
+import gr.dipae.thesisfitnessapp.data.user.model.RemoteUserSportChallengeDetails
 import gr.dipae.thesisfitnessapp.data.user.model.RemoteUserUpdateRequest
 import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkout
 import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkoutExercise
@@ -37,6 +39,7 @@ import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_WORKOUT_EXERCISES_DONE_COLLECT
 import gr.dipae.thesisfitnessapp.util.EXERCISES_COLLECTION
 import gr.dipae.thesisfitnessapp.util.GOOGLE_SIGN_IN_BLOCKED_TIME
 import gr.dipae.thesisfitnessapp.util.SCANNED_FOODS_COLLECTION
+import gr.dipae.thesisfitnessapp.util.SPORTS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.SPORT_CHALLENGES_COLLECTION
 import gr.dipae.thesisfitnessapp.util.USERS_COLLECTION
 import gr.dipae.thesisfitnessapp.util.USER_DECLINED_SIGN_IN_COUNTER
@@ -156,12 +159,17 @@ class UserDataSourceImpl @Inject constructor(
         loginBroadcast.refreshGoogleSignInEnabledState(true)
     }
 
-    override suspend fun setUserFitnessProfile(wizardDetails: UserWizardDetails) {
+    override suspend fun setUserProfileDetails(wizardDetails: UserWizardDetails) {
         val challenges = getFavoriteSportsChallenges(wizardDetails.favoriteActivitiesIds).map {
             RemoteUserSportChallenge(
                 challengeId = it.id,
                 activityId = it.activityId,
                 activityName = it.activityName,
+                activityImgUrl = it.activityImgUrl,
+                goal = RemoteUserSportChallengeDetails(
+                    type = it.goal.type,
+                    value = it.goal.value
+                ),
                 done = false,
                 progress = 0.0
             )
@@ -301,7 +309,11 @@ class UserDataSourceImpl @Inject constructor(
     }
 
     private suspend fun getFavoriteSportsChallenges(favoriteActivitiesIds: List<String>): List<RemoteSportChallenges> {
-        return fireStore.collection(SPORT_CHALLENGES_COLLECTION).getDocumentsResponse<RemoteSportChallenges>().filter { favoriteActivitiesIds.contains(it.activityId) }
+        val sportChallenges = fireStore.collection(SPORT_CHALLENGES_COLLECTION).getDocumentsResponse<RemoteSportChallenges>().filter { favoriteActivitiesIds.contains(it.activityId) }
+        fireStore.collection(SPORTS_COLLECTION).getDocumentsResponse<RemoteSport>().forEach { sport ->
+            sportChallenges.find { it.activityId == sport.id }?.activityImgUrl = sport.imageUrl
+        }
+        return sportChallenges
     }
 
     private fun getStartTimestampOfThisDay(): Date {

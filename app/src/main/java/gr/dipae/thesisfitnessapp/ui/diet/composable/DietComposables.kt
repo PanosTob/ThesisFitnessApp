@@ -136,11 +136,12 @@ fun NutritionProgressBarRow(
             .fillMaxWidth()
             .aspectRatio(4f)
     ) {
-        NutritionProgressBar(
+        ArcProgressBar(
             modifier = Modifier
                 .weight(0.4f)
                 .fillMaxHeight(),
-            progressBarItem = progressBarItem,
+            progress = progressBarItem.progressTowardsGoal,
+            amount = progressBarItem.amount,
             color = color
         )
         Column(
@@ -156,9 +157,10 @@ fun NutritionProgressBarRow(
 }
 
 @Composable
-fun NutritionProgressBar(
+fun ArcProgressBar(
     modifier: Modifier,
-    progressBarItem: NutritionProgressBarUiItem,
+    progress: Float,
+    amount: String,
     color: Color
 ) {
     Box(
@@ -181,7 +183,7 @@ fun NutritionProgressBar(
             )
         }
         val progressAnimation by animateFloatAsState(
-            targetValue = progressBarItem.progressTowardsGoal,
+            targetValue = progress,
             animationSpec = tween(3000, 500)
         )
         Canvas(
@@ -202,7 +204,7 @@ fun NutritionProgressBar(
             modifier = Modifier
                 .fillMaxWidth(0.8f)
                 .padding(bottom = SpacingQuarter_4dp),
-            text = progressBarItem.amount,
+            text = amount,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = color

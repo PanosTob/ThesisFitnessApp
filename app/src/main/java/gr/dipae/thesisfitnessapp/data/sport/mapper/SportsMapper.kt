@@ -30,7 +30,11 @@ class SportsMapper @Inject constructor() : Mapper {
     }
 
     private fun mapSportParameters(parameters: List<String>): List<SportParameter> {
-        return parameters.map { SportParameter(name = it, type = sportParameterTypesMap[it] ?: SportParameterType.Unknown) }
+        return parameters.map { SportParameter(name = it, type = mapSportParameterType(it)) }
+    }
+
+    fun mapSportParameterType(parameter: String): SportParameterType {
+        return sportParameterTypesMap[parameter.lowercase()] ?: SportParameterType.Unknown
     }
 
     private fun mapSportDetails(details: RemoteSportDetails): SportDetails {
@@ -42,7 +46,7 @@ class SportsMapper @Inject constructor() : Mapper {
 
 
     companion object {
-        val sportParameterTypesMap = linkedMapOf(
+        private val sportParameterTypesMap = linkedMapOf(
             "duration" to SportParameterType.Duration,
             "distance" to SportParameterType.Distance
         )

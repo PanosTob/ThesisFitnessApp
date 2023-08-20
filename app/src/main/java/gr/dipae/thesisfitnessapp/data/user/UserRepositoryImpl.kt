@@ -99,8 +99,8 @@ class UserRepositoryImpl @Inject constructor(
         dataSource.resetGoogleSignInDenialCount()
     }
 
-    override suspend fun setUserFitnessProfile(userWizardDetails: UserWizardDetails) {
-        dataSource.setUserFitnessProfile(userWizardDetails)
+    override suspend fun setUserProfileDetails(userWizardDetails: UserWizardDetails) {
+        dataSource.setUserProfileDetails(userWizardDetails)
     }
 
     override suspend fun getUserWorkouts(): List<UserWorkout> {

@@ -30,6 +30,7 @@
     <string name="home_title">Home</string>
     <string name="home_step_counter_label">Steps</string>
     <string name="home_remaining_goal">remaining</string>
+    <string name="home_user_challenges_section">Activity Challenges</string>
 
     <!-- Sports Screen -->
     <string name="sport_title">Activity</string>

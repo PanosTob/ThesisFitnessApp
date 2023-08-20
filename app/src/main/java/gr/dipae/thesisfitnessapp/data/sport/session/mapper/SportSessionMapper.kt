@@ -10,7 +10,9 @@ import gr.dipae.thesisfitnessapp.domain.sport.session.entity.SportParameterArgum
 import gr.dipae.thesisfitnessapp.util.ext.toDoubleWithSpecificDecimals
 import javax.inject.Inject
 
-class SportSessionMapper @Inject constructor() : Mapper {
+class SportSessionMapper @Inject constructor(
+    private val sportsMapper: SportsMapper
+) : Mapper {
 
     operator fun invoke(sportId: String, breakTime: Long): SportSessionRequest {
         return SportSessionRequest(
@@ -48,7 +50,7 @@ class SportSessionMapper @Inject constructor() : Mapper {
 
         return SportParameter(
             name = parameter.name,
-            type = SportsMapper.sportParameterTypesMap[parameter.name] ?: SportParameterType.Unknown,
+            type = sportsMapper.mapSportParameterType(parameter.name),
             value = parameter.value
         )
     }

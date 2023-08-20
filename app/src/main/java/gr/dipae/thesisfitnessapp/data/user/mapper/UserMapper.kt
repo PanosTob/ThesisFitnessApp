@@ -1,20 +1,25 @@
 package gr.dipae.thesisfitnessapp.data.user.mapper
 
+import gr.dipae.thesisfitnessapp.BuildConfig
 import gr.dipae.thesisfitnessapp.data.Mapper
 import gr.dipae.thesisfitnessapp.data.history.mapper.HistoryMapper
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteDaySummary
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteSportDone
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteWorkoutDone
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteWorkoutExerciseDone
+import gr.dipae.thesisfitnessapp.data.sport.mapper.SportsMapper
 import gr.dipae.thesisfitnessapp.data.user.diet.model.RemoteUserScannedFood
 import gr.dipae.thesisfitnessapp.data.user.model.RemoteDietGoal
 import gr.dipae.thesisfitnessapp.data.user.model.RemoteUser
+import gr.dipae.thesisfitnessapp.data.user.model.RemoteUserSportChallenge
 import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkout
 import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkoutExercise
 import gr.dipae.thesisfitnessapp.domain.history.entity.DaySummary
 import gr.dipae.thesisfitnessapp.domain.history.entity.SportDone
 import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutDone
 import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutExerciseDone
+import gr.dipae.thesisfitnessapp.domain.user.challenges.entity.SportChallenge
+import gr.dipae.thesisfitnessapp.domain.user.challenges.entity.UserSportChallenge
 import gr.dipae.thesisfitnessapp.domain.user.diet.entity.UserScannedFood
 import gr.dipae.thesisfitnessapp.domain.user.entity.DietGoal
 import gr.dipae.thesisfitnessapp.domain.user.entity.FitnessLevel
@@ -24,7 +29,8 @@ import gr.dipae.thesisfitnessapp.domain.user.workout.entity.UserWorkoutExercise
 import javax.inject.Inject
 
 class UserMapper @Inject constructor(
-    private val historyMapper: HistoryMapper
+    private val historyMapper: HistoryMapper,
+    private val sportsMapper: SportsMapper
 ) : Mapper {
 
     @JvmName(name = "1")
@@ -44,7 +50,8 @@ class UserMapper @Inject constructor(
             favoriteActivities = remoteUser.favoriteActivitiesIds,
             daySummaries = emptyList(),
             scannedFoods = emptyList(),
-            workouts = emptyList()
+            workouts = emptyList(),
+            sportChallenges = mapUserSportChallenges(remoteUser.challenges)
         )
     }
 
@@ -101,15 +108,22 @@ class UserMapper @Inject constructor(
         }
     }
 
-    /*private fun mapUserSportChallenges(remoteUserSportChallenges: List<RemoteUserSportChallenge>?): List<UserSportChallenge>? {
-        remoteUserSportChallenges ?: return null
+    private fun mapUserSportChallenges(remoteUserSportChallenges: List<RemoteUserSportChallenge>?): List<UserSportChallenge> {
+        remoteUserSportChallenges ?: return emptyList()
+
         return remoteUserSportChallenges.map {
             UserSportChallenge(
                 sportId = it.activityId,
                 sportName = it.activityName,
-                goal = it.,
-                completed: Boolean
+                sportImgUrl = "${BuildConfig.GOOGLE_STORAGE_FIREBASE}${it.activityImgUrl}${BuildConfig.GOOGLE_STORAGE_FIREBASE_QUERY_PARAMS}",
+                goal = SportChallenge(
+                    type = sportsMapper.mapSportParameterType(it.goal.type),
+                    name = it.goal.type,
+                    value = it.goal.value
+                ),
+                progress = it.progress,
+                completed = it.done
             )
         }
-    }*/
+    }
 }

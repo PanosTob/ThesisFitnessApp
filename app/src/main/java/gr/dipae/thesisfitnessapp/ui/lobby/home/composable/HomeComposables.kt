@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -42,6 +44,7 @@ import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerDefault
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerDouble
+import gr.dipae.thesisfitnessapp.ui.base.compose.WidthAdjustedDivider
 import gr.dipae.thesisfitnessapp.ui.lobby.home.model.HomeUiState
 import gr.dipae.thesisfitnessapp.ui.lobby.home.model.UserDetailsUiItem
 import gr.dipae.thesisfitnessapp.ui.lobby.home.model.UserMovementTrackingUiItem
@@ -62,56 +65,76 @@ fun HomeContent(
     Column(
         Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .background(color = MaterialTheme.colorScheme.background)
             .padding(horizontal = SpacingCustom_24dp)
     ) {
-        Row(
+        HomeUserDetails(uiState.userDetails)
+        VerticalSpacerDouble()
+        HomeDailyMovementStats(uiState.userMovementTracking)
+
+        VerticalSpacerDefault()
+        WidthAdjustedDivider(Modifier.fillMaxWidth())
+        VerticalSpacerDefault()
+
+        HomeSportChallenges(uiState.sportChallenges)
+    }
+}
+
+@Composable
+fun HomeUserDetails(
+    userDetails: UserDetailsUiItem
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(2.5f), horizontalArrangement = Arrangement.spacedBy(SpacingDefault_16dp), verticalAlignment = Alignment.CenterVertically
+    ) {
+        AsyncImage(
             modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(3f), horizontalArrangement = Arrangement.spacedBy(SpacingDefault_16dp), verticalAlignment = Alignment.CenterVertically
-        ) {
-            AsyncImage(
+                .weight(0.4f)
+                .aspectRatio(1f)
+                .border(BorderStroke(width = SpacingEighth_2dp, color = MaterialTheme.colorScheme.primary), shape = CircleShape)
+                .clip(shape = CircleShape),
+            model = userDetails.imageUrl.loadImageWithCrossfade(),
+            contentDescription = ""
+        )
+        Column(modifier = Modifier.weight(0.6f), verticalArrangement = Arrangement.spacedBy(SpacingHalf_8dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            ThesisFitnessHLAutoSizeText(
                 modifier = Modifier
-                    .weight(0.4f)
-                    .aspectRatio(1f)
-                    .border(BorderStroke(width = SpacingEighth_2dp, color = MaterialTheme.colorScheme.primary), shape = CircleShape)
-                    .clip(shape = CircleShape),
-                model = uiState.userDetails.imageUrl.loadImageWithCrossfade(),
-                contentDescription = ""
+                    .weight(0.5f)
+                    .fillMaxWidth(), text = userDetails.username, maxFontSize = 38.sp, color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center
             )
-            Column(modifier = Modifier.weight(0.6f), verticalArrangement = Arrangement.spacedBy(SpacingHalf_8dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                ThesisFitnessHLAutoSizeText(
-                    modifier = Modifier
-                        .weight(0.5f)
-                        .fillMaxWidth(), text = uiState.userDetails.username, maxFontSize = 38.sp, color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center
-                )
-                Row(modifier = Modifier.weight(0.5f), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
-                    HomeUserDetailItem(uiState.userDetails.bodyWeight, R.drawable.ic_scale)
-                    HomeUserDetailItem(uiState.userDetails.muscleMassPercent, R.drawable.ic_muscle)
-                    HomeUserDetailItem(uiState.userDetails.bodyFatPercent, R.drawable.ic_weight)
-                }
+            Row(modifier = Modifier.weight(0.5f), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
+                HomeUserDetailItem(userDetails.bodyWeight, R.drawable.ic_scale)
+                HomeUserDetailItem(userDetails.muscleMassPercent, R.drawable.ic_muscle)
+                HomeUserDetailItem(userDetails.bodyFatPercent, R.drawable.ic_weight)
             }
         }
+    }
+}
 
-        VerticalSpacerDouble()
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(2f),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            HomeUserTrackingStat(
-                title = stringResource(id = R.string.wizard_calories_label),
-                trackingItem = uiState.userMovementTracking.caloriesTracking,
-                imgRes = R.drawable.ic_caloric_burn
-            )
-            VerticalSpacerDefault()
-            HomeUserTrackingStat(
-                title = stringResource(id = R.string.home_step_counter_label),
-                trackingItem = uiState.userMovementTracking.stepsTracking,
-                imgRes = R.drawable.ic_steps_track
-            )
-        }
+@Composable
+fun HomeDailyMovementStats(
+    userMovementTracking: UserMovementTrackingUiItems
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(2f),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        HomeUserTrackingStat(
+            title = stringResource(id = R.string.wizard_calories_label),
+            trackingItem = userMovementTracking.caloriesTracking,
+            imgRes = R.drawable.ic_caloric_burn
+        )
+        VerticalSpacerDefault()
+        HomeUserTrackingStat(
+            title = stringResource(id = R.string.home_step_counter_label),
+            trackingItem = userMovementTracking.stepsTracking,
+            imgRes = R.drawable.ic_steps_track
+        )
     }
 }
 
@@ -191,6 +214,7 @@ fun HomeContentPreview() {
                     muscleMassPercent = "0.25%",
                     bodyFatPercent = "0.17%"
                 ),
+                sportChallenges = emptyList(),
                 userMovementTracking = UserMovementTrackingUiItems(
                     stepsTracking = UserMovementTrackingUiItem(remaining = remember { mutableStateOf("10000") }),
                     caloriesTracking = UserMovementTrackingUiItem(

@@ -6,7 +6,7 @@ import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
 import gr.dipae.thesisfitnessapp.usecase.UseCase
 import javax.inject.Inject
 
-class SetUserFitnessProfileUseCase @Inject constructor(
+class SetUserProfileDetailsUseCase @Inject constructor(
     private val repository: UserRepository
 ) : UseCase {
 
@@ -14,7 +14,7 @@ class SetUserFitnessProfileUseCase @Inject constructor(
         return try {
             userWizardDetails ?: return FirebaseWriteDocumentResult.Failure
 
-            repository.setUserFitnessProfile(userWizardDetails)
+            repository.setUserProfileDetails(userWizardDetails)
             FirebaseWriteDocumentResult.Success
         } catch (ex: Exception) {
             FirebaseWriteDocumentResult.Failure
