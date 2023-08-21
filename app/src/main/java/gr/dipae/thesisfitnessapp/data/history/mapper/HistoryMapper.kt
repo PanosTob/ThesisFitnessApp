@@ -14,7 +14,6 @@ import gr.dipae.thesisfitnessapp.domain.history.entity.SportDone
 import gr.dipae.thesisfitnessapp.domain.history.entity.SportDoneParameter
 import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutDone
 import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutExerciseDone
-import gr.dipae.thesisfitnessapp.util.ext.toDate
 import javax.inject.Inject
 
 class HistoryMapper @Inject constructor(
@@ -32,7 +31,8 @@ class HistoryMapper @Inject constructor(
             return DaySummary(
                 id = id,
                 steps = steps,
-                dateTime = date.time.toDate(),
+                calories = calories,
+                dateTime = date.time,
                 dailyDiet = mapDailyDiet(dailyDiet),
                 sportsDone = activitiesDone.map { it.toSportDone() },
                 workoutsDone = workoutsDone.map { it.toWorkoutDone() }

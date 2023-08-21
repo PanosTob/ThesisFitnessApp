@@ -1,7 +1,6 @@
 package gr.dipae.thesisfitnessapp.ui.sport.session.composable
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import gr.dipae.thesisfitnessapp.R
@@ -33,10 +30,8 @@ import gr.dipae.thesisfitnessapp.ui.sport.session.model.ContinuationState
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.SportSessionUiState
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
-import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
 import gr.dipae.thesisfitnessapp.ui.theme.openSansFontFamily
 
-internal typealias OnSessionFinish = () -> Unit
 internal typealias OnSportSessionTimerResume = () -> Unit
 internal typealias OnSportSessionTimerPause = () -> Unit
 internal typealias OnSportSessionTimerStop = () -> Unit
@@ -53,10 +48,10 @@ fun SportSessionContent(
     onStartAnimationComplete: OnStartAnimationComplete,
     onStopSession: OnStopSession,
     onMapLoaded: OnMapLoaded,
-    onSessionFinish: OnSessionFinish,
     onSportSessionTimerResume: OnSportSessionTimerResume,
     onSportSessionTimerPause: OnSportSessionTimerPause,
-    onMyLocationButtonClick: OnMyLocationButtonClick
+    onMyLocationButtonClick: OnMyLocationButtonClick,
+    onSportSessionShown: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -94,6 +89,7 @@ fun SportSessionContent(
                 .padding(vertical = SpacingDefault_16dp), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (uiState.showContent.value) {
+                onSportSessionShown()
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                     Box(
                         modifier = Modifier
@@ -212,23 +208,6 @@ fun SportSessionContent(
                     onClick = {
                         onStopSession()
                     }
-                )
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.7f)
-                    .aspectRatio(5f)
-                    .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(SpacingDefault_16dp))
-                    .clickable { onSessionFinish() }
-                    .padding(SpacingHalf_8dp),
-                contentAlignment = Alignment.Center
-            ) {
-                ThesisFitnessHLText(
-                    text = stringResource(R.string.sport_session_button),
-                    fontSize = 32.sp,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.background
                 )
             }
         }

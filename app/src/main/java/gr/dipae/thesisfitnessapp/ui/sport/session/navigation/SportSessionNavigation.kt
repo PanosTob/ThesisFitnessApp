@@ -32,7 +32,7 @@ internal val SportSessionRoute = "sports_session${SportSessionArgumentKeys.getCo
 @ExperimentalPermissionsApi
 @ExperimentalComposeUiApi
 fun NavGraphBuilder.sportSessionScreen(
-    onSportSessionShown: () -> Unit,
+    onSportSessionShown: (() -> Unit, () -> Unit, Boolean) -> Unit,
     popBackToSports: () -> Unit,
     onSportSessionTimerResume: OnSportSessionTimerResume,
     onSportSessionTimerPause: OnSportSessionTimerPause,
@@ -43,7 +43,11 @@ fun NavGraphBuilder.sportSessionScreen(
 
         LaunchedEffect(key1 = Unit) {
             viewModel.init()
-            onSportSessionShown()
+            onSportSessionShown(
+                { popBackToSports() },
+                {},
+                false
+            )
         }
 
         val lifecycleOwner = LocalLifecycleOwner.current
@@ -72,10 +76,6 @@ fun NavGraphBuilder.sportSessionScreen(
                 },
                 onMapLoaded = { viewModel.subscribeToLocationUpdates() },
                 onMyLocationButtonClick = { viewModel.onMyLocationButtonClick() },
-                onSessionFinish = {
-                    onSportSessionTimerStop()
-                    viewModel.onSessionFinish()
-                },
                 onSportSessionTimerResume = {
                     onSportSessionTimerResume()
                     viewModel.pauseBreakTimer()
@@ -83,6 +83,16 @@ fun NavGraphBuilder.sportSessionScreen(
                 onSportSessionTimerPause = {
                     onSportSessionTimerPause()
                     viewModel.startBreakTimer()
+                },
+                onSportSessionShown = {
+                    onSportSessionShown(
+                        { popBackToSports() },
+                        {
+                            onSportSessionTimerStop()
+                            viewModel.onSessionFinish()
+                        },
+                        true
+                    )
                 }
             )
         }

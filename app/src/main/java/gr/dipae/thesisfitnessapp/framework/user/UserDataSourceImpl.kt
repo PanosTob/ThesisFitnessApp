@@ -363,7 +363,7 @@ class UserDataSourceImpl @Inject constructor(
 
     override suspend fun setFavoriteSportIds(favoritesSports: List<String>) {
         val userId = getFirebaseUserId()
-        val challenges = getUserCompletedChallenges() + getFavoriteSportsChallenges(favoritesSports).map {
+        val challenges = getUserProgressedChallenges() + getFavoriteSportsChallenges(favoritesSports).map {
             RemoteUserSportChallenge(
                 challengeId = it.id,
                 activityId = it.activityId,
@@ -390,8 +390,8 @@ class UserDataSourceImpl @Inject constructor(
             ).await()
     }
 
-    private suspend fun getUserCompletedChallenges(): List<RemoteUserSportChallenge> {
-        return getUser()?.challenges?.filter { it.done } ?: emptyList()
+    private suspend fun getUserProgressedChallenges(): List<RemoteUserSportChallenge> {
+        return getUser()?.challenges?.filter { it.progress > 0 } ?: emptyList()
     }
 
     override suspend fun setUserNewSportChallenges(favoritesSports: List<String>) {
@@ -465,7 +465,6 @@ class UserDataSourceImpl @Inject constructor(
         sportChallenges.onEach { challenge ->
             challenge.activityImgUrl = sports.find { it.id == challenge.activityId }?.imageUrl ?: ""
         }
-        //img_walking.png
         return sportChallenges
     }
 

@@ -11,3 +11,14 @@ fun Long.toDate(format: String = DATE): String {
         ""
     }
 }
+
+fun String.convertDateFormat(sourcePattern: String = DATE, desiredPattern: String): String {
+    val sourceDateFormat = SimpleDateFormat(sourcePattern, Locale.getDefault())
+    val desiredDateFormat = SimpleDateFormat(desiredPattern, Locale.getDefault())
+    return try {
+        val date = sourceDateFormat.parse(this)
+        date?.let { desiredDateFormat.format(date) } ?: ""
+    } catch (e: java.lang.Exception) {
+        ""
+    }
+}

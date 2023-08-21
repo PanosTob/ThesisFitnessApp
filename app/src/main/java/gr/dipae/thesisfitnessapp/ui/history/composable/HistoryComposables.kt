@@ -27,13 +27,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.himanshoe.charty.pie.PieChart
+import co.yml.charts.ui.linechart.LineChart
+import co.yml.charts.ui.piechart.charts.PieChart
+import co.yml.charts.ui.piechart.models.PieChartConfig
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBMAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHMAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerDefault
 import gr.dipae.thesisfitnessapp.ui.base.compose.WidthAdjustedDivider
+import gr.dipae.thesisfitnessapp.ui.history.model.HistoryDietLineChartUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportPieChartUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportsUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.HistoryUiState
@@ -61,7 +64,30 @@ fun HistoryContent(
             uiState.sportsUiState != null -> {
                 HistorySportsContent(uiState.sportsUiState)
             }
+
+            uiState.dietUiState != null -> {
+                HistoryDietContent(uiState.dietUiState.lineCharts.value)
+            }
         }
+    }
+}
+
+@Composable
+fun HistoryDietContent(
+    item: List<HistoryDietLineChartUiItem>
+) {
+    item.forEach {
+        ThesisFitnessHLAutoSizeText(text = stringResource(id = it.titleRes), maxLines = 1, maxFontSize = 20.sp)
+        LineChart(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f),
+            lineChartData = it.data
+        )
+
+        VerticalSpacerDefault()
+        WidthAdjustedDivider(Modifier.fillMaxWidth())
+        VerticalSpacerDefault()
     }
 }
 
@@ -86,6 +112,7 @@ fun HistorySportsContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(SpacingDefault_16dp)
     ) {
+
         uiState.sportsDone.value.forEach {
             HistorySportDoneItem(it)
         }
@@ -148,7 +175,13 @@ fun HistorySportsPieChart(
         PieChart(
             modifier = Modifier
                 .fillMaxWidth(),
-            dataCollection = it.data
+            pieChartData = it.data,
+            pieChartConfig = PieChartConfig(
+                labelVisible = true,
+                isAnimationEnable = true,
+                showSliceLabels = true,
+                animationDuration = 1500
+            )
         )
     }
 }

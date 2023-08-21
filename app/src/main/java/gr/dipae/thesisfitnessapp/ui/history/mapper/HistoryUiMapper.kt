@@ -2,11 +2,25 @@ package gr.dipae.thesisfitnessapp.ui.history.mapper
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.himanshoe.charty.common.ChartDataCollection
-import com.himanshoe.charty.pie.model.PieData
+import co.yml.charts.axis.AxisData
+import co.yml.charts.common.extensions.formatToSinglePrecision
+import co.yml.charts.common.model.PlotType
+import co.yml.charts.common.model.Point
+import co.yml.charts.ui.linechart.model.GridLines
+import co.yml.charts.ui.linechart.model.IntersectionPoint
+import co.yml.charts.ui.linechart.model.Line
+import co.yml.charts.ui.linechart.model.LineChartData
+import co.yml.charts.ui.linechart.model.LinePlotData
+import co.yml.charts.ui.linechart.model.LineStyle
+import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
+import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
+import co.yml.charts.ui.linechart.model.ShadowUnderLine
+import co.yml.charts.ui.piechart.models.PieChartData
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.data.Mapper
 import gr.dipae.thesisfitnessapp.data.sport.mapper.SportsMapper
@@ -21,6 +35,7 @@ import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerHalf
 import gr.dipae.thesisfitnessapp.ui.history.model.DailyDietUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.DaySummaryUiItem
+import gr.dipae.thesisfitnessapp.ui.history.model.HistoryDietLineChartUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.HistoryDietUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportPieChartUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportsUiState
@@ -31,6 +46,7 @@ import gr.dipae.thesisfitnessapp.ui.history.model.WorkoutExerciseDoneUiItem
 import gr.dipae.thesisfitnessapp.ui.lobby.home.mapper.HomeUiMapper
 import gr.dipae.thesisfitnessapp.ui.theme.ColorPrimary
 import gr.dipae.thesisfitnessapp.ui.theme.openSansFontFamily
+import gr.dipae.thesisfitnessapp.util.ext.toDate
 import javax.inject.Inject
 
 class HistoryUiMapper @Inject constructor() : Mapper {
@@ -90,25 +106,75 @@ class HistoryUiMapper @Inject constructor() : Mapper {
         )
     }
 
-    private fun populateSportsChartData(groupedSummariesBySport: Map<String, List<DaySummary>>, totalDays: Int): ChartDataCollection {
-        return ChartDataCollection(
-            groupedSummariesBySport.map {
-                PieData(
-                    yValue = it.value.count().toFloat() / totalDays,
-                    xValue = SportsMapper.sportNamesMap[it.key] ?: "Unknown",
+    private fun populateSportsChartData(groupedSummariesBySport: Map<String, List<DaySummary>>, totalDays: Int): PieChartData {
+        return PieChartData(
+            slices = groupedSummariesBySport.map {
+                PieChartData.Slice(
+                    label = SportsMapper.sportNamesMap[it.key] ?: "Unknown",
+                    value = it.value.count().toFloat() / totalDays,
                     color = HomeUiMapper.sportColorMap[it.key] ?: ColorPrimary
                 )
-            }
+            },
+            plotType = PlotType.Pie
         )
     }
 
     private fun getDietUiState(fromSports: Boolean, daySummaries: List<DaySummary>): HistoryDietUiState? {
-        if (!fromSports) {
+        if (fromSports) {
             return null
         }
-
         return HistoryDietUiState(
-            wha = ""
+            lineCharts = mutableStateOf(
+                listOf(
+                    getHistoryDietLineChart(daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.calories.toFloat()) }, R.string.diet_nutrition_progress_bar_cal),
+                    getHistoryDietLineChart(daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.proteins.toFloat()) }, R.string.diet_nutrition_progress_bar_protein),
+                    getHistoryDietLineChart(daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.carbohydrates.toFloat()) }, R.string.diet_nutrition_progress_bar_carb),
+                    getHistoryDietLineChart(daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.fats.toFloat()) }, R.string.diet_nutrition_progress_bar_fats),
+                    getHistoryDietLineChart(daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.waterML.toFloat()) }, R.string.diet_nutrition_progress_bar_water),
+                )
+            )
+        )
+    }
+
+    private fun getHistoryDietLineChart(dataPoints: List<Point>, titleRes: Int): HistoryDietLineChartUiItem {
+        val xAxisData = AxisData.Builder()
+            .axisStepSize(100.dp)
+            .backgroundColor(Color.Blue)
+            .steps(dataPoints.size - 1)
+            .labelData { i -> i.toString() }
+            .labelAndAxisLinePadding(15.dp)
+            .build()
+
+        val steps = dataPoints.maxOf { it.y }.toInt()
+        val yAxisData = AxisData.Builder()
+            .steps(steps)
+            .backgroundColor(Color.Red)
+            .labelAndAxisLinePadding(20.dp)
+            .labelData { i ->
+                val yScale = 100f / steps
+                (i * yScale).formatToSinglePrecision()
+            }.build()
+
+        return HistoryDietLineChartUiItem(
+            titleRes = titleRes,
+            LineChartData(
+                linePlotData = LinePlotData(
+                    lines = listOf(
+                        Line(
+                            dataPoints = dataPoints,
+                            LineStyle(),
+                            IntersectionPoint(),
+                            SelectionHighlightPoint(),
+                            ShadowUnderLine(),
+                            SelectionHighlightPopUp()
+                        )
+                    ),
+                ),
+                xAxisData = xAxisData,
+                yAxisData = yAxisData,
+                gridLines = GridLines(),
+                backgroundColor = Color.White
+            )
         )
     }
 
@@ -116,9 +182,10 @@ class HistoryUiMapper @Inject constructor() : Mapper {
         return daySummary?.let {
             DaySummaryUiItem(
                 steps = it.steps.toString(),
-                date = it.dateTime,
+                calories = it.calories.toString(),
+                date = it.dateTime.toDate(),
                 dailyDiet = mapDaySummaryDailyDiet(it.dailyDiet),
-                sportsDone = mapSportsDone(it.sportsDone, daySummary.dateTime),
+                sportsDone = mapSportsDone(it.sportsDone, daySummary.dateTime.toDate()),
                 workoutsDone = mapWorkoutsDone(it.workoutsDone)
             )
         }

@@ -3,7 +3,8 @@ package gr.dipae.thesisfitnessapp.ui.history.model
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.himanshoe.charty.common.ChartDataCollection
+import co.yml.charts.ui.linechart.model.LineChartData
+import co.yml.charts.ui.piechart.models.PieChartData
 import gr.dipae.thesisfitnessapp.domain.history.entity.SportDoneParameter
 
 data class HistoryUiState(
@@ -21,16 +22,22 @@ data class HistorySportsUiState(
 )
 
 data class HistorySportPieChartUiItem(
-    val data: ChartDataCollection,
+    val data: PieChartData,
     val totalDays: String,
 )
 
 data class HistoryDietUiState(
-    val wha: String
+    val lineCharts: MutableState<List<HistoryDietLineChartUiItem>> = mutableStateOf(emptyList())
+)
+
+data class HistoryDietLineChartUiItem(
+    val titleRes: Int,
+    val data: LineChartData
 )
 
 data class DaySummaryUiItem(
     val steps: String,
+    val calories: String,
     val date: String,
     val dailyDiet: DailyDietUiItem,
     val sportsDone: List<SportDoneUiItem>,
@@ -52,11 +59,6 @@ data class SportDoneUiItem(
     val sportName: String,
     val parameters: List<SportDoneParameter>,
     val text: @Composable () -> Unit
-)
-
-data class SportDoneDetailsUiItem(
-    val distanceMeters: String,
-    val durationSeconds: String
 )
 
 data class WorkoutDoneUiItem(

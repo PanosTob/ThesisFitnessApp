@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gr.dipae.thesisfitnessapp.R
@@ -53,21 +54,24 @@ class LobbyViewModel @Inject constructor(
                 TopBarActionUiItem(R.drawable.ic_calendar, onCalendarClicked)
             )
         }
-        _uiState.value.topBarState.navigationIcon.value = null
+        updateTopBarNavigationIcon(null) {}
+        updateTopBarTitle(SportsRoute)
         _uiState.value.topBarState.isVisible.value = true
         showBottomNavigation()
     }
 
     fun handleBarsForDiet(onCalendarClicked: () -> Unit) {
-        updateTopBarNavigationIcon(null)
+        updateTopBarNavigationIcon(null) {}
         _uiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_calendar, onCalendarClicked))
         _uiState.value.topBarState.isVisible.value = true
         showBottomNavigation()
     }
 
-    fun showSportSessionTopBar() {
-        _uiState.value.topBarState.actionIcons.value = emptyList()
-        _uiState.value.topBarState.navigationIcon.value = Icons.Filled.Close
+    fun showSportSessionTopBar(onSportSessionDiscard: () -> Unit, onCheckButtonClicked: () -> Unit, showCheckBtn: Boolean) {
+        if (showCheckBtn) {
+            _uiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_check, onCheckButtonClicked, tint = { Color.Green }))
+        }
+        updateTopBarNavigationIcon(Icons.Filled.Close, onSportSessionDiscard)
     }
 
     fun showWorkoutTopBar() {
@@ -80,12 +84,12 @@ class LobbyViewModel @Inject constructor(
         _uiState.value.topBarState.isVisible.value = false
     }
 
-    fun handleBarsForInnerDestination() {
-        showInnerLoginTopBar()
+    fun handleBarsForInnerDestination(onBackButtonPressed: () -> Unit) {
+        showInnerLoginTopBar(onBackButtonPressed)
         hideBottomNavigation()
     }
 
-    fun handleBarsForHistory(fromSports: Boolean, onFilterClicked: () -> Unit) {
+    fun handleBarsForHistory(fromSports: Boolean, onFilterClicked: () -> Unit, onBackButtonPressed: () -> Unit) {
         _uiState.value.apply {
             topBarState.titleRes.value = R.string.empty
             if (fromSports) {
@@ -93,15 +97,15 @@ class LobbyViewModel @Inject constructor(
             } else {
                 topBarState.actionIcons.value = emptyList()
             }
-            updateTopBarNavigationIcon(Icons.Filled.ArrowBack)
+            updateTopBarNavigationIcon(Icons.Filled.ArrowBack, onBackButtonPressed)
             topBarState.isVisible.value = true
         }
         hideBottomNavigation()
     }
 
-    fun showInnerLoginTopBar() {
+    fun showInnerLoginTopBar(onBackButtonPressed: () -> Unit) {
         _uiState.value.apply {
-            updateTopBarNavigationIcon(Icons.Filled.ArrowBack)
+            updateTopBarNavigationIcon(Icons.Filled.ArrowBack, onBackButtonPressed)
             topBarState.isVisible.value = true
             topBarState.titleRes.value = R.string.empty
             topBarState.actionIcons.value = emptyList()
@@ -116,8 +120,11 @@ class LobbyViewModel @Inject constructor(
         _uiState.value.bottomAppBarItems.value = emptyList()
     }
 
-    private fun updateTopBarNavigationIcon(icon: ImageVector?) {
-        _uiState.value.topBarState.navigationIcon.value = icon
+    private fun updateTopBarNavigationIcon(icon: ImageVector?, action: () -> Unit) {
+        _uiState.value.topBarState.navigationItem.value.apply {
+            iconVector.value = icon
+            clickAction.value = action
+        }
     }
 
     fun updateTopBarTitle(route: String) {

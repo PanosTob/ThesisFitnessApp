@@ -46,7 +46,7 @@ fun NavGraphBuilder.sportsScreen(
             viewModel.init()
         }
 
-        LaunchedEffect(key1 = editState.value)
+        LaunchedEffect(key1 = editState.value, lifecycleOwner.lifecycle)
         {
             onSportsShown(
                 {

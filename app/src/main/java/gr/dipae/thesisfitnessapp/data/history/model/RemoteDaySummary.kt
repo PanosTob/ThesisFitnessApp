@@ -7,6 +7,7 @@ data class RemoteDaySummary(
     @DocumentId
     val id: String = "",
     val steps: Long = 0,
+    val calories: Long = 0,
     val date: Date = Date(),
     val dailyDiet: RemoteDailyDiet = RemoteDailyDiet(),
     var activitiesDone: List<RemoteSportDone> = emptyList(),

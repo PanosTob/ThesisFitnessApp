@@ -109,8 +109,8 @@ fun NavGraphBuilder.lobbyNavHost(
                                 navigationIconContentColor = MaterialTheme.colorScheme.primary
                             ),
                             navigationIcon = {
-                                topBarState.navigationIcon.value?.let {
-                                    IconButton(onClick = { navController.navigateUp() }) {
+                                topBarState.navigationItem.value.iconVector.value?.let {
+                                    IconButton(onClick = { topBarState.navigationItem.value.clickAction.value.invoke() }) {
                                         Icon(
                                             imageVector = it,
                                             contentDescription = "Back"
@@ -129,7 +129,7 @@ fun NavGraphBuilder.lobbyNavHost(
                                             .clickable { it.clickAction() },
                                         painter = painterResource(id = it.icon),
                                         contentDescription = "",
-                                        tint = MaterialTheme.colorScheme.primary
+                                        tint = it.tint.invoke()
                                     )
                                 }
                             }
@@ -166,15 +166,16 @@ fun NavGraphBuilder.lobbyNavHost(
                         )
                         sportCustomizeScreen(
                             onSportCustomizeShown = {
-                                viewModel.handleBarsForInnerDestination()
+                                viewModel.handleBarsForInnerDestination { navController.navigateUp() }
                             },
                             onStartClicked = { navController.navigateToSportSession(it) }
                         )
                         sportSessionScreen(
-                            onSportSessionShown = {
-                                viewModel.showSportSessionTopBar()
+                            onSportSessionShown = { onSportSessionDiscard, onCheckButtonClicked, showCheckBtn ->
+                                viewModel.showSportSessionTopBar(onSportSessionDiscard, onCheckButtonClicked, showCheckBtn)
                             },
                             popBackToSports = {
+                                stopStopWatch()
                                 navController.popBackStack(route = SportsRoute, inclusive = false)
                             },
                             onSportSessionTimerResume = { startStopWatch() },
@@ -192,7 +193,7 @@ fun NavGraphBuilder.lobbyNavHost(
                             }
                         )
                         foodSelectionScreen {
-                            viewModel.showInnerLoginTopBar()
+                            viewModel.showInnerLoginTopBar { navController.navigateUp() }
                         }
                         macrosDialog(
                             onSave = { navController.navigateUp() }
@@ -204,7 +205,7 @@ fun NavGraphBuilder.lobbyNavHost(
 
                         historyScreen(
                             onHistoryShown = { fromSports, onFilterClicked ->
-                                viewModel.handleBarsForHistory(fromSports, onFilterClicked)
+                                viewModel.handleBarsForHistory(fromSports, onFilterClicked) { navController.navigateUp() }
                             }
                         )
                     }

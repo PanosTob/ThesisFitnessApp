@@ -38,6 +38,7 @@ const val TIME = "HH:mm"
 const val MONTH = "MMMM"
 const val MONTH_2 = "LLLL"
 const val DAY_MONTH = "dd/MM"
+const val DAY = "EEEE"
 const val TIME_FULL = "HH:mm:ss"
 const val DAY_TIME_FULL = "dd:HH:mm:ss"
 

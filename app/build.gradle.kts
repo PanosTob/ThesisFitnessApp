@@ -36,7 +36,7 @@ android {
 
     defaultConfig {
         applicationId = "gr.dipae.thesisfitnessapp"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -250,7 +250,7 @@ dependencies {
     implementation("com.airbnb.android:lottie-compose:6.1.0")
 
     //Charts
-    implementation("com.himanshoe:charty:2.0.0-alpha01")
+    implementation("co.yml:ycharts:2.1.0")
 
     //Tests libs
     testImplementation("junit:junit:4.13.2")
