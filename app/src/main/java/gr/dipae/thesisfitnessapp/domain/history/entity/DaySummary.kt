@@ -1,12 +1,14 @@
 package gr.dipae.thesisfitnessapp.domain.history.entity
 
+import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameterType
+
 data class DaySummary(
     val id: String,
     val steps: Long,
     val dateTime: String,
     val dailyDiet: DailyDiet,
-    var sportsDone: List<SportDone>,
-    var workoutsDone: List<WorkoutDone>
+    val sportsDone: List<SportDone>,
+    val workoutsDone: List<WorkoutDone>
 )
 
 data class DailyDiet(
@@ -19,13 +21,16 @@ data class DailyDiet(
 
 data class SportDone(
     val id: String,
-    val name: String,
-    val details: SportDoneDetails
+    val sportId: String,
+    val breakTime: Long,
+    val sportParameters: List<SportDoneParameter>
 )
 
-data class SportDoneDetails(
-    val distanceMeters: Long,
-    val durationSeconds: Long
+data class SportDoneParameter(
+    val type: SportParameterType,
+    val name: String,
+    val value: Long,
+    val achieved: Boolean
 )
 
 data class WorkoutDone(

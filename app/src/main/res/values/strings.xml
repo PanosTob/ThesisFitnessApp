@@ -30,6 +30,12 @@
 
     <!-- History screen -->
     <string name="history_activities_title">Activities History</string>
+    <string name="history_activities_generic_details">General Activity Details</string>
+    <string name="history_activities_total_time">Total Time</string>
+    <string name="history_activities_total_distance">Total Distance</string>
+    <string name="history_activities_pie_chart_total_days">Total Days: %1$s</string>
+    <string name="history_activities_sport_done_duration">Duration: %1$s</string>
+    <string name="history_activities_sport_done_distance">Distance: %1$s</string>
     <string name="history_diet_title">Diet History</string>
 
     <!-- Lobby Screen -->

@@ -31,6 +31,7 @@ import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkout
 import gr.dipae.thesisfitnessapp.data.user.workout.model.RemoteUserWorkoutExercise
 import gr.dipae.thesisfitnessapp.di.module.qualifier.GeneralSharedPrefs
 import gr.dipae.thesisfitnessapp.domain.wizard.entity.UserWizardDetails
+import gr.dipae.thesisfitnessapp.util.ACTIVITY_STATISTICS
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_COLLECTION
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_DAILY_DIET
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_DATE
@@ -229,31 +230,87 @@ class UserDataSourceImpl @Inject constructor(
         val startOfDayTime = getStartTimestampOfThisDay()
         val endOfDayTime = getEndTimeStampOfThisDay()
 
-        return fireStore
+        val summary = fireStore
             .collection(USERS_COLLECTION)
             .document(userId)
             .collection(DAY_SUMMARY_COLLECTION)
             .whereGreaterThanOrEqualTo(DAY_SUMMARY_DATE, startOfDayTime)
             .whereLessThanOrEqualTo(DAY_SUMMARY_DATE, endOfDayTime)
             .getMatchingDocument<RemoteDaySummary>()
+
+        return summary?.apply {
+            activitiesDone = fireStore
+                .collection(USERS_COLLECTION)
+                .document(userId)
+                .collection(DAY_SUMMARY_COLLECTION)
+                .document(id)
+                .collection(DAY_SUMMARY_SPORTS_DONE_COLLECTION)
+                .getDocumentsResponse()
+
+            workoutsDone = fireStore
+                .collection(USERS_COLLECTION)
+                .document(userId)
+                .collection(DAY_SUMMARY_COLLECTION)
+                .document(id)
+                .collection(DAY_SUMMARY_WORKOUTS_DONE_COLLECTION)
+                .getDocumentsResponse()
+        }
     }
 
     override suspend fun getDaySummariesByRange(startDate: Long, endDate: Long): List<RemoteDaySummary> {
         val userId = getFirebaseUserId()
         val startOfDayTime = Calendar.getInstance().apply {
-            set(Calendar.MILLISECOND, startDate.toInt())
+            timeInMillis = startDate
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
         }.time
         val endOfDayTime = Calendar.getInstance().apply {
-            set(Calendar.MILLISECOND, endDate.toInt())
+            timeInMillis = endDate
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 59)
+            set(Calendar.SECOND, 59)
         }.time
 
-        return fireStore
+
+        val summaries = fireStore
             .collection(USERS_COLLECTION)
             .document(userId)
             .collection(DAY_SUMMARY_COLLECTION)
             .whereGreaterThanOrEqualTo(DAY_SUMMARY_DATE, startOfDayTime)
             .whereLessThanOrEqualTo(DAY_SUMMARY_DATE, endOfDayTime)
-            .getMatchingDocuments()
+            .getMatchingDocuments<RemoteDaySummary>()
+
+
+        return summaries.onEach { summary ->
+            summary.activitiesDone = fireStore
+                .collection(USERS_COLLECTION)
+                .document(userId)
+                .collection(DAY_SUMMARY_COLLECTION)
+                .document(summary.id)
+                .collection(DAY_SUMMARY_SPORTS_DONE_COLLECTION)
+                .getDocumentsResponse()
+
+            summary.activitiesDone.onEach {
+                it.activityStatistics = fireStore
+                    .collection(USERS_COLLECTION)
+                    .document(userId)
+                    .collection(DAY_SUMMARY_COLLECTION)
+                    .document(summary.id)
+                    .collection(DAY_SUMMARY_SPORTS_DONE_COLLECTION)
+                    .document(it.id)
+                    .collection(ACTIVITY_STATISTICS)
+                    .getDocumentsResponse()
+            }
+
+            summary.workoutsDone = fireStore
+                .collection(USERS_COLLECTION)
+                .document(userId)
+                .collection(DAY_SUMMARY_COLLECTION)
+                .document(summary.id)
+                .collection(DAY_SUMMARY_WORKOUTS_DONE_COLLECTION)
+                .getDocumentsResponse()
+        }
     }
 
     override suspend fun getDaySummarySportsDone(daySummaryId: String): List<RemoteSportDone> {

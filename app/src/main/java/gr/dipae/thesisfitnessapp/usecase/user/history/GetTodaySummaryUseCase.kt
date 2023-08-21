@@ -9,17 +9,7 @@ class GetTodaySummaryUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(): DaySummary? {
         return try {
-            val summary = repository.getDaySummary()
-
-            if (summary != null && summary.id.isNotBlank()) {
-                val sportsDone = repository.getDaySummarySportsDone(summary.id)
-                val workoutsDone = repository.getDaySummaryWorkoutsDone(summary.id)
-
-                summary.sportsDone = sportsDone
-                summary.workoutsDone = workoutsDone
-            }
-
-            return summary
+            repository.getDaySummary()
         } catch (ex: Exception) {
             null
         }

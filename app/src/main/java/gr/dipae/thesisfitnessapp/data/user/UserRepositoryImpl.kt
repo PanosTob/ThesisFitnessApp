@@ -6,9 +6,6 @@ import gr.dipae.thesisfitnessapp.data.diet.model.DailyDietRequest
 import gr.dipae.thesisfitnessapp.data.history.mapper.HistoryMapper
 import gr.dipae.thesisfitnessapp.data.user.mapper.UserMapper
 import gr.dipae.thesisfitnessapp.domain.history.entity.DaySummary
-import gr.dipae.thesisfitnessapp.domain.history.entity.SportDone
-import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutDone
-import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutExerciseDone
 import gr.dipae.thesisfitnessapp.domain.user.UserRepository
 import gr.dipae.thesisfitnessapp.domain.user.challenges.entity.UserSportChallenge
 import gr.dipae.thesisfitnessapp.domain.user.diet.entity.UserScannedFood
@@ -118,23 +115,11 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getDaySummary(): DaySummary? {
-        return historyMapper(dataSource.getDaySummary())
+        return historyMapper.mapDaySummary(dataSource.getDaySummary())
     }
 
     override suspend fun getDaySummariesByRange(startDate: Long, endDate: Long): List<DaySummary> {
         return historyMapper(dataSource.getDaySummariesByRange(startDate, endDate))
-    }
-
-    override suspend fun getDaySummarySportsDone(daySummaryId: String): List<SportDone> {
-        return userMapper(dataSource.getDaySummarySportsDone(daySummaryId))
-    }
-
-    override suspend fun getDaySummaryWorkoutsDone(daySummaryId: String): List<WorkoutDone> {
-        return userMapper(dataSource.getDaySummaryWorkoutsDone(daySummaryId))
-    }
-
-    override suspend fun getDaySummaryWorkoutExercisesDone(daySummaryId: String, workoutId: String): List<WorkoutExerciseDone> {
-        return userMapper(dataSource.getDaySummaryWorkoutExercisesDone(daySummaryId, workoutId))
     }
 
     override suspend fun getUserScannedFoods(): List<UserScannedFood> {

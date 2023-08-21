@@ -249,6 +249,9 @@ dependencies {
     //Lottie Animation
     implementation("com.airbnb.android:lottie-compose:6.1.0")
 
+    //Charts
+    implementation("com.himanshoe:charty:2.0.0-alpha01")
+
     //Tests libs
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

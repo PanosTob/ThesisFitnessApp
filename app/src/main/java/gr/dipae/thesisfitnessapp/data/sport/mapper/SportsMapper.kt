@@ -46,6 +46,17 @@ class SportsMapper @Inject constructor() : Mapper {
 
 
     companion object {
+        val sportNamesMap = linkedMapOf(
+            "B7i1ymOBSpyug4JpVCUY" to "Ping Pong",
+            "DeycT4SHRC7oXICdz8Eu" to "Indoor Running",
+            "GQwtuStM2lK3K9HPPbuL" to "Walking",
+            "YjBbZzm1SjahJnFryDjN" to "Running",
+            "hT4SiXXhJNLTZcLh2Ftw" to "Jumping Rope",
+            "khuM7tOiXxq3GAzd6vG7" to "Cycling",
+            "nbLxd82u7iq0vGxzFsf5" to "Boxing",
+            "rOGkpF0m5WxCxWOhwQg9" to "Climbing",
+            "w3S0w3zexZ75j0vm2ziK" to "Swimming",
+        )
         private val sportParameterTypesMap = linkedMapOf(
             "duration" to SportParameterType.Duration,
             "distance" to SportParameterType.Distance

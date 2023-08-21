@@ -4,9 +4,6 @@ import android.content.Intent
 import android.content.IntentSender
 import gr.dipae.thesisfitnessapp.data.diet.model.DailyDietRequest
 import gr.dipae.thesisfitnessapp.domain.history.entity.DaySummary
-import gr.dipae.thesisfitnessapp.domain.history.entity.SportDone
-import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutDone
-import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutExerciseDone
 import gr.dipae.thesisfitnessapp.domain.user.challenges.entity.UserSportChallenge
 import gr.dipae.thesisfitnessapp.domain.user.diet.entity.UserScannedFood
 import gr.dipae.thesisfitnessapp.domain.user.entity.User
@@ -42,9 +39,6 @@ interface UserRepository {
     suspend fun getDaySummary(): DaySummary?
     suspend fun getDaySummariesByRange(startDate: Long, endDate: Long): List<DaySummary>
     suspend fun setMacrosDaily(dailyDietRequest: DailyDietRequest, todaySummaryId: String?)
-    suspend fun getDaySummarySportsDone(daySummaryId: String): List<SportDone>
-    suspend fun getDaySummaryWorkoutsDone(daySummaryId: String): List<WorkoutDone>
-    suspend fun getDaySummaryWorkoutExercisesDone(daySummaryId: String, workoutId: String): List<WorkoutExerciseDone>
     suspend fun getUserScannedFoods(): List<UserScannedFood>
     suspend fun getFavoriteSportIds(): List<String>
     suspend fun setFavoriteSportIds(favoritesSports: List<String>)
