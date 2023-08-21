@@ -7,6 +7,10 @@ import javax.inject.Inject
 
 class HistoryMapper @Inject constructor() : Mapper {
 
+    operator fun invoke(remoteDaySummaries: List<RemoteDaySummary>): List<DaySummary> {
+        return remoteDaySummaries.map { it.toDaySummary() }
+    }
+
     operator fun invoke(remoteDaySummary: RemoteDaySummary?): DaySummary? {
         return remoteDaySummary?.toDaySummary()
     }

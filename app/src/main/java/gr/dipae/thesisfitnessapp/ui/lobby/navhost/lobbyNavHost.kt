@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,6 +37,7 @@ import gr.dipae.thesisfitnessapp.ui.diet.macros.navigation.macrosDialog
 import gr.dipae.thesisfitnessapp.ui.diet.macros.navigation.navigateToMacrosDialog
 import gr.dipae.thesisfitnessapp.ui.diet.navigation.dietScreen
 import gr.dipae.thesisfitnessapp.ui.history.navigation.historyScreen
+import gr.dipae.thesisfitnessapp.ui.history.navigation.navigateToHistory
 import gr.dipae.thesisfitnessapp.ui.lobby.composable.LobbyBottomNavItem
 import gr.dipae.thesisfitnessapp.ui.lobby.home.navigation.HomeRoute
 import gr.dipae.thesisfitnessapp.ui.lobby.home.navigation.homeScreen
@@ -56,6 +58,7 @@ import gr.dipae.thesisfitnessapp.util.ext.singleNavigateWithPopInclusive
 
 internal const val LobbyNavHostRoute = "lobby_nav_host"
 
+@ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @ExperimentalPermissionsApi
 @ExperimentalComposeUiApi
@@ -144,15 +147,22 @@ fun NavGraphBuilder.lobbyNavHost(
                     ) {
                         homeScreen(
                             onHomeShown = {
-                                viewModel.showLobbyTopBar()
+                                viewModel.handleBarsForHome()
                             }
                         )
                         workoutScreen(
                             onWorkoutShown = { viewModel.showWorkoutTopBar() }
                         )
                         sportsScreen(
-                            onSportsShown = viewModel::handleBarsForSports,
-                            onSportSelected = { navController.navigateToSportCustomize(it) }
+                            onSportsShown = { onEditClicked, onEditDoneClicked, onCalendarClicked, statusBarState ->
+                                viewModel.handleBarsForSports(onEditClicked, onEditDoneClicked, onCalendarClicked, statusBarState)
+                            },
+                            onSportSelected = { navController.navigateToSportCustomize(it) },
+                            onDateRangePicked = { startDate, endDate ->
+                                if (startDate != null && endDate != null) {
+                                    navController.navigateToHistory(startDate, endDate, true)
+                                }
+                            }
                         )
                         sportCustomizeScreen(
                             onSportCustomizeShown = {
@@ -172,11 +182,18 @@ fun NavGraphBuilder.lobbyNavHost(
                             onSportSessionTimerStop = { stopStopWatch() }
                         )
                         dietScreen(
-                            onDietShown = { viewModel.showDietTopBar() },
+                            onDietShown = { viewModel.handleBarsForDiet(it) },
                             onFoodSelectionFabClicked = { navController.navigateToFoodSelection() },
-                            onMacrosFabClicked = { navController.navigateToMacrosDialog() }
+                            onMacrosFabClicked = { navController.navigateToMacrosDialog() },
+                            onDateRangePicked = { startDate, endDate ->
+                                if (startDate != null && endDate != null) {
+                                    navController.navigateToHistory(startDate, endDate, false)
+                                }
+                            }
                         )
-                        foodSelectionScreen()
+                        foodSelectionScreen {
+                            viewModel.showInnerLoginTopBar()
+                        }
                         macrosDialog(
                             onSave = { navController.navigateUp() }
                         )
@@ -185,7 +202,11 @@ fun NavGraphBuilder.lobbyNavHost(
                             onLogout = { logoutUser() }
                         )
 
-                        historyScreen()
+                        historyScreen(
+                            onHistoryShown = { fromSports, onFilterClicked ->
+                                viewModel.handleBarsForHistory(fromSports, onFilterClicked)
+                            }
+                        )
                     }
                 },
                 bottomBar = {

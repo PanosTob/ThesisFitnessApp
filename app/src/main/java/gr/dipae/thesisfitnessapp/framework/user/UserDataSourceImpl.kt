@@ -55,6 +55,7 @@ import gr.dipae.thesisfitnessapp.util.ext.get
 import gr.dipae.thesisfitnessapp.util.ext.getDocumentResponse
 import gr.dipae.thesisfitnessapp.util.ext.getDocumentsResponse
 import gr.dipae.thesisfitnessapp.util.ext.getMatchingDocument
+import gr.dipae.thesisfitnessapp.util.ext.getMatchingDocuments
 import gr.dipae.thesisfitnessapp.util.ext.set
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
@@ -235,6 +236,24 @@ class UserDataSourceImpl @Inject constructor(
             .whereGreaterThanOrEqualTo(DAY_SUMMARY_DATE, startOfDayTime)
             .whereLessThanOrEqualTo(DAY_SUMMARY_DATE, endOfDayTime)
             .getMatchingDocument<RemoteDaySummary>()
+    }
+
+    override suspend fun getDaySummariesByRange(startDate: Long, endDate: Long): List<RemoteDaySummary> {
+        val userId = getFirebaseUserId()
+        val startOfDayTime = Calendar.getInstance().apply {
+            set(Calendar.MILLISECOND, startDate.toInt())
+        }.time
+        val endOfDayTime = Calendar.getInstance().apply {
+            set(Calendar.MILLISECOND, endDate.toInt())
+        }.time
+
+        return fireStore
+            .collection(USERS_COLLECTION)
+            .document(userId)
+            .collection(DAY_SUMMARY_COLLECTION)
+            .whereGreaterThanOrEqualTo(DAY_SUMMARY_DATE, startOfDayTime)
+            .whereLessThanOrEqualTo(DAY_SUMMARY_DATE, endOfDayTime)
+            .getMatchingDocuments()
     }
 
     override suspend fun getDaySummarySportsDone(daySummaryId: String): List<RemoteSportDone> {

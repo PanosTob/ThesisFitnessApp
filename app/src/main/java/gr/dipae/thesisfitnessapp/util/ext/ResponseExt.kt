@@ -23,11 +23,11 @@ suspend inline fun <reified T> Query.getMatchingDocument(): T? {
     return get().await().toObjects(T::class.java).firstOrNull()
 }
 
-suspend inline fun <reified T> CollectionReference.getDocumentsResponse(): List<T> {
+suspend inline fun <reified T> Query.getMatchingDocuments(): List<T> {
     return get().await().toObjects(T::class.java)
 }
 
-suspend inline fun <reified T> Query.getMatchingDocuments(): List<T> {
+suspend inline fun <reified T> CollectionReference.getDocumentsResponse(): List<T> {
     return get().await().toObjects(T::class.java)
 }
 

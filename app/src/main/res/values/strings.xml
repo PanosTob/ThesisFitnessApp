@@ -23,6 +23,15 @@
     <string name="wizard_next_btn">Next</string>
     <string name="wizard_finish_btn">Finish</string>
 
+    <!-- Calendar -->
+    <string name="history_date_picker_activity_title">Please select the date range of activity history</string>
+    <string name="history_date_picker_start_date">Start Date</string>
+    <string name="history_date_picker_end_date">End Date</string>
+
+    <!-- History screen -->
+    <string name="history_activities_title">Activities History</string>
+    <string name="history_diet_title">Diet History</string>
+
     <!-- Lobby Screen -->
     <string name="lobby_top_bar_title">Welcome %1$s</string>
 

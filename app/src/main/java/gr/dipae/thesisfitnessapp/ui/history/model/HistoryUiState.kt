@@ -1,7 +1,10 @@
 package gr.dipae.thesisfitnessapp.ui.history.model
 
+import androidx.compose.runtime.Composable
+
 data class HistoryUiState(
-    val daySummary: DaySummaryUiItem?
+    val title: @Composable () -> Unit,
+    val daySummaries: List<DaySummaryUiItem>
 )
 
 data class DaySummaryUiItem(

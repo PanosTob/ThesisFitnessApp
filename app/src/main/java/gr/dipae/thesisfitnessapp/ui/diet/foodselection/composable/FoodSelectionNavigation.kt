@@ -14,11 +14,14 @@ internal const val FoodSelectionRoute = "food_selection"
 
 @ExperimentalFoundationApi
 @ExperimentalMaterial3Api
-fun NavGraphBuilder.foodSelectionScreen() {
+fun NavGraphBuilder.foodSelectionScreen(
+    onFoodSelectionShown: () -> Unit
+) {
     composable(FoodSelectionRoute) {
         val viewModel: FoodSelectionViewModel = hiltViewModel()
 
         LaunchedEffect(key1 = Unit) {
+            onFoodSelectionShown()
             viewModel.init()
         }
 

@@ -3,6 +3,7 @@ package gr.dipae.thesisfitnessapp.ui.app
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -29,6 +30,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 
+@ExperimentalMaterialApi
 @ExperimentalPermissionsApi
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi

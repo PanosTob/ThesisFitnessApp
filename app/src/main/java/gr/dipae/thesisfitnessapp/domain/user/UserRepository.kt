@@ -40,6 +40,7 @@ interface UserRepository {
     suspend fun getUserWorkouts(): List<UserWorkout>
     suspend fun getUserWorkoutExercises(workoutId: String): List<UserWorkoutExercise>
     suspend fun getDaySummary(): DaySummary?
+    suspend fun getDaySummariesByRange(startDate: Long, endDate: Long): List<DaySummary>
     suspend fun setMacrosDaily(dailyDietRequest: DailyDietRequest, todaySummaryId: String?)
     suspend fun getDaySummarySportsDone(daySummaryId: String): List<SportDone>
     suspend fun getDaySummaryWorkoutsDone(daySummaryId: String): List<WorkoutDone>

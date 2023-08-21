@@ -35,17 +35,33 @@ class LobbyViewModel @Inject constructor(
     private val _uiState: MutableState<LobbyUiState> = mutableStateOf(LobbyUiState())
     val uiState: State<LobbyUiState> = _uiState
 
-    fun showLobbyTopBar() {
-        _uiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_top_burger_menu))
+    fun handleBarsForHome() {
+        _uiState.value.topBarState.actionIcons.value = emptyList()
+        _uiState.value.topBarState.isVisible.value = false
+        showBottomNavigation()
     }
 
-    fun handleBarsForSports(onEditClicked: () -> Unit, onEditDoneClicked: () -> Unit, statusBarState: Boolean) {
+    fun handleBarsForSports(onEditClicked: () -> Unit, onEditDoneClicked: () -> Unit, onCalendarClicked: () -> Unit, statusBarState: Boolean) {
         if (statusBarState) {
-            _uiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_add, onEditDoneClicked), TopBarActionUiItem(R.drawable.ic_calendar))
+            _uiState.value.topBarState.actionIcons.value = listOf(
+                TopBarActionUiItem(R.drawable.ic_add, onEditDoneClicked),
+                TopBarActionUiItem(R.drawable.ic_calendar, onCalendarClicked)
+            )
         } else {
-            _uiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_edit, onEditClicked), TopBarActionUiItem(R.drawable.ic_calendar))
+            _uiState.value.topBarState.actionIcons.value = listOf(
+                TopBarActionUiItem(R.drawable.ic_edit, onEditClicked),
+                TopBarActionUiItem(R.drawable.ic_calendar, onCalendarClicked)
+            )
         }
         _uiState.value.topBarState.navigationIcon.value = null
+        _uiState.value.topBarState.isVisible.value = true
+        showBottomNavigation()
+    }
+
+    fun handleBarsForDiet(onCalendarClicked: () -> Unit) {
+        updateTopBarNavigationIcon(null)
+        _uiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_calendar, onCalendarClicked))
+        _uiState.value.topBarState.isVisible.value = true
         showBottomNavigation()
     }
 
@@ -56,18 +72,30 @@ class LobbyViewModel @Inject constructor(
 
     fun showWorkoutTopBar() {
         _uiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_calendar))
-    }
-
-    fun showDietTopBar() {
-        _uiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_calendar))
+        _uiState.value.topBarState.isVisible.value = true
     }
 
     fun showProfileTopBar() {
         _uiState.value.topBarState.actionIcons.value = listOf()
+        _uiState.value.topBarState.isVisible.value = false
     }
 
     fun handleBarsForInnerDestination() {
         showInnerLoginTopBar()
+        hideBottomNavigation()
+    }
+
+    fun handleBarsForHistory(fromSports: Boolean, onFilterClicked: () -> Unit) {
+        _uiState.value.apply {
+            topBarState.titleRes.value = R.string.empty
+            if (fromSports) {
+                topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_filter, onFilterClicked))
+            } else {
+                topBarState.actionIcons.value = emptyList()
+            }
+            updateTopBarNavigationIcon(Icons.Filled.ArrowBack)
+            topBarState.isVisible.value = true
+        }
         hideBottomNavigation()
     }
 
@@ -88,7 +116,7 @@ class LobbyViewModel @Inject constructor(
         _uiState.value.bottomAppBarItems.value = emptyList()
     }
 
-    private fun updateTopBarNavigationIcon(icon: ImageVector) {
+    private fun updateTopBarNavigationIcon(icon: ImageVector?) {
         _uiState.value.topBarState.navigationIcon.value = icon
     }
 

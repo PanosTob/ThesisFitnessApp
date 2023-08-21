@@ -3,6 +3,7 @@ package gr.dipae.thesisfitnessapp.data.user
 import android.content.Intent
 import android.content.IntentSender
 import gr.dipae.thesisfitnessapp.data.diet.model.DailyDietRequest
+import gr.dipae.thesisfitnessapp.data.history.mapper.HistoryMapper
 import gr.dipae.thesisfitnessapp.data.user.mapper.UserMapper
 import gr.dipae.thesisfitnessapp.domain.history.entity.DaySummary
 import gr.dipae.thesisfitnessapp.domain.history.entity.SportDone
@@ -20,7 +21,8 @@ import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val dataSource: UserDataSource,
-    private val userMapper: UserMapper
+    private val userMapper: UserMapper,
+    private val historyMapper: HistoryMapper,
 ) : UserRepository {
     override suspend fun isUserSignedIn(): Boolean {
         return dataSource.isUserSignedIn()
@@ -116,7 +118,11 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getDaySummary(): DaySummary? {
-        return userMapper.mapDaySummary(dataSource.getDaySummary())
+        return historyMapper(dataSource.getDaySummary())
+    }
+
+    override suspend fun getDaySummariesByRange(startDate: Long, endDate: Long): List<DaySummary> {
+        return historyMapper(dataSource.getDaySummariesByRange(startDate, endDate))
     }
 
     override suspend fun getDaySummarySportsDone(daySummaryId: String): List<SportDone> {

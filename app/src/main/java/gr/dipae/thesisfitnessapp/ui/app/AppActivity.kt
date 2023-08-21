@@ -10,6 +10,7 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -25,6 +26,7 @@ import gr.dipae.thesisfitnessapp.ui.theme.ThesisFitnessAppTheme
 import gr.dipae.thesisfitnessapp.util.connectivity.ConnectivityStatus
 import kotlinx.coroutines.DelicateCoroutinesApi
 
+@ExperimentalMaterialApi
 @ExperimentalPermissionsApi
 @DelicateCoroutinesApi
 @ExperimentalMaterial3Api
