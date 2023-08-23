@@ -114,11 +114,19 @@ class HistoryUiMapper @Inject constructor() : Mapper {
         return HistoryDietUiState(
             lineCharts = mutableStateOf(
                 listOf(
-                    getHistoryDietLineChart(daySummaries, daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.calories.toFloat()) }, R.string.diet_nutrition_progress_bar_cal),
-                    getHistoryDietLineChart(daySummaries, daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.proteins.toFloat()) }, R.string.diet_nutrition_progress_bar_protein),
-                    getHistoryDietLineChart(daySummaries, daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.carbohydrates.toFloat()) }, R.string.diet_nutrition_progress_bar_carb),
-                    getHistoryDietLineChart(daySummaries, daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.fats.toFloat()) }, R.string.diet_nutrition_progress_bar_fats),
-                    getHistoryDietLineChart(daySummaries, daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.waterML.toFloat()) }, R.string.diet_nutrition_progress_bar_water),
+                    getHistoryDietLineChart(daySummaries, daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.calories.toFloat()) }, R.string.diet_nutrition_progress_bar_cal),
+                    getHistoryDietLineChart(
+                        daySummaries,
+                        daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.proteins.toFloat()) },
+                        R.string.diet_nutrition_progress_bar_protein
+                    ),
+                    getHistoryDietLineChart(
+                        daySummaries,
+                        daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.carbohydrates.toFloat()) },
+                        R.string.diet_nutrition_progress_bar_carb
+                    ),
+                    getHistoryDietLineChart(daySummaries, daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.fats.toFloat()) }, R.string.diet_nutrition_progress_bar_fats),
+                    getHistoryDietLineChart(daySummaries, daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.waterML.toFloat()) }, R.string.diet_nutrition_progress_bar_water),
                 )
             )
         )
@@ -129,7 +137,7 @@ class HistoryUiMapper @Inject constructor() : Mapper {
             if (i in daySummaries.indices) {
                 daySummaries[i].dateTime.toDate()
             } else {
-                "unknown date"
+                ""
             }
         }
 

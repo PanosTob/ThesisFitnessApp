@@ -52,6 +52,7 @@ import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportsUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.HistoryUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.SportDoneUiItem
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
+import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_36dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
 import gr.dipae.thesisfitnessapp.ui.theme.openSansFontFamily
@@ -113,6 +114,8 @@ fun HistoryDietContent(
                 xAxisData = AxisData.Builder()
                     .backgroundColor(MaterialTheme.colorScheme.primary)
                     .steps(it.points.size)
+                    .axisStepSize(SpacingCustom_36dp)
+                    .axisLabelFontSize(16.sp)
                     .labelData(it.xAxisData)
                     .build(),
                 yAxisData = AxisData.Builder()
