@@ -25,7 +25,7 @@ data class RemoteDailyDiet(
 data class RemoteSportDone(
     @DocumentId
     val id: String = "",
-    val sportId: String = "",
+    val activityId: String = "",
     val breakTime: Long = 0,
     var activityStatistics: List<RemoteSportDoneParameter> = emptyList()
 )

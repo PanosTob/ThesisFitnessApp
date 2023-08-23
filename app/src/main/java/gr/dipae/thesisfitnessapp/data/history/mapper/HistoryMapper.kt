@@ -55,7 +55,7 @@ class HistoryMapper @Inject constructor(
     private fun RemoteSportDone.toSportDone() =
         SportDone(
             id = id,
-            sportId = sportId,
+            sportId = activityId,
             breakTime = breakTime,
             sportParameters = activityStatistics.map { it.toSportDoneParameter() }
         )
