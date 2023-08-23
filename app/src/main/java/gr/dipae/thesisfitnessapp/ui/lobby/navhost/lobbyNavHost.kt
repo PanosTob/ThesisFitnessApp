@@ -14,7 +14,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.State
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -41,6 +43,7 @@ import gr.dipae.thesisfitnessapp.ui.history.navigation.navigateToHistory
 import gr.dipae.thesisfitnessapp.ui.lobby.composable.LobbyBottomNavItem
 import gr.dipae.thesisfitnessapp.ui.lobby.home.navigation.HomeRoute
 import gr.dipae.thesisfitnessapp.ui.lobby.home.navigation.homeScreen
+import gr.dipae.thesisfitnessapp.ui.lobby.model.LobbyUiState
 import gr.dipae.thesisfitnessapp.ui.lobby.viewmodel.LobbyViewModel
 import gr.dipae.thesisfitnessapp.ui.onboarding.navigation.OnBoardingNavHostRoute
 import gr.dipae.thesisfitnessapp.ui.profile.navigation.profileScreen
@@ -99,133 +102,156 @@ fun NavGraphBuilder.lobbyNavHost(
             }
         }
 
-        viewModel.uiState.value.apply {
-            Scaffold(
-                topBar = {
-                    if (topBarState.isVisible.value) {
-                        TopAppBar(
-                            colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = MaterialTheme.colorScheme.background,
-                                navigationIconContentColor = MaterialTheme.colorScheme.primary
-                            ),
-                            navigationIcon = {
-                                topBarState.navigationItem.value.iconVector.value?.let {
-                                    IconButton(onClick = { topBarState.navigationItem.value.clickAction.value.invoke() }) {
-                                        Icon(
-                                            imageVector = it,
-                                            contentDescription = "Back"
-                                        )
-                                    }
-                                }
-                            },
-                            title = {
-                                ThesisFitnessBMText(text = stringResource(id = topBarState.titleRes.value), color = MaterialTheme.colorScheme.primary, fontSize = 22.sp)
-                            },
-                            actions = {
-                                topBarState.actionIcons.value.forEach {
-                                    Icon(
-                                        modifier = Modifier
-                                            .padding(end = SpacingDefault_16dp)
-                                            .clickable { it.clickAction() },
-                                        painter = painterResource(id = it.icon),
-                                        contentDescription = "",
-                                        tint = it.tint.invoke()
-                                    )
-                                }
-                            }
-                        )
-                    }
-                },
-                content = { paddingValues ->
-                    NavHost(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.background)
-                            .padding(top = paddingValues.calculateTopPadding() + SpacingDefault_16dp, bottom = paddingValues.calculateBottomPadding() + SpacingDefault_16dp),
-                        navController = navController,
-                        startDestination = HomeRoute
-                    ) {
-                        homeScreen(
-                            onHomeShown = {
-                                viewModel.handleBarsForHome()
-                            }
-                        )
-                        workoutScreen(
-                            onWorkoutShown = { viewModel.showWorkoutTopBar() }
-                        )
-                        sportsScreen(
-                            onSportsShown = { onEditClicked, onEditDoneClicked, onCalendarClicked, statusBarState ->
-                                viewModel.handleBarsForSports(onEditClicked, onEditDoneClicked, onCalendarClicked, statusBarState)
-                            },
-                            onSportSelected = { navController.navigateToSportCustomize(it) },
-                            onDateRangePicked = { startDate, endDate ->
-                                if (startDate != null && endDate != null) {
-                                    navController.navigateToHistory(startDate, endDate, true)
-                                }
-                            }
-                        )
-                        sportCustomizeScreen(
-                            onSportCustomizeShown = {
-                                viewModel.handleBarsForInnerDestination { navController.navigateUp() }
-                            },
-                            onStartClicked = { navController.navigateToSportSession(it) }
-                        )
-                        sportSessionScreen(
-                            onSportSessionShown = { onSportSessionDiscard, onCheckButtonClicked, showCheckBtn ->
-                                viewModel.showSportSessionTopBar(onSportSessionDiscard, onCheckButtonClicked, showCheckBtn)
-                            },
-                            popBackToSports = {
-                                stopStopWatch()
-                                navController.popBackStack(route = SportsRoute, inclusive = false)
-                            },
-                            onSportSessionTimerResume = { startStopWatch() },
-                            onSportSessionTimerPause = { pauseStopWatch() },
-                            onSportSessionTimerStop = { stopStopWatch() }
-                        )
-                        dietScreen(
-                            onDietShown = { viewModel.handleBarsForDiet(it) },
-                            onFoodSelectionFabClicked = { navController.navigateToFoodSelection() },
-                            onMacrosFabClicked = { navController.navigateToMacrosDialog() },
-                            onDateRangePicked = { startDate, endDate ->
-                                if (startDate != null && endDate != null) {
-                                    navController.navigateToHistory(startDate, endDate, false)
-                                }
-                            }
-                        )
-                        foodSelectionScreen {
-                            viewModel.showInnerLoginTopBar { navController.navigateUp() }
+        Scaffold(
+            topBar = {
+                LobbyTopBar(lobbyUiState = viewModel.uiState)
+            },
+            content = { paddingValues ->
+                NavHost(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(top = paddingValues.calculateTopPadding() + SpacingDefault_16dp, bottom = paddingValues.calculateBottomPadding() + SpacingDefault_16dp),
+                    navController = navController,
+                    startDestination = HomeRoute
+                ) {
+                    homeScreen(
+                        onHomeShown = {
+                            viewModel.handleBarsForHome()
                         }
-                        macrosDialog(
-                            onSave = { navController.navigateUp() }
-                        )
-                        profileScreen(
-                            onProfileShown = { viewModel.showProfileTopBar() },
-                            onLogout = { logoutUser() }
-                        )
+                    )
+                    workoutScreen(
+                        onWorkoutShown = { viewModel.showWorkoutTopBar() }
+                    )
+                    sportsScreen(
+                        onSportsShown = { onEditClicked, onEditDoneClicked, onCalendarClicked, statusBarState ->
+                            viewModel.handleBarsForSports(onEditClicked, onEditDoneClicked, onCalendarClicked, statusBarState)
+                        },
+                        onSportSelected = { navController.navigateToSportCustomize(it) },
+                        onDateRangePicked = { startDate, endDate ->
+                            if (startDate != null && endDate != null) {
+                                navController.navigateToHistory(startDate, endDate, true)
+                            }
+                        }
+                    )
+                    sportCustomizeScreen(
+                        onSportCustomizeShown = {
+                            viewModel.handleBarsForInnerDestination { navController.navigateUp() }
+                        },
+                        onStartClicked = { navController.navigateToSportSession(it) }
+                    )
+                    sportSessionScreen(
+                        onSportSessionShown = { onSportSessionDiscard, onCheckButtonClicked, showCheckBtn ->
+                            viewModel.showSportSessionTopBar(onSportSessionDiscard, onCheckButtonClicked, showCheckBtn)
+                        },
+                        popBackToSports = {
+                            stopStopWatch()
+                            navController.popBackStack(route = SportsRoute, inclusive = false)
+                        },
+                        onSportSessionTimerResume = { startStopWatch() },
+                        onSportSessionTimerPause = { pauseStopWatch() },
+                        onSportSessionTimerStop = { stopStopWatch() }
+                    )
+                    dietScreen(
+                        onDietShown = { viewModel.handleBarsForDiet(it) },
+                        onFoodSelectionFabClicked = { navController.navigateToFoodSelection() },
+                        onMacrosFabClicked = { navController.navigateToMacrosDialog() },
+                        onDateRangePicked = { startDate, endDate ->
+                            if (startDate != null && endDate != null) {
+                                navController.navigateToHistory(startDate, endDate, false)
+                            }
+                        }
+                    )
+                    foodSelectionScreen {
+                        viewModel.showInnerLoginTopBar { navController.navigateUp() }
+                    }
+                    macrosDialog(
+                        onSave = { navController.navigateUp() }
+                    )
+                    profileScreen(
+                        onProfileShown = { viewModel.showProfileTopBar() },
+                        onLogout = { logoutUser() }
+                    )
 
-                        historyScreen(
-                            onHistoryShown = { fromSports, onFilterClicked ->
-                                viewModel.handleBarsForHistory(fromSports, onFilterClicked) { navController.navigateUp() }
-                            }
-                        )
+                    historyScreen(
+                        onHistoryShown = { fromSports, onFilterClicked ->
+                            viewModel.handleBarsForHistory(fromSports, onFilterClicked) { navController.navigateUp() }
+                        }
+                    )
+                }
+            },
+            bottomBar = {
+                LobbyBottomNavigation(
+                    lobbyUiState = viewModel.uiState,
+                    popToCurrentScreen = { navController.popToCurrentScreen(it) },
+                    updateTopBarTitle = { viewModel.updateTopBarTitle(it) }
+                )
+            }
+        )
+    }
+}
+
+@ExperimentalMaterial3Api
+@Composable
+fun LobbyTopBar(
+    lobbyUiState: State<LobbyUiState>
+) {
+    lobbyUiState.value.apply {
+        if (topBarState.isVisible.value) {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    navigationIconContentColor = MaterialTheme.colorScheme.primary
+                ),
+                navigationIcon = {
+                    topBarState.navigationItem.value.iconVector.value?.let {
+                        IconButton(onClick = { topBarState.navigationItem.value.clickAction.value.invoke() }) {
+                            Icon(
+                                imageVector = it,
+                                contentDescription = "Back"
+                            )
+                        }
                     }
                 },
-                bottomBar = {
-                    if (bottomAppBarItems.value.isNotEmpty()) {
-                        BottomAppBar(
-                            containerColor = ColorBottomNavBar
-                        ) {
-                            bottomAppBarItems.value.forEach {
-                                LobbyBottomNavItem(item = it) {
-                                    navController.popToCurrentScreen(it.route)
-                                    onBottomAppBarItemSelection(it)
-                                    viewModel.updateTopBarTitle(it.route)
-                                }
-                            }
-                        }
+                title = {
+                    ThesisFitnessBMText(text = stringResource(id = topBarState.titleRes.value), color = MaterialTheme.colorScheme.primary, fontSize = 22.sp)
+                },
+                actions = {
+                    topBarState.actionIcons.value.forEach {
+                        Icon(
+                            modifier = Modifier
+                                .padding(end = SpacingDefault_16dp)
+                                .clickable { it.clickAction() },
+                            painter = painterResource(id = it.icon),
+                            contentDescription = "",
+                            tint = it.tint.invoke()
+                        )
                     }
                 }
             )
+        }
+    }
+}
+
+@Composable
+fun LobbyBottomNavigation(
+    lobbyUiState: State<LobbyUiState>,
+    popToCurrentScreen: (String) -> Unit,
+    updateTopBarTitle: (String) -> Unit
+) {
+    lobbyUiState.value.apply {
+        if (bottomAppBarItems.value.isNotEmpty()) {
+            BottomAppBar(
+                containerColor = ColorBottomNavBar
+            ) {
+                bottomAppBarItems.value.forEach {
+                    LobbyBottomNavItem(item = it) {
+                        popToCurrentScreen(it.route)
+                        onBottomAppBarItemSelection(it)
+                        updateTopBarTitle(it.route)
+                    }
+                }
+            }
         }
     }
 }

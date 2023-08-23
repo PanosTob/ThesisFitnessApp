@@ -11,13 +11,17 @@ data class SportSessionUiState(
     val showContent: MutableState<Boolean> = mutableStateOf(false),
     val mapState: SportSessionUiMapState,
     val goalParameter: SportParameter?,
-    val duration: MutableState<String> = mutableStateOf("-"),
-    val breakTime: MutableState<String> = mutableStateOf("-"),
-    val distance: MutableState<String> = mutableStateOf("-"),
-    val pace: MutableState<String> = mutableStateOf("-"),
+    val sportSessionRealTimeDataUiItem: SportSessionRealTimeDataUiItem = SportSessionRealTimeDataUiItem(),
     val playStateBtn: PlayStateButtonUiItem = PlayStateButtonUiItem(),
     val stopBtnEnabled: MutableState<Boolean> = mutableStateOf(false),
     val backToSports: MutableState<Boolean> = mutableStateOf(false)
+)
+
+data class SportSessionRealTimeDataUiItem(
+    val duration: MutableState<() -> String> = mutableStateOf({ "-" }),
+    val breakTime: MutableState<() -> String> = mutableStateOf({ "-" }),
+    val distance: MutableState<String> = mutableStateOf("-"),
+    val pace: MutableState<String> = mutableStateOf("-"),
 )
 
 data class SportSessionUiMapState(

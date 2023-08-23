@@ -81,13 +81,13 @@ class SportSessionViewModel @Inject constructor(
     private fun initTimers() {
         jobOfCollectingDuration = launch {
             getSportSessionDurationLiveUseCase().collectLatest {
-                _uiState.value?.duration?.value = sportSessionUiMapper.toHundredsOfASecond(it)
+                _uiState.value?.sportSessionRealTimeDataUiItem?.duration?.value = { sportSessionUiMapper.toHundredsOfASecond(it) }
             }
         }
 
         jobOfCollectingBreak = launch {
             getSportSessionBreakTimerDurationLiveUseCase().collectLatest {
-                _uiState.value?.breakTime?.value = sportSessionUiMapper.toSecondsString(it)
+                _uiState.value?.sportSessionRealTimeDataUiItem?.breakTime?.value = { sportSessionUiMapper.toSecondsString(it) }
             }
         }
     }
@@ -141,11 +141,11 @@ class SportSessionViewModel @Inject constructor(
         _uiState.value?.apply {
             val travelledDistance = calculateTravelledDistanceMetersUseCase(getUserPreviousLocationUseCase(), userLocation, getSportSessionDistanceLiveUseCase().value)
             val distanceTwoDecimals = (travelledDistance.toDouble() / 1000).toDoubleWithSpecificDecimals(2)
-            distance.value = "${if (distanceTwoDecimals == 0.0) 0 else distanceTwoDecimals} km/h"
+            sportSessionRealTimeDataUiItem.distance.value = "${if (distanceTwoDecimals == 0.0) 0 else distanceTwoDecimals} km/h"
 
             setSportSessionDistanceUseCase(travelledDistance)
             sportDuration = getSportSessionDurationLiveUseCase().value
-            pace.value = "${calculateUserPaceUseCase(sportDuration, distanceTwoDecimals)} min/km"
+            sportSessionRealTimeDataUiItem.pace.value = "${calculateUserPaceUseCase(sportDuration, distanceTwoDecimals)} min/km"
         }
     }
 

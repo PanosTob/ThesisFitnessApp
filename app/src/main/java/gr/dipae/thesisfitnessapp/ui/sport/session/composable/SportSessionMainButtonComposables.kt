@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.compose.ifable
+import gr.dipae.thesisfitnessapp.ui.sport.session.model.ContinuationState
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.PlayStateButtonUiItem
 import gr.dipae.thesisfitnessapp.ui.theme.ColorDisabledButton
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
@@ -22,7 +23,10 @@ import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 fun SportSessionPlayButton(
     modifier: Modifier,
     buttonItem: PlayStateButtonUiItem,
-    onClick: () -> Unit
+    sessionStarted: Boolean,
+    onSportSessionTimerPause: () -> Unit,
+    onSportSessionTimerResume: () -> Unit,
+    onStartAnimation: () -> Unit,
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
     Box(
@@ -37,7 +41,15 @@ fun SportSessionPlayButton(
             }
             .ifable(buttonItem.isEnabled.value) {
                 clickable {
-                    onClick()
+                    if (sessionStarted) {
+                        if (buttonItem.timerState.value is ContinuationState.Stopped) {
+                            onSportSessionTimerResume()
+                        } else {
+                            onSportSessionTimerPause()
+                        }
+                    } else {
+                        onStartAnimation()
+                    }
                 }
             }
             .padding(SpacingDefault_16dp)

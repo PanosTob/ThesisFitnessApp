@@ -1,5 +1,6 @@
 package gr.dipae.thesisfitnessapp.ui.sport.session.navigation
 
+import android.util.Log
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -43,6 +44,7 @@ fun NavGraphBuilder.sportSessionScreen(
 
         LaunchedEffect(key1 = Unit) {
             viewModel.init()
+            Log.e("SportSessionNavigation", "viewModel.init()")
             onSportSessionShown(
                 { popBackToSports() },
                 {},
@@ -62,9 +64,8 @@ fun NavGraphBuilder.sportSessionScreen(
                 }
         }
 
-        viewModel.uiState.value?.let { uiState ->
             SportSessionContent(
-                uiState = uiState,
+                uiState = viewModel.uiState,
                 onLocationPermissionsAccepted = { viewModel.onLocationPermissionsAccepted() },
                 onStartAnimationComplete = {
                     viewModel.onStartAnimationComplete()
@@ -85,6 +86,7 @@ fun NavGraphBuilder.sportSessionScreen(
                     viewModel.startBreakTimer()
                 },
                 onSportSessionShown = {
+                    Log.e("SportSessionNavigation", "onSportSessionShown")
                     onSportSessionShown(
                         { popBackToSports() },
                         {
@@ -95,7 +97,6 @@ fun NavGraphBuilder.sportSessionScreen(
                     )
                 }
             )
-        }
     }
 }
 
