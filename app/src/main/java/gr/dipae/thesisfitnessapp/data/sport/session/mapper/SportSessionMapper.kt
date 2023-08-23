@@ -25,12 +25,12 @@ class SportSessionMapper @Inject constructor(
             SportParameterRequest(
                 name = "distance",
                 value = distance,
-                achieved = goalParameter.first?.type is SportParameterType.Distance && goalParameter.second
+                achieved = goalParameter.first?.let { it.type is SportParameterType.Distance && goalParameter.second }
             ),
             SportParameterRequest(
                 name = "duration",
                 value = duration,
-                achieved = goalParameter.first?.type is SportParameterType.Duration && goalParameter.second
+                achieved = goalParameter.first?.let { it.type is SportParameterType.Duration && goalParameter.second }
             )
         )
     }

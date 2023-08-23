@@ -31,7 +31,7 @@ data class SportDoneParameter(
     val type: SportParameterType,
     val name: String,
     val value: Long,
-    val achieved: Boolean
+    val achieved: Boolean?
 )
 
 data class WorkoutDone(

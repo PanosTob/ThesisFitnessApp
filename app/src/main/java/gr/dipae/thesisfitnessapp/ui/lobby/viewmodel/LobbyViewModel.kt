@@ -44,7 +44,6 @@ class LobbyViewModel @Inject constructor(
     }
 
     fun handleBarsForSports(onEditClicked: () -> Unit, onEditDoneClicked: () -> Unit, onCalendarClicked: () -> Unit, statusBarState: Boolean) {
-        Log.e("LobbyViewModel", "handleBarsForSports")
         if (statusBarState) {
             _uiState.value.topBarState.actionIcons.value = listOf(
                 TopBarActionUiItem(R.drawable.ic_add, onEditDoneClicked),

@@ -16,9 +16,10 @@ data class UserSportChallengeUiItem(
     val sportName: String,
     val sportImgUrl: String,
     val goalName: String,
-    val goalValue: String,
+    val goalAmount: String,
     val completed: Boolean,
-    val progress: Float,
+    val amount: String,
+    val progressPercentage: Float,
     val color: Color
 )
 

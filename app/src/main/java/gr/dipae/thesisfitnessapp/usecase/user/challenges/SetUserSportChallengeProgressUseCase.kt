@@ -7,7 +7,7 @@ class SetUserSportChallengeProgressUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
 
-    suspend operator fun invoke(challengeId: String, progress: Double) {
+    suspend operator fun invoke(challengeId: String, progress: Long) {
         userRepository.setUserSportChallengeProgress(challengeId, progress)
     }
 }

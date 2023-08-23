@@ -184,7 +184,8 @@ fun ArcProgressBar(
         }
         val progressAnimation by animateFloatAsState(
             targetValue = progress,
-            animationSpec = tween(3000, 500)
+            animationSpec = tween(3000, 500),
+            label = ""
         )
         Canvas(
             modifier = Modifier

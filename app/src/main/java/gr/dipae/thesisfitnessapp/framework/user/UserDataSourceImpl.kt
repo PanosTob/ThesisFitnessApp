@@ -178,9 +178,7 @@ class UserDataSourceImpl @Inject constructor(
                 goal = RemoteUserSportChallengeDetails(
                     type = it.goal.type,
                     value = it.goal.value
-                ),
-                done = false,
-                progress = 0.0
+                )
             )
         }
 
@@ -372,9 +370,7 @@ class UserDataSourceImpl @Inject constructor(
                 goal = RemoteUserSportChallengeDetails(
                     type = it.goal.type,
                     value = it.goal.value
-                ),
-                done = false,
-                progress = 0.0
+                )
             )
         }
 
@@ -408,7 +404,7 @@ class UserDataSourceImpl @Inject constructor(
             ).await()
     }
 
-    override suspend fun setUserSportChallengeProgress(challengeId: String, progress: Double) {
+    override suspend fun setUserSportChallengeProgress(challengeId: String, progress: Long) {
         getUser()?.let { user ->
             val userChallenges = user.challenges.toMutableList()
 
@@ -421,7 +417,6 @@ class UserDataSourceImpl @Inject constructor(
                         activityName = matchedChallenge.activityName,
                         activityImgUrl = matchedChallenge.activityImgUrl,
                         goal = RemoteUserSportChallengeDetails(type = matchedChallenge.goal.type, value = matchedChallenge.goal.value),
-                        done = progress == 1.0,
                         progress = progress
                     )
                 )

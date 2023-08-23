@@ -33,7 +33,7 @@ data class RemoteSportDone(
 data class RemoteSportDoneParameter(
     val name: String = "",
     val value: Long = 0,
-    val achieved: Boolean = false
+    val achieved: Boolean? = null
 )
 
 data class RemoteWorkoutDone(

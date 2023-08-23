@@ -25,10 +25,10 @@ data class User(
 
 data class DietGoal(
     val calories: Long,
-    val carbohydrates: Double,
-    val fats: Double,
-    val protein: Double,
-    val waterML: Double
+    val carbohydrates: Long,
+    val fats: Long,
+    val protein: Long,
+    val waterML: Long
 )
 
 enum class FitnessLevel {

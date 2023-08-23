@@ -246,7 +246,7 @@ fun SportCustomizeParametersDropdown(
                                 Icon(
                                     painterResource(id = it.iconRes),
                                     contentDescription = null,
-                                    tint = Color.Black
+                                    tint = MaterialTheme.colorScheme.primary
                                 )
                             }
                         )
@@ -269,7 +269,7 @@ fun SportCustomizeParametersDropdown(
                             Icon(
                                 painterResource(id = R.drawable.ic_deselect),
                                 contentDescription = null,
-                                tint = Color.Black
+                                tint = MaterialTheme.colorScheme.primary
                             )
                         }
                     )

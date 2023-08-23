@@ -71,8 +71,8 @@ fun HomeSportChallenge(
                 modifier = Modifier
                     .weight(0.4f)
                     .fillMaxHeight(),
-                progress = item.progress,
-                amount = item.goalValue,
+                progress = item.progressPercentage,
+                amount = item.amount,
                 color = item.color
             )
             Column(

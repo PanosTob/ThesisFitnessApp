@@ -20,6 +20,7 @@ import gr.dipae.thesisfitnessapp.ui.theme.ColorPingPong
 import gr.dipae.thesisfitnessapp.ui.theme.ColorRunning
 import gr.dipae.thesisfitnessapp.ui.theme.ColorSwimming
 import gr.dipae.thesisfitnessapp.ui.theme.ColorWalking
+import gr.dipae.thesisfitnessapp.util.ext.toDoubleWithSpecificDecimals
 import javax.inject.Inject
 
 class HomeUiMapper @Inject constructor() : Mapper {
@@ -52,9 +53,10 @@ class HomeUiMapper @Inject constructor() : Mapper {
                 sportName = it.sportName,
                 sportImgUrl = it.sportImgUrl,
                 goalName = it.goal.name,
-                goalValue = it.goal.value.toString(),
-                progress = it.progress.toFloat(),
-                completed = it.completed,
+                goalAmount = it.goal.value.toString(),
+                amount = "${it.progress}/${it.goal.value}",
+                progressPercentage = (it.progress.toDouble() / it.goal.value).toDoubleWithSpecificDecimals(4).toFloat(),
+                completed = it.progress.toFloat() == 1f,
                 color = sportColorMap[it.sportId] ?: ColorDividerGrey
             )
         }

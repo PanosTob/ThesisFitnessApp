@@ -21,10 +21,10 @@ data class RemoteUser(
 
 data class RemoteDietGoal(
     val calories: Long = 0,
-    val carbohydrates: Double? = 0.0,
-    val fatGrams: Double? = 0.0,
-    val proteinGrams: Double? = 0.0,
-    val waterML: Double? = 0.0
+    val carbohydrates: Long = 0,
+    val fatGrams: Long = 0,
+    val proteinGrams: Long = 0,
+    val waterML: Long = 0
 )
 
 data class RemoteUserUpdateRequest(
@@ -48,8 +48,7 @@ data class RemoteUserSportChallenge(
     val activityImgUrl: String = "",
     val goal: RemoteUserSportChallengeDetails = RemoteUserSportChallengeDetails(),
     val activityName: String = "",
-    val done: Boolean = false,
-    val progress: Double = 0.0
+    val progress: Long = 0
 )
 
 data class RemoteUserSportChallengeDetails(

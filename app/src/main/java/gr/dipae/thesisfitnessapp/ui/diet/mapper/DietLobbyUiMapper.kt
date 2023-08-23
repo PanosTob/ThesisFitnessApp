@@ -21,7 +21,7 @@ class DietLobbyUiMapper @Inject constructor() : Mapper {
     private fun mapNutritionBars(diet: DailyDiet?, dietGoal: DietGoal?): NutritionProgressBarsUiItem {
         if (diet == null || dietGoal == null) return NutritionProgressBarsUiItem()
         return NutritionProgressBarsUiItem(
-            caloriesBar = mapNutritionBar(diet.calories.toDouble(), dietGoal.calories.toDouble()),
+            caloriesBar = mapNutritionBar(diet.calories.toDouble(), dietGoal.calories),
             proteinBar = mapNutritionBar(diet.proteins, dietGoal.protein),
             carbsBar = mapNutritionBar(diet.carbohydrates, dietGoal.carbohydrates),
             fatsBar = mapNutritionBar(diet.fats, dietGoal.fats),
@@ -29,10 +29,17 @@ class DietLobbyUiMapper @Inject constructor() : Mapper {
         )
     }
 
-    private fun mapNutritionBar(amount: Double, goalAmount: Double): NutritionProgressBarUiItem {
-        return NutritionProgressBarUiItem(
-            amount = amount.formatAmountWith2Decimals,
-            progressTowardsGoal = (amount / goalAmount).toFloat()
-        )
+    private fun mapNutritionBar(amount: Double, goalAmount: Long): NutritionProgressBarUiItem {
+        return if (goalAmount == 0L) {
+            NutritionProgressBarUiItem(
+                amount = amount.formatAmountWith2Decimals,
+                progressTowardsGoal = 1f
+            )
+        } else {
+            NutritionProgressBarUiItem(
+                amount = "${amount.formatAmountWith2Decimals}/${goalAmount}",
+                progressTowardsGoal = (amount / goalAmount).toFloat()
+            )
+        }
     }
 }

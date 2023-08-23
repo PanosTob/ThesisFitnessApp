@@ -138,7 +138,7 @@ class UserRepositoryImpl @Inject constructor(
         dataSource.setUserNewSportChallenges(favoritesSports)
     }
 
-    override suspend fun setUserSportChallengeProgress(challengeId: String, progress: Double) {
+    override suspend fun setUserSportChallengeProgress(challengeId: String, progress: Long) {
         dataSource.setUserSportChallengeProgress(challengeId, progress)
     }
 

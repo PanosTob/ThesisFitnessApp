@@ -9,7 +9,6 @@ import gr.dipae.thesisfitnessapp.domain.user.challenges.entity.UserSportChalleng
 import gr.dipae.thesisfitnessapp.usecase.UseCase
 import gr.dipae.thesisfitnessapp.usecase.user.challenges.GetUserSportChallengesBySportIdUseCase
 import gr.dipae.thesisfitnessapp.usecase.user.challenges.SetUserSportChallengeProgressUseCase
-import gr.dipae.thesisfitnessapp.util.ext.toDoubleWithSpecificDecimals
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -27,16 +26,18 @@ class SetSportSessionUseCase @Inject constructor(
             val breakMinutes = convertMillisToMinutes(breakTime)
 
             val userSportChallenges = getUserSportChallengesBySportIdUseCase(sportId)
+
             getChallengeByParameterType(userSportChallenges, SportParameterType.Duration)?.let { durationChallenge ->
                 setUserSportChallengeProgressUseCase(
                     challengeId = durationChallenge.id,
-                    progress = (durationChallenge.progress + (durationMinutes / durationChallenge.goal.value)).toDoubleWithSpecificDecimals(2)
+                    progress = durationChallenge.progress + durationMinutes
                 )
             }
+
             getChallengeByParameterType(userSportChallenges, SportParameterType.Distance)?.let { distanceChallenge ->
                 setUserSportChallengeProgressUseCase(
                     challengeId = distanceChallenge.id,
-                    progress = (distanceChallenge.progress + (distance / distanceChallenge.goal.value)).toDoubleWithSpecificDecimals(4)
+                    progress = distanceChallenge.progress + distance
                 )
             }
 

@@ -9,8 +9,7 @@ data class UserSportChallenge(
     val sportName: String,
     val sportImgUrl: String,
     val goal: SportChallenge,
-    val completed: Boolean,
-    val progress: Double
+    val progress: Long
 )
 
 data class SportChallenge(

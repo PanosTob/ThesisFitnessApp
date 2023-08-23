@@ -65,10 +65,10 @@ class UserMapper @Inject constructor(
     private fun mapDietGoal(remoteDietGoal: RemoteDietGoal): DietGoal {
         return DietGoal(
             calories = remoteDietGoal.calories,
-            carbohydrates = remoteDietGoal.carbohydrates ?: 0.0,
-            fats = remoteDietGoal.fatGrams ?: 0.0,
-            protein = remoteDietGoal.proteinGrams ?: 0.0,
-            waterML = remoteDietGoal.waterML ?: 0.0
+            carbohydrates = remoteDietGoal.carbohydrates,
+            fats = remoteDietGoal.fatGrams,
+            protein = remoteDietGoal.proteinGrams,
+            waterML = remoteDietGoal.waterML
         )
     }
 
@@ -95,8 +95,7 @@ class UserMapper @Inject constructor(
                     name = it.goal.type,
                     value = it.goal.value
                 ),
-                progress = it.progress,
-                completed = it.done
+                progress = it.progress
             )
         }
     }

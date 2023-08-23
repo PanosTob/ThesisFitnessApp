@@ -1,6 +1,5 @@
 package gr.dipae.thesisfitnessapp.ui.sport.session.composable
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -92,7 +91,6 @@ fun SportSessionContent(
                     .padding(vertical = SpacingDefault_16dp), horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (showContent.value) {
-                    Log.e("SportSessionComposables", "if statement of showContent.value")
                     onSportSessionShown()
                     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                         Box(

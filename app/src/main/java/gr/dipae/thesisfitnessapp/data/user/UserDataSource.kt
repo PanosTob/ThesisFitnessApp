@@ -48,6 +48,6 @@ interface UserDataSource {
     suspend fun getFavoriteSportIds(): List<String>
     suspend fun setFavoriteSportIds(favoritesSports: List<String>)
     suspend fun setUserNewSportChallenges(favoritesSports: List<String>)
-    suspend fun setUserSportChallengeProgress(challengeId: String, progress: Double)
+    suspend fun setUserSportChallengeProgress(challengeId: String, progress: Long)
     suspend fun setMacrosDaily(dailyDietRequest: DailyDietRequest, todaySummaryId: String?)
 }
