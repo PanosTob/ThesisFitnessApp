@@ -1,7 +1,10 @@
 package gr.dipae.thesisfitnessapp.ui.sport.session.navigation
 
-import android.util.Log
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -42,14 +45,18 @@ fun NavGraphBuilder.sportSessionScreen(
     composable(route = SportSessionRoute, arguments = sportCustomizeArguments()) {
         val viewModel: SportSessionViewModel = hiltViewModel()
 
+        var dontLoadSportSessionTopBar by remember {
+            mutableStateOf(false)
+        }
         LaunchedEffect(key1 = Unit) {
-            viewModel.init()
-            Log.e("SportSessionNavigation", "viewModel.init()")
-            onSportSessionShown(
-                { popBackToSports() },
-                {},
-                false
-            )
+            if (!dontLoadSportSessionTopBar) {
+                viewModel.init()
+                onSportSessionShown(
+                    { popBackToSports() },
+                    {},
+                    false
+                )
+            }
         }
 
         val lifecycleOwner = LocalLifecycleOwner.current
@@ -64,29 +71,29 @@ fun NavGraphBuilder.sportSessionScreen(
                 }
         }
 
-            SportSessionContent(
-                uiState = viewModel.uiState,
-                onLocationPermissionsAccepted = { viewModel.onLocationPermissionsAccepted() },
-                onStartAnimationComplete = {
-                    viewModel.onStartAnimationComplete()
-                    onSportSessionTimerResume()
-                },
-                onStopSession = {
-                    onSportSessionTimerStop()
-                    viewModel.onStopSession()
-                },
-                onMapLoaded = { viewModel.subscribeToLocationUpdates() },
-                onMyLocationButtonClick = { viewModel.onMyLocationButtonClick() },
-                onSportSessionTimerResume = {
-                    onSportSessionTimerResume()
-                    viewModel.pauseBreakTimer()
-                },
-                onSportSessionTimerPause = {
-                    onSportSessionTimerPause()
-                    viewModel.startBreakTimer()
-                },
-                onSportSessionShown = {
-                    Log.e("SportSessionNavigation", "onSportSessionShown")
+        SportSessionContent(
+            uiState = viewModel.uiState,
+            onLocationPermissionsAccepted = { viewModel.onLocationPermissionsAccepted() },
+            onStartAnimationComplete = {
+                viewModel.onStartAnimationComplete()
+                onSportSessionTimerResume()
+            },
+            onStopSession = {
+                onSportSessionTimerStop()
+                viewModel.onStopSession()
+            },
+            onMapLoaded = { viewModel.subscribeToLocationUpdates() },
+            onMyLocationButtonClick = { viewModel.onMyLocationButtonClick() },
+            onSportSessionTimerResume = {
+                onSportSessionTimerResume()
+                viewModel.pauseBreakTimer()
+            },
+            onSportSessionTimerPause = {
+                onSportSessionTimerPause()
+                viewModel.startBreakTimer()
+            },
+            onSportSessionShown = {
+                if (!dontLoadSportSessionTopBar) {
                     onSportSessionShown(
                         { popBackToSports() },
                         {
@@ -96,7 +103,9 @@ fun NavGraphBuilder.sportSessionScreen(
                         true
                     )
                 }
-            )
+                dontLoadSportSessionTopBar = true
+            }
+        )
     }
 }
 
