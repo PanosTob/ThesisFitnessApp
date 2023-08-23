@@ -47,7 +47,7 @@ class HistoryMapper @Inject constructor(
                 carbohydrates = carbohydrates,
                 fats = fats,
                 proteins = protein,
-                waterML = water
+                water = water
             )
         }
     }
@@ -57,15 +57,15 @@ class HistoryMapper @Inject constructor(
             id = id,
             sportId = activityId,
             breakTime = breakTime,
-            sportParameters = activityStatistics.map { it.toSportDoneParameter() }
+            sportParameters = activityStatistics.map { it.toSportDoneParameter() },
+            goalParameter = goalParameter.toSportDoneParameter()
         )
 
     private fun RemoteSportDoneParameter.toSportDoneParameter() =
         SportDoneParameter(
             type = sportsMapper.mapSportParameterType(name),
             name = name,
-            value = value,
-            achieved = achieved
+            value = value
         )
 
     private fun RemoteWorkoutDone.toWorkoutDone() =

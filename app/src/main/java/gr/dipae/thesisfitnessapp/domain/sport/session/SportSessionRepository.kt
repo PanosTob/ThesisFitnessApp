@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 interface SportSessionRepository {
-    suspend fun setSportSession(todaySummaryId: String?, sportId: String, distance: Long, duration: Long, breakTime: Long, goalParameter: Pair<SportParameter?, Boolean>)
+    suspend fun setSportSession(todaySummaryId: String?, sportId: String, distance: Long, duration: Long, breakTime: Long, goalParameter: SportParameter?)
     fun getUserLocation(): Flow<LatLng?>
     fun getUserMapRoute(): List<List<LatLng>>
     suspend fun setSportSessionDistance(distance: Long)

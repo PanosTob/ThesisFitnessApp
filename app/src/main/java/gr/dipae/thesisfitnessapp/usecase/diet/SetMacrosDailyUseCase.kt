@@ -24,7 +24,7 @@ class SetMacrosDailyUseCase @Inject constructor(
             val dailyProteinAccumulation = protein.plus(todaySummary?.dailyDiet?.proteins ?: 0.0)
             val dailyCarbAccumulation = carbs.plus(todaySummary?.dailyDiet?.carbohydrates ?: 0.0)
             val dailyFatAccumulation = fats.plus(todaySummary?.dailyDiet?.fats ?: 0.0)
-            val dailyWaterAccumulation = water.plus(todaySummary?.dailyDiet?.waterML ?: 0.0)
+            val dailyWaterAccumulation = water.plus(todaySummary?.dailyDiet?.water ?: 0.0)
 
             userRepository.setMacrosDaily(
                 DailyDietRequest(

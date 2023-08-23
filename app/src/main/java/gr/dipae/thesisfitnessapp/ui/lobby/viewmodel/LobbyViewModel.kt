@@ -1,6 +1,5 @@
 package gr.dipae.thesisfitnessapp.ui.lobby.viewmodel
 
-import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -69,7 +68,6 @@ class LobbyViewModel @Inject constructor(
     }
 
     fun showSportSessionTopBar(onSportSessionDiscard: () -> Unit, onCheckButtonClicked: () -> Unit, showCheckBtn: Boolean) {
-        Log.e("LobbyViewModel", "showSportSessionTopBar")
         if (showCheckBtn) {
             _uiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_check, onCheckButtonClicked, tint = { Color.Green }))
         }

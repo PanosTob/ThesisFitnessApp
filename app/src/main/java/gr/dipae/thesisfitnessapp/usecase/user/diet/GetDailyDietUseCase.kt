@@ -9,9 +9,9 @@ import javax.inject.Inject
 class GetDailyDietUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) : UseCase {
-    suspend operator fun invoke(): DailyDiet? {
+    suspend operator fun invoke(date: Long?): DailyDiet? {
         return try {
-            userRepository.getDaySummary()?.dailyDiet
+            userRepository.getDaySummary(date)?.dailyDiet
         } catch (ex: Exception) {
             Timber.tag(GetDailyDietUseCase::class.java.simpleName).e(ex)
             null

@@ -18,12 +18,12 @@ class DietViewModel @Inject constructor(
     private val dietLobbyUiMapper: DietLobbyUiMapper
 ) : BaseViewModel() {
 
-    private val _uiState: MutableState<DietLobbyUiState> = mutableStateOf(DietLobbyUiState())
-    val uiState: State<DietLobbyUiState> = _uiState
+    private val _uiState: MutableState<DietLobbyUiState?> = mutableStateOf(null)
+    val uiState: State<DietLobbyUiState?> = _uiState
 
-    fun init() {
+    fun init(date: Long? = null) {
         launchWithProgress {
-            _uiState.value = dietLobbyUiMapper(getDailyDietUseCase(), getDietGoalUseCase())
+            _uiState.value = dietLobbyUiMapper(getDailyDietUseCase(date), getDietGoalUseCase(), date)
         }
     }
 }

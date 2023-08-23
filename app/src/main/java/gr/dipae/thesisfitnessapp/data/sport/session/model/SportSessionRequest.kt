@@ -1,15 +1,12 @@
 package gr.dipae.thesisfitnessapp.data.sport.session.model
 
-import com.google.firebase.firestore.PropertyName
-
 data class SportSessionRequest(
-    @PropertyName(value = "activityId")
-    val sportId: String,
+    val activityId: String,
     val breakTime: Long,
+    val goalParameter: SportParameterRequest?
 )
 
 data class SportParameterRequest(
     val name: String,
-    val value: Any,
-    val achieved: Boolean?
+    val value: Any
 )

@@ -17,21 +17,21 @@ data class DailyDiet(
     val carbohydrates: Double,
     val fats: Double,
     val proteins: Double,
-    val waterML: Double
+    val water: Double
 )
 
 data class SportDone(
     val id: String,
     val sportId: String,
     val breakTime: Long,
-    val sportParameters: List<SportDoneParameter>
+    val sportParameters: List<SportDoneParameter>,
+    val goalParameter: SportDoneParameter
 )
 
 data class SportDoneParameter(
     val type: SportParameterType,
     val name: String,
-    val value: Long,
-    val achieved: Boolean?
+    val value: Long
 )
 
 data class WorkoutDone(

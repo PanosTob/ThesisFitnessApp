@@ -114,8 +114,8 @@ class UserRepositoryImpl @Inject constructor(
         return userMapper(dataSource.getUserWorkoutExercises(workoutId))
     }
 
-    override suspend fun getDaySummary(): DaySummary? {
-        return historyMapper.mapDaySummary(dataSource.getDaySummary())
+    override suspend fun getDaySummary(date: Long?): DaySummary? {
+        return historyMapper.mapDaySummary(dataSource.getDaySummary(date))
     }
 
     override suspend fun getDaySummariesByRange(startDate: Long, endDate: Long): List<DaySummary> {

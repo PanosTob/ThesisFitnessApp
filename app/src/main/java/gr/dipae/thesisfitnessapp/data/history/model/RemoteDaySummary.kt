@@ -27,13 +27,13 @@ data class RemoteSportDone(
     val id: String = "",
     val activityId: String = "",
     val breakTime: Long = 0,
-    var activityStatistics: List<RemoteSportDoneParameter> = emptyList()
+    val goalParameter: RemoteSportDoneParameter = RemoteSportDoneParameter(),
+    var activityStatistics: List<RemoteSportDoneParameter> = emptyList(),
 )
 
 data class RemoteSportDoneParameter(
     val name: String = "",
-    val value: Long = 0,
-    val achieved: Boolean? = null
+    val value: Long = 0
 )
 
 data class RemoteWorkoutDone(

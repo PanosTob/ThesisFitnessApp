@@ -25,32 +25,32 @@ val karantinaFontFamily = FontFamily(
 
 val thesisFitnessTypography = Typography(
     headlineLarge = TextStyle(
-        fontFamily = karantinaFontFamily,
+        fontFamily = openSansFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 18.sp
     ),
     headlineMedium = TextStyle(
-        fontFamily = lexendDecaFontFamily,
+        fontFamily = openSansFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp
     ),
     headlineSmall = TextStyle(
-        fontFamily = lexendDecaFontFamily,
+        fontFamily = openSansFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp
     ),
     bodyLarge = TextStyle(
-        fontFamily = lexendDecaFontFamily,
+        fontFamily = openSansFontFamily,
         fontWeight = FontWeight.Thin,
         fontSize = 14.sp
     ),
     bodyMedium = TextStyle(
-        fontFamily = lexendDecaFontFamily,
+        fontFamily = openSansFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp
     ),
     labelLarge = TextStyle(
-        fontFamily = lexendDecaFontFamily,
+        fontFamily = openSansFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 18.sp
     )

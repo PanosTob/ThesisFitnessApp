@@ -41,9 +41,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.sp
 import gr.dipae.thesisfitnessapp.R
+import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHMAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.WidthAdjustedDivider
+import gr.dipae.thesisfitnessapp.ui.base.compose.ifable
 import gr.dipae.thesisfitnessapp.ui.diet.model.DietLobbyUiState
 import gr.dipae.thesisfitnessapp.ui.diet.model.NutritionProgressBarUiItem
 import gr.dipae.thesisfitnessapp.ui.diet.model.NutritionProgressBarsUiItem
@@ -51,32 +54,44 @@ import gr.dipae.thesisfitnessapp.ui.diet.navigation.OnFoodSelectionFabClicked
 import gr.dipae.thesisfitnessapp.ui.diet.navigation.OnMacrosFabClicked
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
+import gr.dipae.thesisfitnessapp.ui.theme.SpacingDouble_32dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingQuarter_4dp
 
 
 @Composable
 fun DietContent(
-    uiState: DietLobbyUiState,
+    uiState: DietLobbyUiState?,
     onFoodSelectionFabClicked: OnFoodSelectionFabClicked,
     onMacrosFabClicked: OnMacrosFabClicked
 ) {
-    Box(
-        Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.background)
-            .padding(horizontal = SpacingCustom_24dp)
-    ) {
-        NutritionProgressBars(
-            modifier = Modifier.fillMaxWidth(),
-            nutritionProgressBars = uiState.nutritionProgressBars.value
-        )
-        DietLobbyFab(
-            modifier = Modifier
-                .fillMaxWidth(0.2f)
-                .align(Alignment.BottomEnd),
-            onFoodSelectionFabClicked = { onFoodSelectionFabClicked() },
-            onMacrosFabClicked = { onMacrosFabClicked() }
-        )
+    uiState?.let {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.background)
+                .padding(horizontal = SpacingCustom_24dp)
+        ) {
+            uiState.pastDate?.let {
+                ThesisFitnessHLAutoSizeText(
+                    text = stringResource(id = R.string.diet_past_date_title, it),
+                    maxLines = 1,
+                    maxFontSize = 26.sp
+                )
+            }
+            NutritionProgressBars(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .ifable(uiState.pastDate != null) { padding(top = SpacingDouble_32dp) },
+                nutritionProgressBars = uiState.nutritionProgressBars
+            )
+            DietLobbyFab(
+                modifier = Modifier
+                    .fillMaxWidth(0.2f)
+                    .align(Alignment.BottomEnd),
+                onFoodSelectionFabClicked = { onFoodSelectionFabClicked() },
+                onMacrosFabClicked = { onMacrosFabClicked() }
+            )
+        }
     }
 }
 

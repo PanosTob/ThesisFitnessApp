@@ -1,9 +1,18 @@
 package gr.dipae.thesisfitnessapp.ui.history.mapper
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import co.yml.charts.common.extensions.formatToSinglePrecision
 import co.yml.charts.common.model.PlotType
@@ -18,8 +27,8 @@ import gr.dipae.thesisfitnessapp.domain.history.entity.SportDone
 import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutDone
 import gr.dipae.thesisfitnessapp.domain.history.entity.WorkoutExerciseDone
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameterType
-import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
+import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerDefault
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerHalf
 import gr.dipae.thesisfitnessapp.ui.history.model.DailyDietUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.DaySummaryUiItem
@@ -31,9 +40,8 @@ import gr.dipae.thesisfitnessapp.ui.history.model.HistoryUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.SportDoneUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.WorkoutDoneUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.WorkoutExerciseDoneUiItem
-import gr.dipae.thesisfitnessapp.ui.lobby.home.mapper.HomeUiMapper
+import gr.dipae.thesisfitnessapp.ui.theme.ColorGold
 import gr.dipae.thesisfitnessapp.ui.theme.ColorPrimary
-import gr.dipae.thesisfitnessapp.ui.theme.openSansFontFamily
 import gr.dipae.thesisfitnessapp.util.ext.toDate
 import javax.inject.Inject
 
@@ -43,17 +51,10 @@ class HistoryUiMapper @Inject constructor() : Mapper {
 
         val daySummaryUiItems = daySummaries.mapNotNull { mapDaySummaryUiItem(it) }
         return HistoryUiState(
-            title = @Composable {
-                ThesisFitnessBLAutoSizeText(
-                    text = stringResource(id = if (fromSports) R.string.history_activities_title else R.string.history_diet_title),
-                    maxFontSize = 22.sp,
-                    maxLines = 1,
-                    style = TextStyle(fontFamily = openSansFontFamily)
-                )
-            },
             daySummaries = daySummaryUiItems,
             sportsUiState = getSportUiState(fromSports, daySummaries, daySummaryUiItems),
-            dietUiState = getDietUiState(fromSports, daySummaries)
+            dietUiState = getDietUiState(fromSports, daySummaries),
+            emptyView = daySummaries.isEmpty()
         )
     }
     /*operator fun invoke(daySummary: DaySummary?): HistoryUiState {
@@ -94,13 +95,15 @@ class HistoryUiMapper @Inject constructor() : Mapper {
         )
     }
 
-    private fun populateSportsChartData(groupedSummariesBySport: Map<String, List<DaySummary>>, totalDays: Int): PieChartData {
+    private fun populateSportsChartData(groupedSummariesBySport: Map<String, List<DaySummary>>, totalDays: Int): PieChartData? {
+        if (groupedSummariesBySport.isEmpty()) return null
+
         return PieChartData(
             slices = groupedSummariesBySport.map {
                 PieChartData.Slice(
-                    label = SportsMapper.sportNamesMap[it.key] ?: "Unknown",
+                    label = (SportsMapper.sportNamesMap[it.key] ?: "Unknown") + " " + it.value.count() + "days",
                     value = it.value.count().toFloat() / totalDays,
-                    color = HomeUiMapper.sportColorMap[it.key] ?: ColorPrimary
+                    color = SportsMapper.sportColorMap[it.key] ?: ColorPrimary
                 )
             },
             plotType = PlotType.Pie
@@ -114,7 +117,9 @@ class HistoryUiMapper @Inject constructor() : Mapper {
         return HistoryDietUiState(
             lineCharts = mutableStateOf(
                 listOf(
-                    getHistoryDietLineChart(daySummaries, daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.calories.toFloat()) }, R.string.diet_nutrition_progress_bar_cal),
+                    getHistoryDietLineChart(daySummaries, daySummaries.mapIndexed { i, it ->
+                        Point(x = i.toFloat(), y = it.dailyDiet.calories.toFloat())
+                    }, R.string.diet_nutrition_progress_bar_cal),
                     getHistoryDietLineChart(
                         daySummaries,
                         daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.proteins.toFloat()) },
@@ -126,7 +131,7 @@ class HistoryUiMapper @Inject constructor() : Mapper {
                         R.string.diet_nutrition_progress_bar_carb
                     ),
                     getHistoryDietLineChart(daySummaries, daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.fats.toFloat()) }, R.string.diet_nutrition_progress_bar_fats),
-                    getHistoryDietLineChart(daySummaries, daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.waterML.toFloat()) }, R.string.diet_nutrition_progress_bar_water),
+                    getHistoryDietLineChart(daySummaries, daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.water.toFloat()) }, R.string.diet_nutrition_progress_bar_water),
                 )
             )
         )
@@ -173,27 +178,68 @@ class HistoryUiMapper @Inject constructor() : Mapper {
             carbohydrates = dailyDiet.carbohydrates.toString(),
             fats = dailyDiet.fats.toString(),
             proteins = dailyDiet.proteins.toString(),
-            waterML = dailyDiet.waterML.toString()
+            waterML = dailyDiet.water.toString()
         )
     }
 
     private fun mapSportsDone(sportsDone: List<SportDone>, date: String): List<SportDoneUiItem> {
         return sportsDone.map { sport ->
+            val goalParameterAchieved = sport.sportParameters.find { it.type == sport.goalParameter.type }?.let {
+                sport.goalParameter.value <= it.value
+            } ?: false
+
             SportDoneUiItem(
                 id = sport.id,
                 date = date,
                 sportId = sport.sportId,
+                sportColor = SportsMapper.sportColorMap[sport.sportId] ?: ColorPrimary,
                 sportName = SportsMapper.sportNamesMap[sport.sportId] ?: "Unknown",
-                parameters = sport.sportParameters,
-                text = @Composable {
-                    sport.sportParameters.forEach {
-                        ThesisFitnessHLAutoSizeText(
-                            text = stringResource(
-                                id = if (it.type == SportParameterType.Duration) R.string.history_activities_sport_done_duration else R.string.history_activities_sport_done_distance,
-                                it.value
+                goalParameterText = @Composable {
+                    val text = stringResource(id = R.string.history_activities_sport_goal_parameter) + " " +
+                            stringResource(
+                                id = if (sport.goalParameter.type == SportParameterType.Duration) R.string.history_activities_sport_done_duration else R.string.history_activities_sport_done_distance,
+                                sport.goalParameter.value
                             )
-                        )
-                        VerticalSpacerHalf()
+                    ThesisFitnessHLAutoSizeText(
+                        text = text,
+                        maxFontSize = 18.sp
+                    )
+                    VerticalSpacerDefault()
+                    if (goalParameterAchieved) {
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            ThesisFitnessHLAutoSizeText(
+                                text = stringResource(R.string.history_activities_sport_goal_parameter_achieved),
+                                maxFontSize = 18.sp,
+                                maxLines = 1
+                            )
+                            Icon(
+                                modifier = Modifier
+                                    .fillMaxWidth(0.3f)
+                                    .aspectRatio(1f),
+                                painter = painterResource(id = R.drawable.ic_trophy),
+                                contentDescription = null,
+                                tint = ColorGold
+                            )
+                        }
+                    }
+                },
+                statisticsText = @Composable {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        sport.sportParameters.forEach {
+                            ThesisFitnessHLAutoSizeText(
+                                text = stringResource(
+                                    id = if (it.type == SportParameterType.Duration) R.string.history_activities_sport_done_duration else R.string.history_activities_sport_done_distance,
+                                    it.value
+                                ),
+                                maxFontSize = 18.sp,
+                                color = MaterialTheme.colorScheme.surface
+                            )
+                            VerticalSpacerHalf()
+                        }
                     }
                 }
             )

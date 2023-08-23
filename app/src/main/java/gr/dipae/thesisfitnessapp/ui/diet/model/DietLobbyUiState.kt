@@ -1,10 +1,8 @@
 package gr.dipae.thesisfitnessapp.ui.diet.model
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-
 data class DietLobbyUiState(
-    val nutritionProgressBars: MutableState<NutritionProgressBarsUiItem> = mutableStateOf(NutritionProgressBarsUiItem())
+    val nutritionProgressBars: NutritionProgressBarsUiItem,
+    val pastDate: String?
 )
 
 data class NutritionProgressBarsUiItem(

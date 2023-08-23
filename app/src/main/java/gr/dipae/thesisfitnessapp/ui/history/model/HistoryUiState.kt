@@ -3,15 +3,15 @@ package gr.dipae.thesisfitnessapp.ui.history.model
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.Color
 import co.yml.charts.common.model.Point
 import co.yml.charts.ui.piechart.models.PieChartData
-import gr.dipae.thesisfitnessapp.domain.history.entity.SportDoneParameter
 
 data class HistoryUiState(
-    val title: @Composable () -> Unit,
     val daySummaries: List<DaySummaryUiItem>,
     val sportsUiState: HistorySportsUiState?,
-    val dietUiState: HistoryDietUiState?
+    val dietUiState: HistoryDietUiState?,
+    val emptyView: Boolean
 )
 
 data class HistorySportsUiState(
@@ -22,7 +22,7 @@ data class HistorySportsUiState(
 )
 
 data class HistorySportPieChartUiItem(
-    val data: PieChartData,
+    val data: PieChartData?,
     val totalDays: String,
 )
 
@@ -59,8 +59,9 @@ data class SportDoneUiItem(
     val date: String,
     val sportId: String,
     val sportName: String,
-    val parameters: List<SportDoneParameter>,
-    val text: @Composable () -> Unit
+    val sportColor: Color,
+    val goalParameterText: @Composable () -> Unit,
+    val statisticsText: @Composable () -> Unit
 )
 
 data class WorkoutDoneUiItem(

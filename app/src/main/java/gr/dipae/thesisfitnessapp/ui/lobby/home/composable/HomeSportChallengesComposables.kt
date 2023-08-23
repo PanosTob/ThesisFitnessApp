@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -36,14 +35,13 @@ import gr.dipae.thesisfitnessapp.ui.lobby.home.model.UserSportChallengeUiItem
 import gr.dipae.thesisfitnessapp.ui.theme.ColorGold
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
-import gr.dipae.thesisfitnessapp.ui.theme.openSansFontFamily
 import gr.dipae.thesisfitnessapp.util.ext.loadImageWithCrossfade
 
 @Composable
 fun HomeSportChallenges(
     sportChallenges: List<UserSportChallengeUiItem>
 ) {
-    ThesisFitnessHLAutoSizeText(text = stringResource(id = R.string.home_user_challenges_section), maxFontSize = 21.sp, maxLines = 1, style = TextStyle(fontFamily = openSansFontFamily))
+    ThesisFitnessHLAutoSizeText(text = stringResource(id = R.string.home_user_challenges_section), maxFontSize = 21.sp, maxLines = 1)
     VerticalSpacerHalf()
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(SpacingDefault_16dp)) {
         sportChallenges.forEach {

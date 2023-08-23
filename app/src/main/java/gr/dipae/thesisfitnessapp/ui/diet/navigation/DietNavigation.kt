@@ -56,7 +56,14 @@ fun NavGraphBuilder.dietScreen(
                 HistoryDateRangeBottomSheet(
                     modifier = Modifier,
                     onDismiss = { openCalendar.value = false },
-                    onDateRangePicked = { startDate, endDate -> onDateRangePicked(startDate, endDate) }
+                    onDateRangePicked = { startDate, endDate ->
+                        if (startDate == endDate) {
+                            openCalendar.value = false
+                            viewModel.init(startDate)
+                        } else {
+                            onDateRangePicked(startDate, endDate)
+                        }
+                    }
                 )
             }
         }

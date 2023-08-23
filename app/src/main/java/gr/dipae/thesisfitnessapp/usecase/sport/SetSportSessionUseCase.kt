@@ -48,7 +48,7 @@ class SetSportSessionUseCase @Inject constructor(
                 duration = durationMinutes,
                 distance = distance,
                 breakTime = breakMinutes,
-                goalParameter = Pair(goalParameter, isSportParameterAchievedUseCase(goalParameter, distance, durationMinutes))
+                goalParameter = goalParameter
             )
 
             return SportSessionSaveResult.Success

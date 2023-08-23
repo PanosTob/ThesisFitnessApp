@@ -223,10 +223,28 @@ class UserDataSourceImpl @Inject constructor(
             .collection(EXERCISES_COLLECTION).getDocumentsResponse()
     }
 
-    override suspend fun getDaySummary(): RemoteDaySummary? {
+    override suspend fun getDaySummary(date: Long?): RemoteDaySummary? {
         val userId = getFirebaseUserId()
-        val startOfDayTime = getStartTimestampOfThisDay()
-        val endOfDayTime = getEndTimeStampOfThisDay()
+        val startOfDayTime = if (date != null) {
+            Calendar.getInstance().apply {
+                timeInMillis = date
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+            }.time
+        } else {
+            getStartTimestampOfThisDay()
+        }
+        val endOfDayTime = if (date != null) {
+            Calendar.getInstance().apply {
+                timeInMillis = date
+                set(Calendar.HOUR_OF_DAY, 23)
+                set(Calendar.MINUTE, 59)
+                set(Calendar.SECOND, 59)
+            }.time
+        } else {
+            getEndTimeStampOfThisDay()
+        }
 
         val summary = fireStore
             .collection(USERS_COLLECTION)

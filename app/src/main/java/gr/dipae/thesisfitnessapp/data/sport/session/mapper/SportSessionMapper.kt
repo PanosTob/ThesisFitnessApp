@@ -5,7 +5,6 @@ import gr.dipae.thesisfitnessapp.data.sport.mapper.SportsMapper
 import gr.dipae.thesisfitnessapp.data.sport.session.model.SportParameterRequest
 import gr.dipae.thesisfitnessapp.data.sport.session.model.SportSessionRequest
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
-import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameterType
 import gr.dipae.thesisfitnessapp.domain.sport.session.entity.SportParameterArgument
 import javax.inject.Inject
 
@@ -13,24 +12,23 @@ class SportSessionMapper @Inject constructor(
     private val sportsMapper: SportsMapper
 ) : Mapper {
 
-    operator fun invoke(sportId: String, breakTime: Long): SportSessionRequest {
+    operator fun invoke(sportId: String, breakTime: Long, goalParameter: SportParameter?): SportSessionRequest {
         return SportSessionRequest(
-            sportId = sportId,
-            breakTime = breakTime
+            activityId = sportId,
+            breakTime = breakTime,
+            goalParameter = goalParameter?.let { SportParameterRequest(goalParameter.name, goalParameter.value) }
         )
     }
 
-    operator fun invoke(distance: Long, duration: Long, goalParameter: Pair<SportParameter?, Boolean>): List<SportParameterRequest> {
+    operator fun invoke(distance: Long, duration: Long): List<SportParameterRequest> {
         return listOf(
             SportParameterRequest(
                 name = "distance",
-                value = distance,
-                achieved = goalParameter.first?.let { it.type is SportParameterType.Distance && goalParameter.second }
+                value = distance
             ),
             SportParameterRequest(
                 name = "duration",
-                value = duration,
-                achieved = goalParameter.first?.let { it.type is SportParameterType.Duration && goalParameter.second }
+                value = duration
             )
         )
     }

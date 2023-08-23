@@ -19,7 +19,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import gr.dipae.thesisfitnessapp.R
@@ -31,7 +30,6 @@ import gr.dipae.thesisfitnessapp.ui.sport.session.model.SportSessionRealTimeData
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.SportSessionUiState
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
-import gr.dipae.thesisfitnessapp.ui.theme.openSansFontFamily
 
 internal typealias OnSportSessionTimerResume = () -> Unit
 internal typealias OnSportSessionTimerPause = () -> Unit
@@ -140,7 +138,6 @@ fun SportSessionDurationTime(
         text = sportSessionRealTimeDataUiItem.duration.value.invoke(),
         color = MaterialTheme.colorScheme.background,
         fontSize = 48.sp,
-        style = TextStyle(fontFamily = openSansFontFamily)
     )
 }
 
@@ -156,7 +153,6 @@ fun SportSessionBreakTime(
             text = stringResource(id = R.string.sport_session_stop_watch_break_timer_label),
             color = MaterialTheme.colorScheme.surface,
             maxFontSize = 16.sp,
-            style = TextStyle(fontFamily = openSansFontFamily)
         )
         HorizontalSpacerHalf()
         ThesisFitnessHLAutoSizeText(
@@ -164,7 +160,6 @@ fun SportSessionBreakTime(
             color = MaterialTheme.colorScheme.surface,
             maxFontSize = 16.sp,
             maxLines = 1,
-            style = TextStyle(fontFamily = openSansFontFamily)
         )
     }
 }
@@ -181,7 +176,6 @@ fun SportSessionRunningPace(
             text = stringResource(id = R.string.sport_session_pace_label),
             color = MaterialTheme.colorScheme.surface,
             maxFontSize = 16.sp,
-            style = TextStyle(fontFamily = openSansFontFamily)
         )
         HorizontalSpacerHalf()
         ThesisFitnessHLAutoSizeText(
@@ -189,7 +183,6 @@ fun SportSessionRunningPace(
             color = MaterialTheme.colorScheme.surface,
             maxFontSize = 16.sp,
             maxLines = 1,
-            style = TextStyle(fontFamily = openSansFontFamily)
         )
     }
 }
@@ -206,7 +199,6 @@ fun SportSessionDistanceTravelled(
             text = stringResource(id = R.string.sport_session_distance_label),
             color = MaterialTheme.colorScheme.surface,
             maxFontSize = 16.sp,
-            style = TextStyle(fontFamily = openSansFontFamily)
         )
         HorizontalSpacerHalf()
         ThesisFitnessHLAutoSizeText(
@@ -214,7 +206,6 @@ fun SportSessionDistanceTravelled(
             color = MaterialTheme.colorScheme.surface,
             maxFontSize = 16.sp,
             maxLines = 1,
-            style = TextStyle(fontFamily = openSansFontFamily)
         )
     }
 }

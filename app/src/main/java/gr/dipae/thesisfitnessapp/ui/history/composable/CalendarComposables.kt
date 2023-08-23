@@ -22,14 +22,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBMText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
-import gr.dipae.thesisfitnessapp.ui.theme.openSansFontFamily
 import gr.dipae.thesisfitnessapp.util.ext.toDate
 
 @ExperimentalMaterialApi
@@ -73,7 +71,6 @@ fun HistoryDateRangePicker(
                     maxLines = 1,
                     maxFontSize = 18.sp,
                     textAlign = TextAlign.Center,
-                    style = TextStyle(fontFamily = openSansFontFamily)
                 )
             },
             headline = {
