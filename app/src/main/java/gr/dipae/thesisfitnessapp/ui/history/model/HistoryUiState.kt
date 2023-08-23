@@ -3,7 +3,7 @@ package gr.dipae.thesisfitnessapp.ui.history.model
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import co.yml.charts.ui.linechart.model.LineChartData
+import co.yml.charts.common.model.Point
 import co.yml.charts.ui.piechart.models.PieChartData
 import gr.dipae.thesisfitnessapp.domain.history.entity.SportDoneParameter
 
@@ -32,7 +32,9 @@ data class HistoryDietUiState(
 
 data class HistoryDietLineChartUiItem(
     val titleRes: Int,
-    val data: LineChartData
+    val points: List<Point>,
+    val xAxisData: (Int) -> String,
+    val yAxisData: (Int) -> String,
 )
 
 data class DaySummaryUiItem(

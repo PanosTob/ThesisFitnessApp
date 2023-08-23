@@ -27,7 +27,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import co.yml.charts.axis.AxisData
 import co.yml.charts.ui.linechart.LineChart
+import co.yml.charts.ui.linechart.model.GridLines
+import co.yml.charts.ui.linechart.model.IntersectionPoint
+import co.yml.charts.ui.linechart.model.Line
+import co.yml.charts.ui.linechart.model.LineChartData
+import co.yml.charts.ui.linechart.model.LinePlotData
+import co.yml.charts.ui.linechart.model.LineStyle
+import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
+import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
+import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import co.yml.charts.ui.piechart.charts.PieChart
 import co.yml.charts.ui.piechart.models.PieChartConfig
 import gr.dipae.thesisfitnessapp.R
@@ -77,12 +87,41 @@ fun HistoryDietContent(
     item: List<HistoryDietLineChartUiItem>
 ) {
     item.forEach {
-        ThesisFitnessHLAutoSizeText(text = stringResource(id = it.titleRes), maxLines = 1, maxFontSize = 20.sp)
+        ThesisFitnessHLAutoSizeText(
+            text = stringResource(id = it.titleRes),
+            maxLines = 1,
+            maxFontSize = 24.sp,
+            color = MaterialTheme.colorScheme.surface
+        )
         LineChart(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f),
-            lineChartData = it.data
+            lineChartData = LineChartData(
+                linePlotData = LinePlotData(
+                    lines = listOf(
+                        Line(
+                            dataPoints = it.points,
+                            LineStyle(),
+                            IntersectionPoint(),
+                            SelectionHighlightPoint(color = MaterialTheme.colorScheme.primary),
+                            ShadowUnderLine(),
+                            SelectionHighlightPopUp()
+                        )
+                    ),
+                ),
+                xAxisData = AxisData.Builder()
+                    .backgroundColor(MaterialTheme.colorScheme.primary)
+                    .steps(it.points.size)
+                    .labelData(it.xAxisData)
+                    .build(),
+                yAxisData = AxisData.Builder()
+                    .steps(it.points.size)
+                    .backgroundColor(MaterialTheme.colorScheme.secondary)
+                    .labelData(it.yAxisData).build(),
+                gridLines = GridLines(),
+                backgroundColor = Color.White
+            )
         )
 
         VerticalSpacerDefault()

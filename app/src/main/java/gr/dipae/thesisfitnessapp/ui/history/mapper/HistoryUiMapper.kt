@@ -2,24 +2,12 @@ package gr.dipae.thesisfitnessapp.ui.history.mapper
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import co.yml.charts.axis.AxisData
 import co.yml.charts.common.extensions.formatToSinglePrecision
 import co.yml.charts.common.model.PlotType
 import co.yml.charts.common.model.Point
-import co.yml.charts.ui.linechart.model.GridLines
-import co.yml.charts.ui.linechart.model.IntersectionPoint
-import co.yml.charts.ui.linechart.model.Line
-import co.yml.charts.ui.linechart.model.LineChartData
-import co.yml.charts.ui.linechart.model.LinePlotData
-import co.yml.charts.ui.linechart.model.LineStyle
-import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
-import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
-import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import co.yml.charts.ui.piechart.models.PieChartData
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.data.Mapper
@@ -126,55 +114,35 @@ class HistoryUiMapper @Inject constructor() : Mapper {
         return HistoryDietUiState(
             lineCharts = mutableStateOf(
                 listOf(
-                    getHistoryDietLineChart(daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.calories.toFloat()) }, R.string.diet_nutrition_progress_bar_cal),
-                    getHistoryDietLineChart(daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.proteins.toFloat()) }, R.string.diet_nutrition_progress_bar_protein),
-                    getHistoryDietLineChart(daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.carbohydrates.toFloat()) }, R.string.diet_nutrition_progress_bar_carb),
-                    getHistoryDietLineChart(daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.fats.toFloat()) }, R.string.diet_nutrition_progress_bar_fats),
-                    getHistoryDietLineChart(daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.waterML.toFloat()) }, R.string.diet_nutrition_progress_bar_water),
+                    getHistoryDietLineChart(daySummaries, daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.calories.toFloat()) }, R.string.diet_nutrition_progress_bar_cal),
+                    getHistoryDietLineChart(daySummaries, daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.proteins.toFloat()) }, R.string.diet_nutrition_progress_bar_protein),
+                    getHistoryDietLineChart(daySummaries, daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.carbohydrates.toFloat()) }, R.string.diet_nutrition_progress_bar_carb),
+                    getHistoryDietLineChart(daySummaries, daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.fats.toFloat()) }, R.string.diet_nutrition_progress_bar_fats),
+                    getHistoryDietLineChart(daySummaries, daySummaries.map { Point(x = it.dateTime.toFloat(), y = it.dailyDiet.waterML.toFloat()) }, R.string.diet_nutrition_progress_bar_water),
                 )
             )
         )
     }
 
-    private fun getHistoryDietLineChart(dataPoints: List<Point>, titleRes: Int): HistoryDietLineChartUiItem {
-        val xAxisData = AxisData.Builder()
-            .axisStepSize(100.dp)
-            .backgroundColor(Color.Blue)
-            .steps(dataPoints.size - 1)
-            .labelData { i -> i.toString() }
-            .labelAndAxisLinePadding(15.dp)
-            .build()
+    private fun getHistoryDietLineChart(daySummaries: List<DaySummary>, dataPoints: List<Point>, titleRes: Int): HistoryDietLineChartUiItem {
+        val xAxisData: (Int) -> String = { i ->
+            if (i in daySummaries.indices) {
+                daySummaries[i].dateTime.toDate()
+            } else {
+                "unknown date"
+            }
+        }
 
-        val steps = dataPoints.maxOf { it.y }.toInt()
-        val yAxisData = AxisData.Builder()
-            .steps(steps)
-            .backgroundColor(Color.Red)
-            .labelAndAxisLinePadding(20.dp)
-            .labelData { i ->
-                val yScale = 100f / steps
-                (i * yScale).formatToSinglePrecision()
-            }.build()
+        val yAxisData: (Int) -> String = { i ->
+            val yScale = dataPoints.maxOf { it.y } / dataPoints.size
+            (i * yScale).formatToSinglePrecision()
+        }
 
         return HistoryDietLineChartUiItem(
             titleRes = titleRes,
-            LineChartData(
-                linePlotData = LinePlotData(
-                    lines = listOf(
-                        Line(
-                            dataPoints = dataPoints,
-                            LineStyle(),
-                            IntersectionPoint(),
-                            SelectionHighlightPoint(),
-                            ShadowUnderLine(),
-                            SelectionHighlightPopUp()
-                        )
-                    ),
-                ),
-                xAxisData = xAxisData,
-                yAxisData = yAxisData,
-                gridLines = GridLines(),
-                backgroundColor = Color.White
-            )
+            points = dataPoints,
+            xAxisData = xAxisData,
+            yAxisData = yAxisData,
         )
     }
 

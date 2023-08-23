@@ -66,9 +66,9 @@ class UserMapper @Inject constructor(
         return DietGoal(
             calories = remoteDietGoal.calories,
             carbohydrates = remoteDietGoal.carbohydrates,
-            fats = remoteDietGoal.fatGrams,
-            protein = remoteDietGoal.proteinGrams,
-            waterML = remoteDietGoal.waterML
+            fats = remoteDietGoal.fats,
+            protein = remoteDietGoal.protein,
+            waterML = remoteDietGoal.water
         )
     }
 
