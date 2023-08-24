@@ -7,6 +7,7 @@ import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
 
 data class SportSessionUiState(
+    val sportTitle: String,
     val hasMap: Boolean,
     val showContent: MutableState<Boolean> = mutableStateOf(false),
     val mapState: SportSessionUiMapState,

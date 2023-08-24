@@ -257,7 +257,8 @@ fun HistorySportsPieChart(
                 isAnimationEnable = true,
                 showSliceLabels = true,
                 animationDuration = 1500,
-                backgroundColor = MaterialTheme.colorScheme.background
+                backgroundColor = MaterialTheme.colorScheme.background,
+                sliceLabelTextSize = 12.sp,
             )
         )
     }

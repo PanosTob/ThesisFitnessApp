@@ -2,6 +2,7 @@ package gr.dipae.thesisfitnessapp.ui.sport.session.mapper
 
 import androidx.compose.runtime.mutableStateOf
 import gr.dipae.thesisfitnessapp.data.Mapper
+import gr.dipae.thesisfitnessapp.domain.sport.entity.Sport
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.PlayStateButtonUiItem
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.SportSessionUiMapState
@@ -11,10 +12,12 @@ import javax.inject.Inject
 class SportSessionUiMapper @Inject constructor(
 ) : Mapper {
 
-    operator fun invoke(sportParameterToBeAchieved: SportParameter?, sportHasMap: Boolean?): SportSessionUiState? {
+    operator fun invoke(sportParameterToBeAchieved: SportParameter?, sportHasMap: Boolean?, sport: Sport?): SportSessionUiState? {
+        sport ?: return null
         sportHasMap ?: return null
 
         return SportSessionUiState(
+            sportTitle = sport.name,
             hasMap = sportHasMap,
             mapState = SportSessionUiMapState(),
             playStateBtn = PlayStateButtonUiItem(isEnabled = mutableStateOf(sportHasMap == false)),

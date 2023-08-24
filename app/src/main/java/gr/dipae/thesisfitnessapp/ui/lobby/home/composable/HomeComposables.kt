@@ -1,5 +1,7 @@
 package gr.dipae.thesisfitnessapp.ui.lobby.home.composable
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
@@ -28,11 +30,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -138,6 +139,7 @@ fun HomeDailyMovementStats(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun HomeUserTrackingStat(
     title: String,
@@ -147,7 +149,7 @@ fun HomeUserTrackingStat(
     val primaryColor = MaterialTheme.colorScheme.primary
     val progressAnimation by animateFloatAsState(
         targetValue = trackingItem.fulfillmentPercentage.value,
-        animationSpec = tween(3000, 500)
+        animationSpec = tween(1500, 500)
     )
     Column(
         modifier = Modifier
@@ -159,17 +161,30 @@ fun HomeUserTrackingStat(
         ThesisFitnessBLAutoSizeText(text = title, maxLines = 1)
         Image(modifier = Modifier
             .graphicsLayer { clip = true }
-            .drawBehind {
-                val path = Path().apply {
-                    moveTo(0f, size.height)
-                    addRect(Rect(topLeft = Offset.Zero, bottomRight = Offset(size.width, size.height * progressAnimation)))
+            .drawWithCache {
+                onDrawWithContent {
+                    drawContent()
+                    with(drawContext.canvas.nativeCanvas) {
+                        val paint = android.graphics
+                            .Paint()
+                            .apply {
+                                color = primaryColor.toArgb()
+                                blendMode = android.graphics.BlendMode.MODULATE
+                            }
+                        drawRect(
+                            0f,
+                            size.height,
+                            size.width,
+                            size.height - size.height * progressAnimation,
+                            paint
+                        )
+                    }
                 }
-
-                drawPath(path = path, color = primaryColor)
-            }, painter = painterResource(id = imgRes), contentDescription = ""
+            },
+            painter = painterResource(id = imgRes),
+            contentDescription = ""
         )
-        ThesisFitnessBLAutoSizeText(text = trackingItem.remaining.value, maxLines = 1)
-        ThesisFitnessBLAutoSizeText(text = stringResource(id = R.string.home_remaining_goal), maxLines = 1)
+        ThesisFitnessBLAutoSizeText(text = trackingItem.remaining.value + " / " + trackingItem.goal, maxLines = 1)
     }
 }
 
@@ -216,9 +231,10 @@ fun HomeContentPreview() {
                 ),
                 sportChallenges = emptyList(),
                 userMovementTracking = UserMovementTrackingUiItems(
-                    stepsTracking = UserMovementTrackingUiItem(remaining = remember { mutableStateOf("10000") }),
+                    stepsTracking = UserMovementTrackingUiItem(remaining = remember { mutableStateOf("8000") }, goal = "10000"),
                     caloriesTracking = UserMovementTrackingUiItem(
-                        remaining = remember { mutableStateOf("1500") },
+                        remaining = remember { mutableStateOf("300") },
+                        goal = "1500"
                     ),
                 )
             )

@@ -9,6 +9,7 @@ import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.history.mapper.HistoryUiMapper
 import gr.dipae.thesisfitnessapp.ui.history.model.HistoryUiState
 import gr.dipae.thesisfitnessapp.ui.history.navigation.HistoryRouteArgs
+import gr.dipae.thesisfitnessapp.usecase.user.history.CalculateDaysBetweenTwoDatesUseCase
 import gr.dipae.thesisfitnessapp.usecase.user.history.GetDaySummariesByRangeUseCase
 import javax.inject.Inject
 
@@ -16,7 +17,8 @@ import javax.inject.Inject
 class HistoryViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getDaySummariesByRangeUseCase: GetDaySummariesByRangeUseCase,
-    private val historyUiMapper: HistoryUiMapper
+    private val historyUiMapper: HistoryUiMapper,
+    private val calculateDaysBetweenTwoDatesUseCase: CalculateDaysBetweenTwoDatesUseCase
 ) : BaseViewModel() {
 
     private val _uiState: MutableState<HistoryUiState?> = mutableStateOf(null)
@@ -27,7 +29,14 @@ class HistoryViewModel @Inject constructor(
 
     fun init(fromSports: Boolean) {
         launchWithProgress {
-            _uiState.value = historyUiMapper(fromSports, getDaySummariesByRangeUseCase(startDate, endDate))
+            if (startDate != null && endDate != null) {
+                val daySummaries = getDaySummariesByRangeUseCase(startDate, endDate)
+                if (daySummaries.isNotEmpty()) {
+                    val totalDaysList = calculateDaysBetweenTwoDatesUseCase(startDate, endDate)
+
+                    _uiState.value = historyUiMapper(fromSports, getDaySummariesByRangeUseCase(startDate, endDate), totalDaysList)
+                }
+            }
         }
     }
 

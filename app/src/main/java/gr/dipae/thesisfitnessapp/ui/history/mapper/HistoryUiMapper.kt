@@ -1,5 +1,6 @@
 package gr.dipae.thesisfitnessapp.ui.history.mapper
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,20 +41,22 @@ import gr.dipae.thesisfitnessapp.ui.history.model.HistoryUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.SportDoneUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.WorkoutDoneUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.WorkoutExerciseDoneUiItem
+import gr.dipae.thesisfitnessapp.ui.theme.ColorDividerGrey
 import gr.dipae.thesisfitnessapp.ui.theme.ColorGold
 import gr.dipae.thesisfitnessapp.ui.theme.ColorPrimary
 import gr.dipae.thesisfitnessapp.util.ext.toDate
+import java.util.Calendar
 import javax.inject.Inject
 
 class HistoryUiMapper @Inject constructor() : Mapper {
 
-    operator fun invoke(fromSports: Boolean, daySummaries: List<DaySummary>): HistoryUiState {
+    operator fun invoke(fromSports: Boolean, daySummaries: List<DaySummary>, everyDayDate: List<Long>): HistoryUiState {
 
         val daySummaryUiItems = daySummaries.mapNotNull { mapDaySummaryUiItem(it) }
         return HistoryUiState(
             daySummaries = daySummaryUiItems,
-            sportsUiState = getSportUiState(fromSports, daySummaries, daySummaryUiItems),
-            dietUiState = getDietUiState(fromSports, daySummaries),
+            sportsUiState = getSportUiState(fromSports, daySummaries, daySummaryUiItems, everyDayDate),
+            dietUiState = getDietUiState(fromSports, daySummaries, everyDayDate),
             emptyView = daySummaries.isEmpty()
         )
     }
@@ -63,7 +66,7 @@ class HistoryUiMapper @Inject constructor() : Mapper {
         )
     }*/
 
-    private fun getSportUiState(fromSports: Boolean, daySummaries: List<DaySummary>, daySummaryUiItems: List<DaySummaryUiItem>): HistorySportsUiState? {
+    private fun getSportUiState(fromSports: Boolean, daySummaries: List<DaySummary>, daySummaryUiItems: List<DaySummaryUiItem>, everyDayDate: List<Long>): HistorySportsUiState? {
         if (!fromSports) {
             return null
         }
@@ -72,14 +75,27 @@ class HistoryUiMapper @Inject constructor() : Mapper {
         val totalDuration = toSecondsString(sportParameters.filter { it.type == SportParameterType.Duration }.sumOf { it.value })
         val totalDistanceMeters = sportParameters.filter { it.type == SportParameterType.Distance }.sumOf { it.value }.toString()
 
-        val totalDaysOfSummary = daySummaries.count()
+        val totalDaysOfSummary = everyDayDate.count()
         val totalDistinctSports = daySummaries.flatMap { it.sportsDone }.distinctBy { it.sportId }
 
-        val daySummaryGroups = mutableMapOf<String, List<DaySummary>>()
+        val daySummaryCountBySport = mutableMapOf<String, Int>()
 
         totalDistinctSports.forEach { sport ->
-            val summaryGroup = daySummaries.filter { it.sportsDone.contains(sport) }
-            daySummaryGroups[sport.sportId] = summaryGroup
+            val summaryGroup = daySummaries.flatMap { it.sportsDone }.count { it.sportId == sport.sportId }
+            daySummaryCountBySport[sport.sportId] = summaryGroup
+        }
+
+        daySummaryCountBySport[""] = daySummaries.count {
+            val summaryStartOfDayDate = Calendar.getInstance().apply {
+                timeInMillis = it.dateTime
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+            }.timeInMillis
+            !everyDayDate.contains(summaryStartOfDayDate)
+        }
+        daySummaryCountBySport.forEach {
+            Log.e("HistoryUiMapper", "Sport: ${it.key} | Count Days: ${it.value}")
         }
 
         return HistorySportsUiState(
@@ -87,51 +103,49 @@ class HistoryUiMapper @Inject constructor() : Mapper {
             totalDistance = totalDistanceMeters,
             pieChart = mutableStateOf(
                 HistorySportPieChartUiItem(
-                    data = populateSportsChartData(daySummaryGroups, totalDaysOfSummary),
-                    totalDays = totalDaysOfSummary.toString()
+                    data = populateSportsChartData(daySummaryCountBySport, totalDaysOfSummary),
+                    totalDays = everyDayDate.count().toString()
                 )
             ),
             sportsDone = mutableStateOf(daySummaryUiItems.flatMap { it.sportsDone })
         )
     }
 
-    private fun populateSportsChartData(groupedSummariesBySport: Map<String, List<DaySummary>>, totalDays: Int): PieChartData? {
+    private fun populateSportsChartData(groupedSummariesBySport: Map<String, Int>, totalDays: Int): PieChartData? {
         if (groupedSummariesBySport.isEmpty()) return null
+
 
         return PieChartData(
             slices = groupedSummariesBySport.map {
                 PieChartData.Slice(
-                    label = (SportsMapper.sportNamesMap[it.key] ?: "Unknown") + " " + it.value.count() + "days",
-                    value = it.value.count().toFloat() / totalDays,
-                    color = SportsMapper.sportColorMap[it.key] ?: ColorPrimary
+                    label = (SportsMapper.sportNamesMap[it.key] ?: "No Sport") + " - " + it.value + " days",
+                    value = it.value.toFloat() / totalDays,
+                    color = SportsMapper.sportColorMap[it.key] ?: ColorDividerGrey
                 )
             },
             plotType = PlotType.Pie
         )
     }
 
-    private fun getDietUiState(fromSports: Boolean, daySummaries: List<DaySummary>): HistoryDietUiState? {
+    private fun getDietUiState(fromSports: Boolean, daySummaries: List<DaySummary>, everyDayDate: List<Long>): HistoryDietUiState? {
         if (fromSports) {
             return null
         }
+
+        val caloriePoints = daySummaries.mapIndexed { i, it -> Point(x = (i).toFloat(), y = it.dailyDiet.calories.toFloat()) }
+        val proteinPoints = daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.proteins.toFloat()) }
+        val carbohydratesPoints = daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.carbohydrates.toFloat()) }
+        val fatsPoints = daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.fats.toFloat()) }
+        val waterPoints = daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.water.toFloat()) }
+
         return HistoryDietUiState(
             lineCharts = mutableStateOf(
                 listOf(
-                    getHistoryDietLineChart(daySummaries, daySummaries.mapIndexed { i, it ->
-                        Point(x = i.toFloat(), y = it.dailyDiet.calories.toFloat())
-                    }, R.string.diet_nutrition_progress_bar_cal),
-                    getHistoryDietLineChart(
-                        daySummaries,
-                        daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.proteins.toFloat()) },
-                        R.string.diet_nutrition_progress_bar_protein
-                    ),
-                    getHistoryDietLineChart(
-                        daySummaries,
-                        daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.carbohydrates.toFloat()) },
-                        R.string.diet_nutrition_progress_bar_carb
-                    ),
-                    getHistoryDietLineChart(daySummaries, daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.fats.toFloat()) }, R.string.diet_nutrition_progress_bar_fats),
-                    getHistoryDietLineChart(daySummaries, daySummaries.mapIndexed { i, it -> Point(x = i.toFloat(), y = it.dailyDiet.water.toFloat()) }, R.string.diet_nutrition_progress_bar_water),
+                    getHistoryDietLineChart(daySummaries, caloriePoints, R.string.diet_nutrition_progress_bar_cal),
+                    getHistoryDietLineChart(daySummaries, proteinPoints, R.string.diet_nutrition_progress_bar_protein),
+                    getHistoryDietLineChart(daySummaries, carbohydratesPoints, R.string.diet_nutrition_progress_bar_carb),
+                    getHistoryDietLineChart(daySummaries, fatsPoints, R.string.diet_nutrition_progress_bar_fats),
+                    getHistoryDietLineChart(daySummaries, waterPoints, R.string.diet_nutrition_progress_bar_water),
                 )
             )
         )
@@ -158,6 +172,7 @@ class HistoryUiMapper @Inject constructor() : Mapper {
             yAxisData = yAxisData,
         )
     }
+
 
     private fun mapDaySummaryUiItem(daySummary: DaySummary?): DaySummaryUiItem? {
         return daySummary?.let {

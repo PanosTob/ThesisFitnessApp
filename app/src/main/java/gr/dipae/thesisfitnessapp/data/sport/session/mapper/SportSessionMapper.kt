@@ -20,17 +20,26 @@ class SportSessionMapper @Inject constructor(
         )
     }
 
-    operator fun invoke(distance: Long, duration: Long): List<SportParameterRequest> {
-        return listOf(
-            SportParameterRequest(
-                name = "distance",
-                value = distance
-            ),
-            SportParameterRequest(
-                name = "duration",
-                value = duration
+    operator fun invoke(distance: Long, duration: Long, sportParameters: List<SportParameter>?): List<SportParameterRequest> {
+        if (sportParameters.isNullOrEmpty()) {
+            return listOf(
+                SportParameterRequest(
+                    name = "distance",
+                    value = distance
+                ),
+                SportParameterRequest(
+                    name = "duration",
+                    value = duration
+                )
             )
-        )
+        }
+
+        return sportParameters.map {
+            SportParameterRequest(
+                name = it.name,
+                value = it.value
+            )
+        }
     }
 
 

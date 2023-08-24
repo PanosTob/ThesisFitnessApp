@@ -36,8 +36,8 @@
     <string name="history_activities_total_time">Total Time</string>
     <string name="history_activities_total_distance">Total Distance</string>
     <string name="history_activities_pie_chart_total_days">Total Days: %1$s</string>
-    <string name="history_activities_sport_done_duration">Duration: %1$s</string>
-    <string name="history_activities_sport_done_distance">Distance: %1$s</string>
+    <string name="history_activities_sport_done_duration">Duration: %1$s minutes</string>
+    <string name="history_activities_sport_done_distance">Distance: %1$s meters</string>
     <string name="history_activities_sport_goal_parameter">Goal</string>
     <string name="history_activities_sport_goal_parameter_achieved">Achieved</string>
     <string name="history_diet_title">Diet History</string>
@@ -50,6 +50,8 @@
     <string name="home_step_counter_label">Steps</string>
     <string name="home_remaining_goal">remaining</string>
     <string name="home_user_challenges_section">Activity Challenges</string>
+    <string name="home_user_challenge_goal_duration_unit">Minutes</string>
+    <string name="home_user_challenge_goal_distance_unit">Meters</string>
 
     <!-- Sports Screen -->
     <string name="sport_title">Activity</string>
@@ -71,6 +73,7 @@
 
     <!-- Workout Screen -->
     <string name="workout_title">Workout</string>
+    <string name="workout_coming_soon_description">This feature is coming soon!</string>
 
     <!-- Diet Screen -->
     <string name="diet_title">Diet</string>

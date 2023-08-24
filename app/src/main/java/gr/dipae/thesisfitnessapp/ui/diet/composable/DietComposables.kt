@@ -2,13 +2,11 @@ package gr.dipae.thesisfitnessapp.ui.diet.composable
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,10 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -52,10 +47,16 @@ import gr.dipae.thesisfitnessapp.ui.diet.model.NutritionProgressBarUiItem
 import gr.dipae.thesisfitnessapp.ui.diet.model.NutritionProgressBarsUiItem
 import gr.dipae.thesisfitnessapp.ui.diet.navigation.OnFoodSelectionFabClicked
 import gr.dipae.thesisfitnessapp.ui.diet.navigation.OnMacrosFabClicked
+import gr.dipae.thesisfitnessapp.ui.theme.ColorJumpingRope
+import gr.dipae.thesisfitnessapp.ui.theme.ColorPingPong
+import gr.dipae.thesisfitnessapp.ui.theme.ColorRunning
+import gr.dipae.thesisfitnessapp.ui.theme.ColorSwimming
+import gr.dipae.thesisfitnessapp.ui.theme.ColorWalking
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDouble_32dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingQuarter_4dp
+import gr.dipae.thesisfitnessapp.util.composable.ArcProgressBar
 
 
 @Composable
@@ -107,35 +108,35 @@ fun NutritionProgressBars(
         NutritionProgressBarRow(
             nutritionProgressBars.caloriesBar,
             R.string.diet_nutrition_progress_bar_cal,
-            color = Color.Red
+            color = ColorJumpingRope
         )
 
         WidthAdjustedDivider(Modifier.fillMaxWidth(1f), color = MaterialTheme.colorScheme.primary)
         NutritionProgressBarRow(
             nutritionProgressBars.proteinBar,
             R.string.diet_nutrition_progress_bar_protein,
-            color = Color.Magenta
+            color = ColorWalking
         )
 
         WidthAdjustedDivider(Modifier.fillMaxWidth(1f), color = MaterialTheme.colorScheme.primary)
         NutritionProgressBarRow(
             nutritionProgressBars.carbsBar,
             R.string.diet_nutrition_progress_bar_carb,
-            color = Color.Yellow
+            color = ColorRunning
         )
 
         WidthAdjustedDivider(Modifier.fillMaxWidth(1f), color = MaterialTheme.colorScheme.primary)
         NutritionProgressBarRow(
             nutritionProgressBars.fatsBar,
             R.string.diet_nutrition_progress_bar_fats,
-            color = Color.LightGray
+            color = ColorPingPong
         )
 
         WidthAdjustedDivider(Modifier.fillMaxWidth(1f), color = MaterialTheme.colorScheme.primary)
         NutritionProgressBarRow(
             nutritionProgressBars.waterBar,
             R.string.diet_nutrition_progress_bar_water,
-            color = Color.Cyan
+            color = ColorSwimming
         )
     }
 }
@@ -151,7 +152,7 @@ fun NutritionProgressBarRow(
             .fillMaxWidth()
             .aspectRatio(4f)
     ) {
-        ArcProgressBar(
+        ArcProgressBarWithTextUnderneath(
             modifier = Modifier
                 .weight(0.4f)
                 .fillMaxHeight(),
@@ -172,7 +173,7 @@ fun NutritionProgressBarRow(
 }
 
 @Composable
-fun ArcProgressBar(
+fun ArcProgressBarWithTextUnderneath(
     modifier: Modifier,
     progress: Float,
     amount: String,
@@ -182,40 +183,14 @@ fun ArcProgressBar(
         modifier = modifier,
         contentAlignment = Alignment.BottomCenter
     ) {
-        val emptyBarColor = MaterialTheme.colorScheme.tertiary
-        Canvas(
+        ArcProgressBar(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(2f)
-        ) {
-            drawArc(
-                emptyBarColor,
-                -180f,
-                180f,
-                useCenter = false,
-                size = Size(size.width, size.height * 2),
-                style = Stroke(SpacingCustom_24dp.toPx(), cap = StrokeCap.Square)
-            )
-        }
-        val progressAnimation by animateFloatAsState(
-            targetValue = progress,
-            animationSpec = tween(3000, 500),
-            label = ""
+                .aspectRatio(2f),
+            color = color,
+            progress = progress,
+            strokeWidth = SpacingDefault_16dp
         )
-        Canvas(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(2f)
-        ) {
-            drawArc(
-                color,
-                -180f,
-                (180f * progressAnimation).coerceAtMost(180f),
-                useCenter = false,
-                size = Size(size.width, size.height * 2),
-                style = Stroke(SpacingCustom_24dp.toPx(), cap = StrokeCap.Square)
-            )
-        }
         ThesisFitnessHMAutoSizeText(
             modifier = Modifier
                 .fillMaxWidth(0.8f)
