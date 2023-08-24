@@ -53,6 +53,7 @@ import gr.dipae.thesisfitnessapp.ui.history.model.HistoryUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.SportDoneUiItem
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
+import gr.dipae.thesisfitnessapp.ui.theme.SpacingDouble_32dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingQuadruple_64dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingQuarter_4dp
@@ -104,7 +105,7 @@ fun HistoryDietContent(
         maxLines = 1,
     )
     VerticalSpacerDefault()
-
+    val primaryColor = MaterialTheme.colorScheme.background
     item.forEach {
         ThesisFitnessHLAutoSizeText(
             text = stringResource(id = it.titleRes),
@@ -117,26 +118,31 @@ fun HistoryDietContent(
                 .fillMaxWidth()
                 .aspectRatio(1f),
             lineChartData = LineChartData(
+                isZoomAllowed = true,
                 linePlotData = LinePlotData(
                     lines = listOf(
                         Line(
                             dataPoints = it.points,
-                            LineStyle(),
-                            IntersectionPoint(color = MaterialTheme.colorScheme.background),
-                            SelectionHighlightPoint(color = MaterialTheme.colorScheme.primary),
-                            ShadowUnderLine(),
+                            LineStyle(
+                                color = MaterialTheme.colorScheme.primary
+                            ),
+                            IntersectionPoint { },
+                            SelectionHighlightPoint(color = MaterialTheme.colorScheme.background),
+                            ShadowUnderLine(color = MaterialTheme.colorScheme.primary, alpha = 1f),
                             SelectionHighlightPopUp(backgroundColor = MaterialTheme.colorScheme.background, labelColor = MaterialTheme.colorScheme.surface, popUpLabel = { _, y -> y.toString() })
                         )
                     ),
                 ),
                 xAxisData = AxisData.Builder()
-                    .backgroundColor(MaterialTheme.colorScheme.primary)
-                    .steps(it.points.size)
+                    .steps(it.points.size * 2)
                     .axisLabelColor(MaterialTheme.colorScheme.secondary)
                     .backgroundColor(Color.Transparent)
                     .labelAndAxisLinePadding(SpacingQuarter_4dp)
                     .axisStepSize(SpacingQuadruple_64dp)
                     .axisLabelFontSize(12.sp)
+                    .startPadding(SpacingDouble_32dp)
+                    .startDrawPadding(SpacingDouble_32dp)
+                    .endPadding(SpacingDouble_32dp)
                     .labelData(it.xAxisData).build(),
                 yAxisData = AxisData.Builder()
                     .steps(it.points.size)
@@ -146,9 +152,8 @@ fun HistoryDietContent(
                     .backgroundColor(Color.Transparent)
                     .axisStepSize(SpacingCustom_24dp)
                     .startPadding(SpacingQuarter_4dp)
+                    .bottomPadding(SpacingQuadruple_64dp)
                     .labelData(it.yAxisData).build(),
-                isZoomAllowed = false,
-                containerPaddingEnd = SpacingCustom_24dp,
                 backgroundColor = MaterialTheme.colorScheme.surface
             )
         )

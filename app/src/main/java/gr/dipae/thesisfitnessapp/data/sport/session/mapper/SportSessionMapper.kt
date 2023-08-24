@@ -1,10 +1,12 @@
 package gr.dipae.thesisfitnessapp.data.sport.session.mapper
 
+import com.google.firebase.firestore.FieldValue
 import gr.dipae.thesisfitnessapp.data.Mapper
 import gr.dipae.thesisfitnessapp.data.sport.mapper.SportsMapper
 import gr.dipae.thesisfitnessapp.data.sport.session.model.SportParameterRequest
 import gr.dipae.thesisfitnessapp.data.sport.session.model.SportSessionRequest
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameter
+import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameterType
 import gr.dipae.thesisfitnessapp.domain.sport.session.entity.SportParameterArgument
 import javax.inject.Inject
 
@@ -16,7 +18,8 @@ class SportSessionMapper @Inject constructor(
         return SportSessionRequest(
             activityId = sportId,
             breakTime = breakTime,
-            goalParameter = goalParameter?.let { SportParameterRequest(goalParameter.name, goalParameter.value) }
+            goalParameter = goalParameter?.let { SportParameterRequest(goalParameter.name, goalParameter.value) },
+            date = FieldValue.serverTimestamp()
         )
     }
 
@@ -37,7 +40,7 @@ class SportSessionMapper @Inject constructor(
         return sportParameters.map {
             SportParameterRequest(
                 name = it.name,
-                value = it.value
+                value = if (it.type == SportParameterType.Duration) duration else distance
             )
         }
     }

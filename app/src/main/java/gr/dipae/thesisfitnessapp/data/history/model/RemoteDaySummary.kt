@@ -27,6 +27,7 @@ data class RemoteSportDone(
     val id: String = "",
     val activityId: String = "",
     val breakTime: Long = 0,
+    val date: Date = Date(),
     val goalParameter: RemoteSportDoneParameter = RemoteSportDoneParameter(),
     var activityStatistics: List<RemoteSportDoneParameter> = emptyList(),
 )

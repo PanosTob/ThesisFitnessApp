@@ -24,6 +24,7 @@ data class SportDone(
     val id: String,
     val sportId: String,
     val breakTime: Long,
+    val date: Long,
     val sportParameters: List<SportDoneParameter>,
     val goalParameter: SportDoneParameter
 )

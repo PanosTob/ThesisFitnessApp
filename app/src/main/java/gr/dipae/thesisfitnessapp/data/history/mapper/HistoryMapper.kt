@@ -57,6 +57,7 @@ class HistoryMapper @Inject constructor(
             id = id,
             sportId = activityId,
             breakTime = breakTime,
+            date = date.time,
             sportParameters = activityStatistics.map { it.toSportDoneParameter() },
             goalParameter = goalParameter.toSportDoneParameter()
         )
