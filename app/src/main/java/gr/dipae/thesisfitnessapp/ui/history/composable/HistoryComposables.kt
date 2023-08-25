@@ -23,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -34,8 +33,12 @@ import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
+import com.patrykandpatrick.vico.compose.chart.line.lineSpec
+import com.patrykandpatrick.vico.compose.component.lineComponent
 import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
+import com.patrykandpatrick.vico.core.chart.scale.AutoScaleUp
+import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBLAutoSizeText
@@ -101,7 +104,6 @@ fun HistoryDietContent(
         maxLines = 1,
     )
     VerticalSpacerDefault()
-    val surfaceColor = MaterialTheme.colorScheme.surface.toArgb()
     item.forEach {
         ThesisFitnessHLAutoSizeText(
             text = stringResource(id = it.titleRes),
@@ -109,16 +111,31 @@ fun HistoryDietContent(
             maxFontSize = 24.sp,
             color = MaterialTheme.colorScheme.surface
         )
-        val m3ChartStyle = m3ChartStyle()
+        val m3ChartStyle = m3ChartStyle(
+            axisGuidelineColor = MaterialTheme.colorScheme.primary
+        )
+        val chartEntryModel = entryModelOf(it.points)
+
         ProvideChartStyle(chartStyle = remember { m3ChartStyle }) {
             Chart(
-                chart = lineChart(),
-                model = entryModelOf(it.points),
+                autoScaleUp = AutoScaleUp.None,
+                chart = lineChart(
+                    lines = listOf(
+                        lineSpec(
+                            lineColor = MaterialTheme.colorScheme.background
+                        )
+                    ),
+                    persistentMarkers = it.points.associate { point -> point.x to rememberMarker() }
+                ),
+                model = chartEntryModel,
                 startAxis = rememberStartAxis(
+                    axis = lineComponent(color = MaterialTheme.colorScheme.outline, thickness = 2.dp, shape = Shapes.rectShape)
                 ),
                 bottomAxis = rememberBottomAxis(
+                    axis = lineComponent(color = MaterialTheme.colorScheme.outline, thickness = 2.dp, shape = Shapes.rectShape),
                     valueFormatter = { value, _ -> it.xAxisLabelMap[value] ?: "" }
-                )
+                ),
+                marker = rememberMarker()
             )
         }
 
