@@ -33,7 +33,6 @@ import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
-import com.patrykandpatrick.vico.compose.chart.line.lineSpec
 import com.patrykandpatrick.vico.compose.component.lineComponent
 import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
@@ -120,11 +119,6 @@ fun HistoryDietContent(
             Chart(
                 autoScaleUp = AutoScaleUp.None,
                 chart = lineChart(
-                    lines = listOf(
-                        lineSpec(
-                            lineColor = MaterialTheme.colorScheme.background
-                        )
-                    ),
                     persistentMarkers = it.points.associate { point -> point.x to rememberMarker() }
                 ),
                 model = chartEntryModel,
