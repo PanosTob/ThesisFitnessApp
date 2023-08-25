@@ -14,10 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
-import co.yml.charts.common.extensions.formatToSinglePrecision
 import co.yml.charts.common.model.PlotType
-import co.yml.charts.common.model.Point
 import co.yml.charts.ui.piechart.models.PieChartData
+import com.patrykandpatrick.vico.core.entry.FloatEntry
+import com.patrykandpatrick.vico.core.entry.entryOf
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.data.Mapper
 import gr.dipae.thesisfitnessapp.data.sport.mapper.SportsMapper
@@ -128,62 +128,51 @@ class HistoryUiMapper @Inject constructor() : Mapper {
             return null
         }
 
-        val daySummariesStartOfDate = daySummaries.map {
-            Calendar.getInstance().apply {
-                timeInMillis = it.dateTime
-                set(Calendar.HOUR_OF_DAY, 0)
-                set(Calendar.MINUTE, 0)
-                set(Calendar.SECOND, 0)
-                set(Calendar.MILLISECOND, 0)
-            }.timeInMillis
-        }
-
-        val indexOfFirstExistingSummary = everyDayDate.indexOfFirst { daySummariesStartOfDate.contains(it) }
-        val indexOfLastExistingSummary = everyDayDate.indexOfLast { daySummariesStartOfDate.contains(it) }
-
-        var index = 0
-        val daysBeforeFirstSummary = everyDayDate.subList(0, indexOfFirstExistingSummary).map { Point(index++.toFloat(), 0f) }
-
-        val caloriePoints = daySummaries.mapIndexed { i, it -> Point(x = (index + i).toFloat(), y = it.dailyDiet.calories.toFloat()) }
-        val proteinPoints = daySummaries.mapIndexed { i, it -> Point(x = (index + i).toFloat(), y = it.dailyDiet.proteins.toFloat()) }
-        val carbohydratesPoints = daySummaries.mapIndexed { i, it -> Point(x = (index + i).toFloat(), y = it.dailyDiet.carbohydrates.toFloat()) }
-        val fatsPoints = daySummaries.mapIndexed { i, it -> Point(x = (index + i).toFloat(), y = it.dailyDiet.fats.toFloat()) }
-        val waterPoints = daySummaries.mapIndexed { i, it -> Point(x = (index + i).toFloat(), y = it.dailyDiet.water.toFloat()) }
-
-        val daysAfterLastSummary = everyDayDate.subList(indexOfLastExistingSummary, everyDayDate.lastIndex).map { Point(index++.toFloat(), 0f) }
+        val caloriePoints = mapLineChartEntries(everyDayDate, daySummaries) { dailyDiet -> dailyDiet?.calories?.toDouble() }
+        val proteinPoints = mapLineChartEntries(everyDayDate, daySummaries) { dailyDiet -> dailyDiet?.proteins }
+        val carbohydratesPoints = mapLineChartEntries(everyDayDate, daySummaries) { dailyDiet -> dailyDiet?.carbohydrates }
+        val fatsPoints = mapLineChartEntries(everyDayDate, daySummaries) { dailyDiet -> dailyDiet?.fats }
+        val waterPoints = mapLineChartEntries(everyDayDate, daySummaries) { dailyDiet -> dailyDiet?.water }
 
         return HistoryDietUiState(
             lineCharts = mutableStateOf(
                 listOf(
-                    getHistoryDietLineChart(everyDayDate, daysBeforeFirstSummary + caloriePoints + daysAfterLastSummary, R.string.diet_nutrition_progress_bar_cal),
-                    getHistoryDietLineChart(everyDayDate, daysBeforeFirstSummary + proteinPoints + daysAfterLastSummary, R.string.diet_nutrition_progress_bar_protein),
-                    getHistoryDietLineChart(everyDayDate, daysBeforeFirstSummary + carbohydratesPoints + daysAfterLastSummary, R.string.diet_nutrition_progress_bar_carb),
-                    getHistoryDietLineChart(everyDayDate, daysBeforeFirstSummary + fatsPoints + daysAfterLastSummary, R.string.diet_nutrition_progress_bar_fats),
-                    getHistoryDietLineChart(everyDayDate, daysBeforeFirstSummary + waterPoints + daysAfterLastSummary, R.string.diet_nutrition_progress_bar_water),
+                    getHistoryDietLineChart(caloriePoints, R.string.diet_nutrition_progress_bar_cal),
+                    getHistoryDietLineChart(proteinPoints, R.string.diet_nutrition_progress_bar_protein),
+                    getHistoryDietLineChart(carbohydratesPoints, R.string.diet_nutrition_progress_bar_carb),
+                    getHistoryDietLineChart(fatsPoints, R.string.diet_nutrition_progress_bar_fats),
+                    getHistoryDietLineChart(waterPoints, R.string.diet_nutrition_progress_bar_water)
                 )
             )
         )
     }
 
-    private fun getHistoryDietLineChart(everyDayDate: List<Long>, dataPoints: List<Point>, titleRes: Int): HistoryDietLineChartUiItem {
-        val xAxisData: (Int) -> String = { i ->
-            if (i in everyDayDate.indices) {
-                everyDayDate[i].toDate()
-            } else {
-                ""
-            }
+    private fun mapLineChartEntries(dates: List<Long>, daySummariesFound: List<DaySummary>, getDietNutritionAction: (DailyDiet?) -> Double?): List<FloatEntry> {
+        return dates.map { date ->
+            entryOf(
+                date,
+                getDietNutritionAction(
+                    daySummariesFound.find {
+                        Calendar.getInstance().apply {
+                            timeInMillis = it.dateTime
+                            set(Calendar.HOUR_OF_DAY, 0)
+                            set(Calendar.MINUTE, 0)
+                            set(Calendar.SECOND, 0)
+                            set(Calendar.MILLISECOND, 0)
+                        }.timeInMillis == date
+                    }?.dailyDiet
+                )?.toFloat() ?: 0f
+            )
         }
+    }
 
-        val yAxisData: (Int) -> String = { i ->
-            val yScale = dataPoints.maxOf { it.y } / dataPoints.size
-            (i * yScale).formatToSinglePrecision()
-        }
+    private fun getHistoryDietLineChart(points: List<FloatEntry>, titleRes: Int): HistoryDietLineChartUiItem {
+        val xAxisLabelMap = points.associate { it.x to it.x.toLong().toDate() }
 
         return HistoryDietLineChartUiItem(
             titleRes = titleRes,
-            points = dataPoints,
-            xAxisData = xAxisData,
-            yAxisData = yAxisData,
+            points = points,
+            xAxisLabelMap = xAxisLabelMap
         )
     }
 
@@ -192,7 +181,6 @@ class HistoryUiMapper @Inject constructor() : Mapper {
         return daySummary?.let {
             DaySummaryUiItem(
                 steps = it.steps.toString(),
-                calories = it.calories.toString(),
                 date = it.dateTime.toDate(),
                 dailyDiet = mapDaySummaryDailyDiet(it.dailyDiet),
                 sportsDone = mapSportsDone(it.sportsDone, daySummary.dateTime),

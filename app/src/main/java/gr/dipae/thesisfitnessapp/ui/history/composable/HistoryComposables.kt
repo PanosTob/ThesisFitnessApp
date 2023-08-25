@@ -18,26 +18,25 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import co.yml.charts.axis.AxisData
-import co.yml.charts.ui.linechart.LineChart
-import co.yml.charts.ui.linechart.model.IntersectionPoint
-import co.yml.charts.ui.linechart.model.Line
-import co.yml.charts.ui.linechart.model.LineChartData
-import co.yml.charts.ui.linechart.model.LinePlotData
-import co.yml.charts.ui.linechart.model.LineStyle
-import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
-import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
-import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import co.yml.charts.ui.piechart.charts.PieChart
 import co.yml.charts.ui.piechart.models.PieChartConfig
+import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
+import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
+import com.patrykandpatrick.vico.compose.chart.Chart
+import com.patrykandpatrick.vico.compose.chart.line.lineChart
+import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
+import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
+import com.patrykandpatrick.vico.core.entry.entryModelOf
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBMAutoSizeText
@@ -53,10 +52,7 @@ import gr.dipae.thesisfitnessapp.ui.history.model.HistoryUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.SportDoneUiItem
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
-import gr.dipae.thesisfitnessapp.ui.theme.SpacingDouble_32dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
-import gr.dipae.thesisfitnessapp.ui.theme.SpacingQuadruple_64dp
-import gr.dipae.thesisfitnessapp.ui.theme.SpacingQuarter_4dp
 
 @Composable
 fun HistoryContent(
@@ -105,7 +101,7 @@ fun HistoryDietContent(
         maxLines = 1,
     )
     VerticalSpacerDefault()
-    val primaryColor = MaterialTheme.colorScheme.background
+    val surfaceColor = MaterialTheme.colorScheme.surface.toArgb()
     item.forEach {
         ThesisFitnessHLAutoSizeText(
             text = stringResource(id = it.titleRes),
@@ -113,50 +109,18 @@ fun HistoryDietContent(
             maxFontSize = 24.sp,
             color = MaterialTheme.colorScheme.surface
         )
-        LineChart(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f),
-            lineChartData = LineChartData(
-                isZoomAllowed = true,
-                linePlotData = LinePlotData(
-                    lines = listOf(
-                        Line(
-                            dataPoints = it.points,
-                            LineStyle(
-                                color = MaterialTheme.colorScheme.primary
-                            ),
-                            IntersectionPoint { },
-                            SelectionHighlightPoint(color = MaterialTheme.colorScheme.background),
-                            ShadowUnderLine(color = MaterialTheme.colorScheme.primary, alpha = 1f),
-                            SelectionHighlightPopUp(backgroundColor = MaterialTheme.colorScheme.background, labelColor = MaterialTheme.colorScheme.surface, popUpLabel = { _, y -> y.toString() })
-                        )
-                    ),
+        val m3ChartStyle = m3ChartStyle()
+        ProvideChartStyle(chartStyle = remember { m3ChartStyle }) {
+            Chart(
+                chart = lineChart(),
+                model = entryModelOf(it.points),
+                startAxis = rememberStartAxis(
                 ),
-                xAxisData = AxisData.Builder()
-                    .steps(it.points.size * 2)
-                    .axisLabelColor(MaterialTheme.colorScheme.secondary)
-                    .backgroundColor(Color.Transparent)
-                    .labelAndAxisLinePadding(SpacingQuarter_4dp)
-                    .axisStepSize(SpacingQuadruple_64dp)
-                    .axisLabelFontSize(12.sp)
-                    .startPadding(SpacingDouble_32dp)
-                    .startDrawPadding(SpacingDouble_32dp)
-                    .endPadding(SpacingDouble_32dp)
-                    .labelData(it.xAxisData).build(),
-                yAxisData = AxisData.Builder()
-                    .steps(it.points.size)
-                    .labelAndAxisLinePadding(SpacingDefault_16dp)
-                    .axisLabelFontSize(16.sp)
-                    .axisLabelColor(MaterialTheme.colorScheme.primary)
-                    .backgroundColor(Color.Transparent)
-                    .axisStepSize(SpacingCustom_24dp)
-                    .startPadding(SpacingQuarter_4dp)
-                    .bottomPadding(SpacingQuadruple_64dp)
-                    .labelData(it.yAxisData).build(),
-                backgroundColor = MaterialTheme.colorScheme.surface
+                bottomAxis = rememberBottomAxis(
+                    valueFormatter = { value, _ -> it.xAxisLabelMap[value] ?: "" }
+                )
             )
-        )
+        }
 
         VerticalSpacerDefault()
         WidthAdjustedDivider(Modifier.fillMaxWidth())

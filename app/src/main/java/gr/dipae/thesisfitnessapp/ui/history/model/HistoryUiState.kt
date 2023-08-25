@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import co.yml.charts.common.model.Point
 import co.yml.charts.ui.piechart.models.PieChartData
+import com.patrykandpatrick.vico.core.entry.FloatEntry
 
 data class HistoryUiState(
     val daySummaries: List<DaySummaryUiItem>,
@@ -32,14 +32,12 @@ data class HistoryDietUiState(
 
 data class HistoryDietLineChartUiItem(
     val titleRes: Int,
-    val points: List<Point>,
-    val xAxisData: (Int) -> String,
-    val yAxisData: (Int) -> String,
+    val points: List<FloatEntry>,
+    val xAxisLabelMap: Map<Float, String>,
 )
 
 data class DaySummaryUiItem(
     val steps: String,
-    val calories: String,
     val date: String,
     val dailyDiet: DailyDietUiItem,
     val sportsDone: List<SportDoneUiItem>,

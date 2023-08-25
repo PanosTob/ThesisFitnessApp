@@ -249,7 +249,13 @@ dependencies {
     //Lottie Animation
     implementation("com.airbnb.android:lottie-compose:6.1.0")
 
-    //Charts
+    //Line Charts
+    val chartsVersion by extra { "1.9.2" }
+    implementation("com.patrykandpatrick.vico:core:$chartsVersion")
+    implementation("com.patrykandpatrick.vico:compose:$chartsVersion")
+    implementation("com.patrykandpatrick.vico:compose-m3:$chartsVersion")
+
+    //Pie Chart
     implementation("co.yml:ycharts:2.1.0")
 
     //Tests libs

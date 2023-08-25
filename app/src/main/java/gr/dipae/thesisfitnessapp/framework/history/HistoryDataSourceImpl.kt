@@ -19,7 +19,6 @@ class HistoryDataSourceImpl @Inject constructor() : HistoryDataSource {
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
-
         }
 
         val timeDiff = endDate.timeInMillis - startDate.timeInMillis

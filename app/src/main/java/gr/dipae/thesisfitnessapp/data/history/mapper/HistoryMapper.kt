@@ -31,7 +31,6 @@ class HistoryMapper @Inject constructor(
             return DaySummary(
                 id = id,
                 steps = steps,
-                calories = calories,
                 dateTime = date.time,
                 dailyDiet = mapDailyDiet(dailyDiet),
                 sportsDone = activitiesDone.map { it.toSportDone() },
