@@ -57,7 +57,7 @@ class HomeUiMapper @Inject constructor() : Mapper {
                 goalUnit = if (it.goal.type == SportParameterType.Duration) R.string.home_user_challenge_goal_duration_unit else R.string.home_user_challenge_goal_distance_unit,
                 goalAmount = it.goal.value.toString(),
                 amount = "${it.progress}/${it.goal.value}",
-                progressPercentage = (it.progress.toDouble() / it.goal.value).toDoubleWithSpecificDecimals(4).toFloat(),
+                progressPercentage = (it.progress.toDouble() / it.goal.value).toDoubleWithSpecificDecimals(2).toFloat().coerceAtMost(1f),
                 completed = it.progress.toFloat() == 1f,
                 color = sportColorMap[it.sportId] ?: ColorDividerGrey
             )
