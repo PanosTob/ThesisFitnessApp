@@ -5,6 +5,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.dipae.thesisfitnessapp.domain.history.entity.DaySummary
+import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameterType
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.history.mapper.HistoryUiMapper
 import gr.dipae.thesisfitnessapp.ui.history.model.HistoryUiState
@@ -27,20 +29,38 @@ class HistoryViewModel @Inject constructor(
     private val startDate = savedStateHandle.get<Long>(HistoryRouteArgs[0])
     private val endDate = savedStateHandle.get<Long>(HistoryRouteArgs[1])
 
+    private var daySummaries: MutableList<DaySummary> = mutableListOf()
+    private var totalDays: MutableList<Long> = mutableListOf()
+
     fun init(fromSports: Boolean) {
         launchWithProgress {
             if (startDate != null && endDate != null) {
-                val daySummaries = getDaySummariesByRangeUseCase(startDate, endDate)
+                daySummaries.addAll(getDaySummariesByRangeUseCase(startDate, endDate))
                 if (daySummaries.isNotEmpty()) {
-                    val totalDaysList = calculateDaysBetweenTwoDatesUseCase(startDate, endDate)
+                    totalDays.addAll(calculateDaysBetweenTwoDatesUseCase(startDate, endDate))
 
-                    _uiState.value = historyUiMapper(fromSports, getDaySummariesByRangeUseCase(startDate, endDate), totalDaysList)
+                    _uiState.value = historyUiMapper(fromSports, daySummaries, totalDays)
                 }
             }
         }
     }
 
-    fun filterSportsDone() {
+    fun showHistoryDialog() {
+        _uiState.value?.sportsUiState?.apply {
+            if (daySummaries.isNotEmpty()) {
+                sportsToFilter.value = daySummaries
+                    .mapNotNull { historyUiMapper.mapDaySummaryUiItem(it) }
+                    .flatMap { it.sportsDone }
+                    .filter { it.sportParameters.any { parameter -> parameter.type == SportParameterType.Distance } }
+                    .distinctBy { it.sportId }
+                showFilterSportsDialog.value = true
+            }
+        }
+    }
 
+    fun filterHistoryBySport(sportId: String) {
+        if (daySummaries.isNotEmpty()) {
+            _uiState.value = historyUiMapper.mapBySportId(daySummaries, totalDays, sportId)
+        }
     }
 }

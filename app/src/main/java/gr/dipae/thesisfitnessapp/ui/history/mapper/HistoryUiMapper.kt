@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import co.yml.charts.common.model.PlotType
 import co.yml.charts.ui.piechart.models.PieChartData
 import com.patrykandpatrick.vico.core.entry.entryOf
+import com.patrykandpatrick.vico.core.extension.sumOf
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.data.Mapper
 import gr.dipae.thesisfitnessapp.data.sport.mapper.SportsMapper
@@ -31,9 +32,10 @@ import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerDefault
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerHalf
 import gr.dipae.thesisfitnessapp.ui.history.model.DailyDietUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.DaySummaryUiItem
-import gr.dipae.thesisfitnessapp.ui.history.model.HistoryDietLineChartUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.HistoryDietUiState
+import gr.dipae.thesisfitnessapp.ui.history.model.HistoryLineChartUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportPieChartUiItem
+import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportsLineCharsUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportsUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.HistoryUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.SportDoneUiItem
@@ -53,23 +55,52 @@ class HistoryUiMapper @Inject constructor() : Mapper {
 
     operator fun invoke(fromSports: Boolean, daySummaries: List<DaySummary>, everyDayDate: List<Long>): HistoryUiState {
 
-        val daySummaryUiItems = daySummaries.mapNotNull { mapDaySummaryUiItem(it) }
         return HistoryUiState(
-            daySummaries = daySummaryUiItems,
-            sportsUiState = getSportUiState(fromSports, daySummaries, daySummaryUiItems, everyDayDate),
+            sportsUiState = getSportUiState(fromSports, daySummaries, everyDayDate),
             dietUiState = getDietUiState(fromSports, daySummaries, everyDayDate),
             emptyView = daySummaries.isEmpty()
         )
     }
 
-    private fun getSportUiState(fromSports: Boolean, daySummaries: List<DaySummary>, daySummaryUiItems: List<DaySummaryUiItem>, everyDayDate: List<Long>): HistorySportsUiState? {
+    fun mapBySportId(daySummaries: List<DaySummary>, everyDayDate: List<Long>, sportId: String): HistoryUiState {
+        return HistoryUiState(
+            sportsUiState = getFilterSportUiState(daySummaries.filter { it.sportsDone.find { sportDone -> sportDone.sportId == sportId } != null }, everyDayDate, sportId),
+            dietUiState = null,
+            emptyView = daySummaries.isEmpty()
+        )
+    }
+
+    private fun getFilterSportUiState(daySummaries: List<DaySummary>, everyDayDate: List<Long>, sportId: String): HistorySportsUiState {
+        val sportParameters = daySummaries.flatMap { summary -> summary.sportsDone.flatMap { it.sportParameters } }
+        val totalDuration = toSecondsString(sportParameters.filter { it.type == SportParameterType.Duration }.sumOf { it.value.toFloat() }.toLong())
+        val totalDistanceMeters = sportParameters.filter { it.type == SportParameterType.Distance }.sumOf { it.value.toFloat() }.toString()
+
+        val totalDaysOfSummary = everyDayDate.count()
+
+
+        val sportsDoneUiItems = daySummaries.mapNotNull { mapDaySummaryUiItem(it) }.flatMap { it.sportsDone }.filter { it.sportId == sportId }
+        return HistorySportsUiState(
+            generalDetailsTitle = { sportsDoneUiItems.find { it.sportId == sportId }?.sportName ?: stringResource(id = R.string.sport_title) },
+            totalTime = totalDuration,
+            totalDistance = totalDistanceMeters,
+            lineCharts = mutableStateOf(
+                HistorySportsLineCharsUiState(
+                    lineCharts = mutableStateOf(populateSportsLineChartDate(daySummaries, everyDayDate, sportId)),
+                    totalDays = totalDaysOfSummary.toString()
+                )
+            ),
+            sportsDone = mutableStateOf(sportsDoneUiItems)
+        )
+    }
+
+    private fun getSportUiState(fromSports: Boolean, daySummaries: List<DaySummary>, everyDayDate: List<Long>): HistorySportsUiState? {
         if (!fromSports) {
             return null
         }
 
         val sportParameters = daySummaries.flatMap { summary -> summary.sportsDone.flatMap { it.sportParameters } }
-        val totalDuration = toSecondsString(sportParameters.filter { it.type == SportParameterType.Duration }.sumOf { it.value })
-        val totalDistanceMeters = sportParameters.filter { it.type == SportParameterType.Distance }.sumOf { it.value }.toString()
+        val totalDuration = toSecondsString(sportParameters.filter { it.type == SportParameterType.Duration }.sumOf { it.value.toFloat() }.toLong())
+        val totalDistanceMeters = sportParameters.filter { it.type == SportParameterType.Distance }.sumOf { it.value.toFloat() }.toString()
 
         val totalDaysOfSummary = everyDayDate.count()
         val totalDistinctSports = daySummaries.flatMap { it.sportsDone }.distinctBy { it.sportId }
@@ -84,19 +115,37 @@ class HistoryUiMapper @Inject constructor() : Mapper {
         daySummaryCountBySport[""] = daySummaries.count { !everyDayDate.contains(it.dateTime) }
 
         return HistorySportsUiState(
+            generalDetailsTitle = { stringResource(id = R.string.sport_title) },
             totalTime = totalDuration,
             totalDistance = totalDistanceMeters,
             pieChart = mutableStateOf(
                 HistorySportPieChartUiItem(
-                    data = populateSportsChartData(daySummaryCountBySport, totalDaysOfSummary),
-                    totalDays = everyDayDate.count().toString()
+                    data = populateSportsPieChartData(daySummaryCountBySport, totalDaysOfSummary),
+                    totalDays = totalDaysOfSummary.toString()
                 )
             ),
-            sportsDone = mutableStateOf(daySummaryUiItems.flatMap { it.sportsDone })
+            sportsDone = mutableStateOf(daySummaries.mapNotNull { mapDaySummaryUiItem(it) }.flatMap { it.sportsDone })
         )
     }
 
-    private fun populateSportsChartData(groupedSummariesBySport: Map<String, Int>, totalDays: Int): PieChartData? {
+    private fun populateSportsLineChartDate(daySummaries: List<DaySummary>, everyDayDate: List<Long>, sportId: String): List<HistoryLineChartUiItem> {
+        val distancePoints = everyDayDate.map { date ->
+            Pair(
+                LocalDate.parse(date.toDate(ENGLISH_DATE)).toEpochDay().toFloat(),
+                daySummaries.find { it.dateTime == date }?.sportsDone
+                    ?.filter { sportDone -> sportDone.sportId == sportId }
+                    ?.sumOf {
+                        it.sportParameters.filter { parameter -> parameter.type == SportParameterType.Distance }.sumOf { parameter -> parameter.value.toFloat() }
+                    } ?: 0f
+            )
+        }
+
+        return listOf(
+            getHistoryLineChart(distancePoints, R.string.history_activities_sport_done_line_chart_title)
+        )
+    }
+
+    private fun populateSportsPieChartData(groupedSummariesBySport: Map<String, Int>, totalDays: Int): PieChartData? {
         if (groupedSummariesBySport.isEmpty()) return null
 
 
@@ -126,11 +175,11 @@ class HistoryUiMapper @Inject constructor() : Mapper {
         return HistoryDietUiState(
             lineCharts = mutableStateOf(
                 listOf(
-                    getHistoryDietLineChart(caloriePoints, R.string.diet_nutrition_progress_bar_cal),
-                    getHistoryDietLineChart(proteinPoints, R.string.diet_nutrition_progress_bar_protein),
-                    getHistoryDietLineChart(carbohydratesPoints, R.string.diet_nutrition_progress_bar_carb),
-                    getHistoryDietLineChart(fatsPoints, R.string.diet_nutrition_progress_bar_fats),
-                    getHistoryDietLineChart(waterPoints, R.string.diet_nutrition_progress_bar_water)
+                    getHistoryLineChart(caloriePoints, R.string.diet_nutrition_progress_bar_cal),
+                    getHistoryLineChart(proteinPoints, R.string.diet_nutrition_progress_bar_protein),
+                    getHistoryLineChart(carbohydratesPoints, R.string.diet_nutrition_progress_bar_carb),
+                    getHistoryLineChart(fatsPoints, R.string.diet_nutrition_progress_bar_fats),
+                    getHistoryLineChart(waterPoints, R.string.diet_nutrition_progress_bar_water)
                 )
             )
         )
@@ -145,10 +194,10 @@ class HistoryUiMapper @Inject constructor() : Mapper {
         }
     }
 
-    private fun getHistoryDietLineChart(points: List<Pair<Float, Float>>, titleRes: Int): HistoryDietLineChartUiItem {
+    private fun getHistoryLineChart(points: List<Pair<Float, Float>>, titleRes: Int): HistoryLineChartUiItem {
         val xAxisLabelMap = points.associate { it.first to LocalDate.ofEpochDay(it.first.toLong()).format(DateTimeFormatter.ofPattern(DATE)) }
 
-        return HistoryDietLineChartUiItem(
+        return HistoryLineChartUiItem(
             titleRes = titleRes,
             points = points.map { entryOf(it.first, it.second) },
             xAxisLabelMap = xAxisLabelMap
@@ -156,7 +205,7 @@ class HistoryUiMapper @Inject constructor() : Mapper {
     }
 
 
-    private fun mapDaySummaryUiItem(daySummary: DaySummary?): DaySummaryUiItem? {
+    fun mapDaySummaryUiItem(daySummary: DaySummary?): DaySummaryUiItem? {
         return daySummary?.let {
             DaySummaryUiItem(
                 steps = it.steps.toString(),
@@ -188,6 +237,7 @@ class HistoryUiMapper @Inject constructor() : Mapper {
                 id = sport.id,
                 date = date.toDate(),
                 sportId = sport.sportId,
+                sportParameters = sport.sportParameters,
                 sportColor = SportsMapper.sportColorMap[sport.sportId] ?: ColorPrimary,
                 sportName = SportsMapper.sportNamesMap[sport.sportId] ?: "Unknown",
                 goalParameterText = @Composable {

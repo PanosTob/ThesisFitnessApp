@@ -3,6 +3,8 @@ package gr.dipae.thesisfitnessapp.ui.lobby.viewmodel
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -15,6 +17,7 @@ import gr.dipae.thesisfitnessapp.ui.diet.navigation.DietRoute
 import gr.dipae.thesisfitnessapp.ui.lobby.home.navigation.HomeRoute
 import gr.dipae.thesisfitnessapp.ui.lobby.model.BottomAppBarUiItem
 import gr.dipae.thesisfitnessapp.ui.lobby.model.LobbyUiState
+import gr.dipae.thesisfitnessapp.ui.lobby.model.NavigationIconUiItem
 import gr.dipae.thesisfitnessapp.ui.lobby.model.TopBarActionUiItem
 import gr.dipae.thesisfitnessapp.ui.profile.navigation.ProfileRoute
 import gr.dipae.thesisfitnessapp.ui.sport.navigation.SportsRoute
@@ -54,14 +57,14 @@ class LobbyViewModel @Inject constructor(
                 TopBarActionUiItem(R.drawable.ic_calendar, onCalendarClicked)
             )
         }
-        updateTopBarNavigationIcon(null) {}
+        updateTopBarNavigationIcon(null)
         updateTopBarTitle(SportsRoute)
         _uiState.value.topBarState.isVisible.value = true
         showBottomNavigation()
     }
 
     fun handleBarsForDiet(onCalendarClicked: () -> Unit) {
-        updateTopBarNavigationIcon(null) {}
+        updateTopBarNavigationIcon(null)
         _uiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_calendar, onCalendarClicked))
         _uiState.value.topBarState.isVisible.value = true
         showBottomNavigation()
@@ -97,7 +100,7 @@ class LobbyViewModel @Inject constructor(
             } else {
                 topBarState.actionIcons.value = emptyList()
             }
-            updateTopBarNavigationIcon(Icons.Filled.ArrowBack, onBackButtonPressed)
+            updateTopBarNavigationIcon(Icons.Filled.ArrowBack, onBackButtonPressed) { Color.White }
             topBarState.isVisible.value = true
         }
         hideBottomNavigation()
@@ -120,11 +123,12 @@ class LobbyViewModel @Inject constructor(
         _uiState.value.bottomAppBarItems.value = emptyList()
     }
 
-    private fun updateTopBarNavigationIcon(icon: ImageVector?, action: () -> Unit) {
-        _uiState.value.topBarState.navigationItem.value.apply {
-            iconVector.value = icon
-            clickAction.value = action
+    private fun updateTopBarNavigationIcon(icon: ImageVector?, action: () -> Unit = {}, tint: @Composable () -> Color = @Composable { MaterialTheme.colorScheme.primary }) {
+        if (icon == null) {
+            _uiState.value.topBarState.navigationItem.value = null
+            return
         }
+        _uiState.value.topBarState.navigationItem.value = NavigationIconUiItem(icon, action, tint)
     }
 
     fun updateTopBarTitle(route: String) {

@@ -47,8 +47,9 @@ import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHMAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerDefault
 import gr.dipae.thesisfitnessapp.ui.base.compose.WidthAdjustedDivider
-import gr.dipae.thesisfitnessapp.ui.history.model.HistoryDietLineChartUiItem
+import gr.dipae.thesisfitnessapp.ui.history.model.HistoryLineChartUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportPieChartUiItem
+import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportsLineCharsUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportsUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.HistoryUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.SportDoneUiItem
@@ -59,6 +60,7 @@ import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
 @Composable
 fun HistoryContent(
     uiState: HistoryUiState,
+    onSportFilterClicked: (String) -> Unit
 ) {
     Column(
         Modifier
@@ -74,6 +76,14 @@ fun HistoryContent(
 
             uiState.sportsUiState != null -> {
                 HistorySportsContent(uiState.sportsUiState)
+
+                if (uiState.sportsUiState.showFilterSportsDialog.value) {
+                    HistoryFilterSportsDialog(
+                        uiState.sportsUiState.sportsToFilter.value,
+                        onCloseClick = { uiState.sportsUiState.showFilterSportsDialog.value = false },
+                        onSportClicked = { onSportFilterClicked(it) }
+                    )
+                }
             }
 
             uiState.dietUiState != null -> {
@@ -95,7 +105,7 @@ fun HistoryEmptyView() {
 
 @Composable
 fun HistoryDietContent(
-    item: List<HistoryDietLineChartUiItem>
+    item: List<HistoryLineChartUiItem>
 ) {
     ThesisFitnessBLAutoSizeText(
         text = stringResource(id = R.string.history_diet_title),
@@ -157,6 +167,7 @@ fun HistorySportsContent(
     VerticalSpacerDefault()
 
     HistorySportsPieChart(uiState.pieChart.value)
+    HistorySportsDistanceLineChart(uiState.lineCharts.value)
 
     VerticalSpacerDefault()
     WidthAdjustedDivider(Modifier.fillMaxWidth())
@@ -245,6 +256,54 @@ fun HistorySportsPieChart(
 }
 
 @Composable
+fun HistorySportsDistanceLineChart(
+    sportsDistanceLineCharts: HistorySportsLineCharsUiState?
+) {
+    if (sportsDistanceLineCharts != null) {
+        ThesisFitnessBLAutoSizeText(
+            text = stringResource(id = R.string.history_activities_pie_chart_total_days, sportsDistanceLineCharts.totalDays),
+            maxFontSize = 22.sp,
+            maxLines = 1,
+        )
+        VerticalSpacerDefault()
+        sportsDistanceLineCharts.lineCharts.value.forEach {
+            ThesisFitnessHLAutoSizeText(
+                text = stringResource(id = it.titleRes),
+                maxLines = 1,
+                maxFontSize = 24.sp,
+                color = MaterialTheme.colorScheme.surface
+            )
+            val m3ChartStyle = m3ChartStyle(
+                axisGuidelineColor = MaterialTheme.colorScheme.primary
+            )
+            val chartEntryModel = entryModelOf(it.points)
+
+            ProvideChartStyle(chartStyle = remember { m3ChartStyle }) {
+                Chart(
+                    autoScaleUp = AutoScaleUp.None,
+                    chart = lineChart(
+                        persistentMarkers = it.points.associate { point -> point.x to rememberMarker() }
+                    ),
+                    model = chartEntryModel,
+                    startAxis = rememberStartAxis(
+                        axis = lineComponent(color = MaterialTheme.colorScheme.outline, thickness = 2.dp, shape = Shapes.rectShape)
+                    ),
+                    bottomAxis = rememberBottomAxis(
+                        axis = lineComponent(color = MaterialTheme.colorScheme.outline, thickness = 2.dp, shape = Shapes.rectShape),
+                        valueFormatter = { value, _ -> it.xAxisLabelMap[value] ?: "" }
+                    ),
+                    marker = rememberMarker()
+                )
+            }
+
+            VerticalSpacerDefault()
+            WidthAdjustedDivider(Modifier.fillMaxWidth())
+            VerticalSpacerDefault()
+        }
+    }
+}
+
+@Composable
 fun HistoryGenericSportDetails(
     uiState: HistorySportsUiState
 ) {
@@ -254,7 +313,7 @@ fun HistoryGenericSportDetails(
             .aspectRatio(2.5f)
     ) {
         ThesisFitnessHLAutoSizeText(
-            text = stringResource(id = R.string.history_activities_generic_details),
+            text = stringResource(id = R.string.history_activities_generic_details, uiState.generalDetailsTitle.invoke()),
             maxLines = 1,
             maxFontSize = 18.sp,
             color = MaterialTheme.colorScheme.surface

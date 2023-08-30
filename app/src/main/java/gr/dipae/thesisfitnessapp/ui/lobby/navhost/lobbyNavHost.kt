@@ -204,11 +204,12 @@ fun LobbyTopBar(
                     navigationIconContentColor = MaterialTheme.colorScheme.primary
                 ),
                 navigationIcon = {
-                    topBarState.navigationItem.value.iconVector.value?.let {
-                        IconButton(onClick = { topBarState.navigationItem.value.clickAction.value.invoke() }) {
+                    topBarState.navigationItem.value?.let {
+                        IconButton(onClick = { it.clickAction.invoke() }) {
                             Icon(
-                                imageVector = it,
-                                contentDescription = "Back"
+                                imageVector = it.iconVector,
+                                contentDescription = "Back",
+                                tint = it.tint.invoke()
                             )
                         }
                     }

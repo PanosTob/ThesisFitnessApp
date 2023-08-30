@@ -6,19 +6,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import co.yml.charts.ui.piechart.models.PieChartData
 import com.patrykandpatrick.vico.core.entry.FloatEntry
+import gr.dipae.thesisfitnessapp.domain.history.entity.SportDoneParameter
 
 data class HistoryUiState(
-    val daySummaries: List<DaySummaryUiItem>,
     val sportsUiState: HistorySportsUiState?,
     val dietUiState: HistoryDietUiState?,
     val emptyView: Boolean
 )
 
 data class HistorySportsUiState(
+    val generalDetailsTitle: @Composable () -> String,
     val totalTime: String,
     val totalDistance: String,
     val pieChart: MutableState<HistorySportPieChartUiItem?> = mutableStateOf(null),
-    val sportsDone: MutableState<List<SportDoneUiItem>> = mutableStateOf(emptyList())
+    val lineCharts: MutableState<HistorySportsLineCharsUiState?> = mutableStateOf(null),
+    val sportsDone: MutableState<List<SportDoneUiItem>> = mutableStateOf(emptyList()),
+    val sportsToFilter: MutableState<List<SportDoneUiItem>> = mutableStateOf(emptyList()),
+    val showFilterSportsDialog: MutableState<Boolean> = mutableStateOf(false)
 )
 
 data class HistorySportPieChartUiItem(
@@ -26,11 +30,16 @@ data class HistorySportPieChartUiItem(
     val totalDays: String,
 )
 
-data class HistoryDietUiState(
-    val lineCharts: MutableState<List<HistoryDietLineChartUiItem>> = mutableStateOf(emptyList())
+data class HistorySportsLineCharsUiState(
+    val totalDays: String,
+    val lineCharts: MutableState<List<HistoryLineChartUiItem>> = mutableStateOf(emptyList())
 )
 
-data class HistoryDietLineChartUiItem(
+data class HistoryDietUiState(
+    val lineCharts: MutableState<List<HistoryLineChartUiItem>> = mutableStateOf(emptyList())
+)
+
+data class HistoryLineChartUiItem(
     val titleRes: Int,
     val points: List<FloatEntry>,
     val xAxisLabelMap: Map<Float, String>,
@@ -58,6 +67,7 @@ data class SportDoneUiItem(
     val sportId: String,
     val sportName: String,
     val sportColor: Color,
+    val sportParameters: List<SportDoneParameter>,
     val goalParameterText: @Composable () -> Unit,
     val statisticsText: @Composable () -> Unit
 )

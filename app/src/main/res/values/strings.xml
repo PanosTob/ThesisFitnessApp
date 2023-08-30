@@ -32,7 +32,7 @@
     <string name="history_activities_title">Activities History</string>
     <string name="history_empty_view_title">No history records were found</string>
     <string name="history_activities_records">Activity Done Reconds</string>
-    <string name="history_activities_generic_details">General Activity Details</string>
+    <string name="history_activities_generic_details">General %s Details</string>
     <string name="history_activities_total_time">Total Time</string>
     <string name="history_activities_total_distance">Total Distance</string>
     <string name="history_activities_pie_chart_total_days">Total Days: %1$s</string>
@@ -40,7 +40,11 @@
     <string name="history_activities_sport_done_distance">Distance: %1$s meters</string>
     <string name="history_activities_sport_goal_parameter">Goal</string>
     <string name="history_activities_sport_goal_parameter_achieved">Achieved</string>
+    <string name="history_activities_sport_done_line_chart_title">Distance</string>
     <string name="history_diet_title">Diet History</string>
+
+    <!-- History Sports Filter Dialog -->
+    <string name="history_sports_filter_dialog_title">Choose which of the Activities that have distance you want to filter</string>
 
     <!-- Lobby Screen -->
     <string name="lobby_top_bar_title">Welcome %1$s</string>

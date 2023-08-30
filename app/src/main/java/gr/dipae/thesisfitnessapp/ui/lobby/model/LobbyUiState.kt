@@ -23,14 +23,15 @@ data class LobbyUiState(
 
 data class TopBarUiState(
     val titleRes: MutableState<Int> = mutableStateOf(R.string.empty),
-    val navigationItem: MutableState<NavigationIconUiItem> = mutableStateOf(NavigationIconUiItem()),
+    val navigationItem: MutableState<NavigationIconUiItem?> = mutableStateOf(null),
     val actionIcons: MutableState<List<TopBarActionUiItem>> = mutableStateOf(listOf(TopBarActionUiItem(R.drawable.ic_edit))),
     val isVisible: MutableState<Boolean> = mutableStateOf(true)
 )
 
 data class NavigationIconUiItem(
-    val iconVector: MutableState<ImageVector?> = mutableStateOf(null),
-    val clickAction: MutableState<() -> Unit> = mutableStateOf({})
+    val iconVector: ImageVector,
+    val clickAction: () -> Unit = {},
+    val tint: @Composable () -> Color = { MaterialTheme.colorScheme.primary }
 )
 
 data class TopBarActionUiItem(

@@ -28,10 +28,8 @@ fun NavGraphBuilder.historyScreen(
 
         val fromSports = it.arguments?.getBoolean(HistoryRouteArgs[2]) ?: false
         LaunchedEffect(key1 = Unit) {
-            onHistoryShown(
-                fromSports
-            ) {
-                viewModel.filterSportsDone()
+            onHistoryShown(fromSports) {
+                viewModel.showHistoryDialog()
             }
 
             viewModel.init(fromSports)
@@ -39,7 +37,8 @@ fun NavGraphBuilder.historyScreen(
 
         viewModel.uiState.value?.let { uiState ->
             HistoryContent(
-                uiState = uiState
+                uiState = uiState,
+                onSportFilterClicked = { sportId -> viewModel.filterHistoryBySport(sportId) }
             )
         }
     }
