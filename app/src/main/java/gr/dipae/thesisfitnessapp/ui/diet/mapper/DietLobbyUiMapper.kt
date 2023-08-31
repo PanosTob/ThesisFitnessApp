@@ -15,7 +15,8 @@ class DietLobbyUiMapper @Inject constructor() : Mapper {
     operator fun invoke(diet: DailyDiet?, dietGoal: DietGoal?, pastDate: Long?): DietLobbyUiState {
         return DietLobbyUiState(
             nutritionProgressBars = mapNutritionBars(diet, dietGoal),
-            pastDate = pastDate?.toDate()
+            pastDate = pastDate?.toDate(),
+            filteredDate = pastDate != null
         )
     }
 

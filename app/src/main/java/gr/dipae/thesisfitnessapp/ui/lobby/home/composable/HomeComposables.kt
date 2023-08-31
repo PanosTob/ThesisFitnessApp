@@ -1,7 +1,7 @@
 package gr.dipae.thesisfitnessapp.ui.lobby.home.composable
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
@@ -139,7 +139,6 @@ fun HomeDailyMovementStats(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun HomeUserTrackingStat(
     title: String,
@@ -149,7 +148,7 @@ fun HomeUserTrackingStat(
     val primaryColor = MaterialTheme.colorScheme.primary
     val progressAnimation by animateFloatAsState(
         targetValue = trackingItem.fulfillmentPercentage.value,
-        animationSpec = tween(1500, 500)
+        animationSpec = tween(3500, 2500)
     )
     Column(
         modifier = Modifier
@@ -169,13 +168,13 @@ fun HomeUserTrackingStat(
                             .Paint()
                             .apply {
                                 color = primaryColor.toArgb()
-                                blendMode = android.graphics.BlendMode.MODULATE
+                                xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
                             }
                         drawRect(
                             0f,
                             size.height,
                             size.width,
-                            size.height - size.height * progressAnimation,
+                            size.height - (size.height * progressAnimation),
                             paint
                         )
                     }

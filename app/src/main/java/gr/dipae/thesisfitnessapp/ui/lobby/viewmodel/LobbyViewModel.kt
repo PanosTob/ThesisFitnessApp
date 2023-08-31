@@ -63,10 +63,17 @@ class LobbyViewModel @Inject constructor(
         showBottomNavigation()
     }
 
-    fun handleBarsForDiet(onCalendarClicked: () -> Unit) {
+    fun handleBarsForDiet(filtered: Boolean, action: () -> Unit) {
         updateTopBarNavigationIcon(null)
-        _uiState.value.topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_calendar, onCalendarClicked))
-        _uiState.value.topBarState.isVisible.value = true
+        _uiState.value.topBarState.apply {
+            actionIcons.value = listOf(
+                TopBarActionUiItem(
+                    if (filtered) R.drawable.ic_close else R.drawable.ic_calendar,
+                    action
+                )
+            )
+            isVisible.value = true
+        }
         showBottomNavigation()
     }
 

@@ -153,7 +153,7 @@ fun NavGraphBuilder.lobbyNavHost(
                         onSportSessionTimerStop = { stopStopWatch() }
                     )
                     dietScreen(
-                        onDietShown = { viewModel.handleBarsForDiet(it) },
+                        onDietShown = { filtered, action -> viewModel.handleBarsForDiet(filtered, action) },
                         onFoodSelectionFabClicked = { navController.navigateToFoodSelection() },
                         onMacrosFabClicked = { navController.navigateToMacrosDialog() },
                         onDateRangePicked = { startDate, endDate ->

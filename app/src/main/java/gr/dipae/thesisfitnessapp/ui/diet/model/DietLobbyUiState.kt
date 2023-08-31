@@ -2,7 +2,8 @@ package gr.dipae.thesisfitnessapp.ui.diet.model
 
 data class DietLobbyUiState(
     val nutritionProgressBars: NutritionProgressBarsUiItem,
-    val pastDate: String?
+    val pastDate: String?,
+    val filteredDate: Boolean
 )
 
 data class NutritionProgressBarsUiItem(

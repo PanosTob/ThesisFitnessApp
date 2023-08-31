@@ -85,13 +85,15 @@ fun DietContent(
                     .ifable(uiState.pastDate != null) { padding(top = SpacingDouble_32dp) },
                 nutritionProgressBars = uiState.nutritionProgressBars
             )
-            DietLobbyFab(
-                modifier = Modifier
-                    .fillMaxWidth(0.2f)
-                    .align(Alignment.BottomEnd),
-                onFoodSelectionFabClicked = { onFoodSelectionFabClicked() },
-                onMacrosFabClicked = { onMacrosFabClicked() }
-            )
+            if (!uiState.filteredDate) {
+                DietLobbyFab(
+                    modifier = Modifier
+                        .fillMaxWidth(0.2f)
+                        .align(Alignment.BottomEnd),
+                    onFoodSelectionFabClicked = { onFoodSelectionFabClicked() },
+                    onMacrosFabClicked = { onMacrosFabClicked() }
+                )
+            }
         }
     }
 }

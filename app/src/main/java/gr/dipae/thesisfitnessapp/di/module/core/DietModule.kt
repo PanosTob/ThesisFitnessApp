@@ -9,6 +9,7 @@ import dagger.hilt.components.SingletonComponent
 import gr.dipae.thesisfitnessapp.BuildConfig
 import gr.dipae.thesisfitnessapp.data.diet.DietDataSource
 import gr.dipae.thesisfitnessapp.data.diet.DietRepositoryImpl
+import gr.dipae.thesisfitnessapp.data.diet.broadcast.DailyDietBroadcast
 import gr.dipae.thesisfitnessapp.domain.diet.DietRepository
 import gr.dipae.thesisfitnessapp.framework.diet.DietDataSourceImpl
 import gr.dipae.thesisfitnessapp.framework.diet.FoodApi
@@ -19,6 +20,12 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 @Module
 @InstallIn(SingletonComponent::class)
 object DietModule {
+
+    @Provides
+    fun provideDailyDietBroadcast(): DailyDietBroadcast {
+        return DailyDietBroadcast.getInstance()
+    }
+
     @Provides
     fun provideFoodApi(
         converterFactory: MoshiConverterFactory,

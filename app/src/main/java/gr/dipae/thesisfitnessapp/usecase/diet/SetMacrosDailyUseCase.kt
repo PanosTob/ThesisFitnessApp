@@ -2,13 +2,16 @@ package gr.dipae.thesisfitnessapp.usecase.diet
 
 import gr.dipae.thesisfitnessapp.data.diet.model.DailyDietRequest
 import gr.dipae.thesisfitnessapp.domain.diet.entity.SetDailyDietResult
+import gr.dipae.thesisfitnessapp.domain.history.entity.DailyDiet
 import gr.dipae.thesisfitnessapp.domain.user.UserRepository
 import gr.dipae.thesisfitnessapp.usecase.UseCase
+import gr.dipae.thesisfitnessapp.usecase.user.history.RefreshDailyDietUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
 class SetMacrosDailyUseCase @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val refreshDailyDietUseCase: RefreshDailyDietUseCase
 ) : UseCase {
 
     suspend operator fun invoke(
@@ -35,6 +38,16 @@ class SetMacrosDailyUseCase @Inject constructor(
                     dailyWaterAccumulation
                 ),
                 todaySummary?.id
+            )
+
+            refreshDailyDietUseCase(
+                DailyDiet(
+                    calories = dailyCalorieAccumulation,
+                    proteins = dailyProteinAccumulation,
+                    carbohydrates = dailyCarbAccumulation,
+                    fats = dailyFatAccumulation,
+                    water = dailyWaterAccumulation
+                )
             )
 
             SetDailyDietResult.Success
