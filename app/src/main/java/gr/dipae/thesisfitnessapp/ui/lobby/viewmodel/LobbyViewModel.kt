@@ -48,8 +48,7 @@ class LobbyViewModel @Inject constructor(
     fun handleBarsForSports(onEditClicked: () -> Unit, onEditDoneClicked: () -> Unit, onCalendarClicked: () -> Unit, statusBarState: Boolean) {
         if (statusBarState) {
             _uiState.value.topBarState.actionIcons.value = listOf(
-                TopBarActionUiItem(R.drawable.ic_add, onEditDoneClicked),
-                TopBarActionUiItem(R.drawable.ic_calendar, onCalendarClicked)
+                TopBarActionUiItem(R.drawable.ic_check, onEditDoneClicked)
             )
         } else {
             _uiState.value.topBarState.actionIcons.value = listOf(
