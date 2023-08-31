@@ -379,7 +379,10 @@ class UserDataSourceImpl @Inject constructor(
 
     override suspend fun setFavoriteSportIds(favoritesSports: List<String>) {
         val userId = getFirebaseUserId()
-        val challenges = getUserProgressedChallenges() + getFavoriteSportsChallenges(favoritesSports).map {
+        val alreadyOwnedChallenges = getAlreadyOwnedChallenges().filter { it.progress > 0 }
+        val newFavoriteChallenges = getFavoriteSportsChallenges(favoritesSports).filter { challenge -> alreadyOwnedChallenges.none { it.challengeId == challenge.id } }
+
+        val challenges = alreadyOwnedChallenges + newFavoriteChallenges.map {
             RemoteUserSportChallenge(
                 challengeId = it.id,
                 activityId = it.activityId,
@@ -404,8 +407,8 @@ class UserDataSourceImpl @Inject constructor(
             ).await()
     }
 
-    private suspend fun getUserProgressedChallenges(): List<RemoteUserSportChallenge> {
-        return getUser()?.challenges?.filter { it.progress > 0 } ?: emptyList()
+    private suspend fun getAlreadyOwnedChallenges(): List<RemoteUserSportChallenge> {
+        return getUser()?.challenges ?: emptyList()
     }
 
     override suspend fun setUserNewSportChallenges(favoritesSports: List<String>) {

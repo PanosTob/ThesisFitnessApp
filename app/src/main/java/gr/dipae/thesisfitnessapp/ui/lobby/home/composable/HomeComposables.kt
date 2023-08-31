@@ -148,7 +148,7 @@ fun HomeUserTrackingStat(
     val primaryColor = MaterialTheme.colorScheme.primary
     val progressAnimation by animateFloatAsState(
         targetValue = trackingItem.fulfillmentPercentage.value,
-        animationSpec = tween(3500, 2500)
+        animationSpec = tween(2500, 1000), label = ""
     )
     Column(
         modifier = Modifier

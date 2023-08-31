@@ -1,5 +1,7 @@
 package gr.dipae.thesisfitnessapp.util.composable
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.size
@@ -7,6 +9,7 @@ import androidx.compose.foundation.progressSemantics
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -25,13 +28,19 @@ fun ArcProgressBar(
     color: Color = MaterialTheme.colorScheme.primary,
     strokeWidth: Dp = ProgressIndicatorDefaults.CircularStrokeWidth
 ) {
+    val progressAnimation by animateFloatAsState(
+        targetValue = progress,
+        animationSpec = tween(2500, 1000),
+        label = ""
+    )
+
     val stroke = with(LocalDensity.current) {
-        Stroke(width = strokeWidth.toPx(), cap = StrokeCap.Square)
+        Stroke(width = strokeWidth.toPx(), cap = StrokeCap.Round)
     }
     val emptyBarColor = MaterialTheme.colorScheme.tertiary
     Canvas(
         modifier
-            .progressSemantics(progress)
+            .progressSemantics(progressAnimation)
             .size(40.dp)
             .focusable()
     ) {
@@ -39,13 +48,13 @@ fun ArcProgressBar(
     }
     Canvas(
         modifier
-            .progressSemantics(progress)
+            .progressSemantics(progressAnimation)
             .size(40.dp)
             .focusable()
     ) {
         // Start at 12 O'clock
         val startAngle = 180f
-        val sweep = progress * 180f
+        val sweep = progressAnimation * 180f
         drawRoundedCircularIndicator(startAngle, sweep, color, stroke)
     }
 }
