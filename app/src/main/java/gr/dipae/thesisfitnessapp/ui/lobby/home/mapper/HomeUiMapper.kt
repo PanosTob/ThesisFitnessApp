@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.data.Mapper
 import gr.dipae.thesisfitnessapp.data.sport.mapper.SportsMapper.Companion.sportColorMap
+import gr.dipae.thesisfitnessapp.domain.history.entity.DaySummary
 import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameterType
 import gr.dipae.thesisfitnessapp.domain.user.challenges.entity.UserSportChallenge
 import gr.dipae.thesisfitnessapp.domain.user.entity.User
@@ -18,30 +19,33 @@ import javax.inject.Inject
 
 class HomeUiMapper @Inject constructor() : Mapper {
 
-    operator fun invoke(user: User?): HomeUiState {
+    operator fun invoke(user: User?, daySummary: DaySummary?): HomeUiState? {
+        if (user == null || daySummary == null) {
+            return null
+        }
         return HomeUiState(
             userDetails = UserDetailsUiItem(
-                username = user?.name ?: "",
-                imageUrl = "${user?.imgUrl}",
-                bodyWeight = user?.let { "${user.bodyWeight}kg" } ?: "",
-                bodyFatPercent = user?.let { "${user.bodyFatPercent}%" } ?: "",
-                muscleMassPercent = user?.let { "${user.muscleMassPercent}%" } ?: "",
-                dailyStepGoal = user?.dailyStepsGoal ?: 0,
-                dailyCaloricBurnGoal = user?.dailyCaloricBurnGoal ?: 0
+                username = user.name,
+                imageUrl = user.imgUrl,
+                bodyWeight = "${user.bodyWeight}kg",
+                bodyFatPercent = "${user.bodyFatPercent}%",
+                muscleMassPercent = "${user.muscleMassPercent}%",
+                dailyStepGoal = user.dailyStepsGoal,
+                dailyCaloricBurnGoal = user.dailyCaloricBurnGoal
             ),
             userMovementTracking = UserMovementTrackingUiItems(
                 stepsTracking = UserMovementTrackingUiItem(
-                    remaining = mutableStateOf(/*user?.dailyStepsGoal?.toString() ?: ""*/ "9000"),
-                    goal = (user?.dailyStepsGoal ?: "").toString(),
-                    fulfillmentPercentage = mutableStateOf(0.6f)
+                    remaining = mutableStateOf(daySummary.steps.toString()),
+                    goal = user.dailyStepsGoal.toString(),
+                    fulfillmentPercentage = mutableStateOf((daySummary.steps.toFloat() / user.dailyStepsGoal).coerceAtMost(1f))
                 ),
                 caloriesTracking = UserMovementTrackingUiItem(
-                    remaining = mutableStateOf(/*user?.dailyCaloricBurnGoal?.toString() ?: ""*/ "1000"),
-                    goal = (user?.dailyCaloricBurnGoal ?: "").toString(),
-                    fulfillmentPercentage = mutableStateOf(0.4f)
+                    remaining = mutableStateOf(daySummary.caloriesBurned.toString()),
+                    goal = user.dailyCaloricBurnGoal.toString(),
+                    fulfillmentPercentage = mutableStateOf((daySummary.caloriesBurned.toFloat() / user.dailyCaloricBurnGoal).coerceAtMost(1f))
                 )
             ),
-            sportChallenges = mapUserSportChallenges(user?.sportChallenges).sortedBy { it.sportId }
+            sportChallenges = mapUserSportChallenges(user.sportChallenges).sortedBy { it.sportId }
         )
     }
 

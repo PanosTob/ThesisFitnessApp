@@ -32,6 +32,7 @@ class HistoryMapper @Inject constructor(
             return DaySummary(
                 id = id,
                 steps = steps,
+                caloriesBurned = caloriesBurned,
                 dateTime = Calendar.getInstance().apply {
                     timeInMillis = date.time
                     set(Calendar.HOUR_OF_DAY, 0)

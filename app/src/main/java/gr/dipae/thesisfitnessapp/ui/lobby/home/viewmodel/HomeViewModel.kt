@@ -4,12 +4,14 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.dipae.thesisfitnessapp.domain.history.entity.DaySummary
 import gr.dipae.thesisfitnessapp.domain.user.entity.User
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.lobby.home.mapper.HomeUiMapper
 import gr.dipae.thesisfitnessapp.ui.lobby.home.model.HomeUiState
 import gr.dipae.thesisfitnessapp.usecase.app.GetStepCounterUseCase
 import gr.dipae.thesisfitnessapp.usecase.app.GetUserIsRunningStatusUseCase
+import gr.dipae.thesisfitnessapp.usecase.history.GetTodaysSummaryUseCase
 import gr.dipae.thesisfitnessapp.usecase.user.GetUserDetailsUseCase
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
@@ -19,6 +21,7 @@ class HomeViewModel @Inject constructor(
     private val getUserDetailsUseCase: GetUserDetailsUseCase,
     private val getStepCounterUseCase: GetStepCounterUseCase,
     private val getUserIsRunningStatusUseCase: GetUserIsRunningStatusUseCase,
+    private val getTodaysSummaryUseCase: GetTodaysSummaryUseCase,
     private val homeUiMapper: HomeUiMapper
 ) : BaseViewModel() {
 
@@ -28,21 +31,21 @@ class HomeViewModel @Inject constructor(
     private var userIsRunning: Boolean = false
 
     private var user: User? = null
+    private var daySummary: DaySummary? = null
     fun init() {
         launchWithProgress {
             user = getUserDetailsUseCase()
-            _uiState.value = homeUiMapper(user)
+            daySummary = getTodaysSummaryUseCase()
+            _uiState.value = homeUiMapper(user, daySummary)
         }
-        handleStepsTracking(3500)
-        handleCaloriesTracking(3500)
-        /*launch {
+        launch {
             getStepCounterUseCase().collectLatest {
                 _uiState.value?.apply {
                     handleStepsTracking(it)
                     handleCaloriesTracking(it)
                 }
             }
-        }*/
+        }
         launch {
             getUserIsRunningStatusUseCase().collectLatest {
                 userIsRunning = it
@@ -53,7 +56,7 @@ class HomeViewModel @Inject constructor(
     private fun handleStepsTracking(stepsDone: Long) {
         _uiState.value?.apply {
             userMovementTracking.stepsTracking.remaining.value = (userDetails.dailyStepGoal - stepsDone).toString()
-            userMovementTracking.stepsTracking.fulfillmentPercentage.value += stepsDone.toFloat() / userDetails.dailyStepGoal
+            userMovementTracking.stepsTracking.fulfillmentPercentage.value += (stepsDone.toFloat() / userDetails.dailyStepGoal).coerceAtMost(1f)
         }
     }
 
@@ -63,7 +66,7 @@ class HomeViewModel @Inject constructor(
 
             val caloriesBurned = calculateCaloricBurnOfOneStep(stepsDone, bodyWeight)
             userMovementTracking.caloriesTracking.remaining.value = (userDetails.dailyCaloricBurnGoal - caloriesBurned).toInt().toString()
-            userMovementTracking.caloriesTracking.fulfillmentPercentage.value += caloriesBurned.toFloat() / userDetails.dailyCaloricBurnGoal
+            userMovementTracking.caloriesTracking.fulfillmentPercentage.value += (caloriesBurned.toFloat() / userDetails.dailyCaloricBurnGoal).coerceAtMost(1f)
         }
     }
 
