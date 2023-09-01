@@ -446,7 +446,8 @@ class UserDataSourceImpl @Inject constructor(
                 mapOf(
                     DAY_SUMMARY_DATE to FieldValue.serverTimestamp(),
                     DAY_SUMMARY_DAILY_DIET to dailyDietRequest
-                )
+                ),
+                SetOptions.merge()
             )
             .await()
     }
