@@ -11,7 +11,8 @@ import gr.dipae.thesisfitnessapp.domain.history.entity.SportDoneParameter
 data class HistoryUiState(
     val sportsUiState: HistorySportsUiState?,
     val dietUiState: HistoryDietUiState?,
-    val emptyView: Boolean
+    val emptyView: Boolean,
+    val filteredSport: Boolean = false
 )
 
 data class HistorySportsUiState(

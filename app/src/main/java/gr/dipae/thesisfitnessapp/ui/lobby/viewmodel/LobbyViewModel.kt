@@ -98,11 +98,15 @@ class LobbyViewModel @Inject constructor(
         hideBottomNavigation()
     }
 
-    fun handleBarsForHistory(fromSports: Boolean, onFilterClicked: () -> Unit, onBackButtonPressed: () -> Unit) {
+    fun handleBarsForHistory(fromSports: Boolean, filteredSport: Boolean, clickAction: () -> Unit, onBackButtonPressed: () -> Unit) {
         _uiState.value.apply {
             topBarState.titleRes.value = R.string.empty
             if (fromSports) {
-                topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_filter, onFilterClicked))
+                if (filteredSport) {
+                    topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_close, clickAction))
+                } else {
+                    topBarState.actionIcons.value = listOf(TopBarActionUiItem(R.drawable.ic_filter, clickAction))
+                }
             } else {
                 topBarState.actionIcons.value = emptyList()
             }

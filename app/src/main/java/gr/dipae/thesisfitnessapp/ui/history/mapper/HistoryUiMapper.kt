@@ -67,7 +67,8 @@ class HistoryUiMapper @Inject constructor() : Mapper {
         return HistoryUiState(
             sportsUiState = getFilterSportUiState(daySummaries.filter { it.sportsDone.find { sportDone -> sportDone.sportId == sportId } != null }, everyDayDate, sportId),
             dietUiState = null,
-            emptyView = daySummaries.isEmpty()
+            emptyView = daySummaries.isEmpty(),
+            filteredSport = true
         )
     }
 

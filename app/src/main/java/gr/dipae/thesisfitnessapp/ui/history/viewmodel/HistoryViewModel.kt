@@ -39,10 +39,14 @@ class HistoryViewModel @Inject constructor(
                 if (daySummaries.isNotEmpty()) {
                     totalDays.addAll(calculateDaysBetweenTwoDatesUseCase(startDate, endDate))
 
-                    _uiState.value = historyUiMapper(fromSports, daySummaries, totalDays)
+                    showHistoryContent(fromSports)
                 }
             }
         }
+    }
+
+    fun showHistoryContent(fromSports: Boolean) {
+        _uiState.value = historyUiMapper(fromSports, daySummaries, totalDays)
     }
 
     fun showHistoryDialog() {

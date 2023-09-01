@@ -174,8 +174,8 @@ fun NavGraphBuilder.lobbyNavHost(
                     )
 
                     historyScreen(
-                        onHistoryShown = { fromSports, onFilterClicked ->
-                            viewModel.handleBarsForHistory(fromSports, onFilterClicked) { navController.navigateUp() }
+                        onHistoryShown = { fromSports, filteredSport, onFilterClicked ->
+                            viewModel.handleBarsForHistory(fromSports, filteredSport, onFilterClicked) { navController.navigateUp() }
                         }
                     )
                 }
