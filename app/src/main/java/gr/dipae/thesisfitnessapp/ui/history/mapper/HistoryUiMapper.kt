@@ -110,11 +110,11 @@ class HistoryUiMapper @Inject constructor() : Mapper {
         val daySummaryCountBySport = mutableMapOf<String, Int>()
 
         totalDistinctSports.forEach { sport ->
-            val summaryGroup = daySummaries.flatMap { it.sportsDone }.count { it.sportId == sport.sportId }
+            val summaryGroup = daySummaries.count { it.sportsDone.any { sportDone -> sportDone.sportId == sport.sportId } }
             daySummaryCountBySport[sport.sportId] = summaryGroup
         }
 
-        daySummaryCountBySport[""] = daySummaries.count { !everyDayDate.contains(it.dateTime) }
+        daySummaryCountBySport[""] = totalDaysOfSummary - daySummaryCountBySport.values.sum()
 
         return HistorySportsUiState(
             generalDetailsTitle = { stringResource(id = R.string.sport_title) },
@@ -176,7 +176,7 @@ class HistoryUiMapper @Inject constructor() : Mapper {
         return PieChartData(
             slices = groupedSummariesBySport.map {
                 PieChartData.Slice(
-                    label = (SportsMapper.sportNamesMap[it.key] ?: "No Sport") + " - " + it.value + " days",
+                    label = (SportsMapper.sportNamesMap[it.key] ?: "No Activity") + " - " + it.value + " days",
                     value = it.value.toFloat() / totalDays,
                     color = SportsMapper.sportColorMap[it.key] ?: ColorDividerGrey
                 )

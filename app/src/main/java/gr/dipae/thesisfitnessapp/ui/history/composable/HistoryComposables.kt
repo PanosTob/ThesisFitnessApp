@@ -1,5 +1,6 @@
 package gr.dipae.thesisfitnessapp.ui.history.composable
 
+import android.graphics.Typeface
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -245,12 +246,12 @@ fun HistorySportsPieChart(
                 .fillMaxWidth(),
             pieChartData = item.data,
             pieChartConfig = PieChartConfig(
-                labelVisible = true,
                 isAnimationEnable = true,
                 showSliceLabels = true,
                 animationDuration = 1500,
                 backgroundColor = MaterialTheme.colorScheme.background,
-                sliceLabelTextSize = 12.sp,
+                sliceLabelTextSize = 14.sp,
+                sliceLabelTypeface = Typeface.DEFAULT_BOLD
             )
         )
     }
