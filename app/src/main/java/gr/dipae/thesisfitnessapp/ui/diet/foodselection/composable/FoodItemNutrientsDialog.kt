@@ -1,6 +1,7 @@
 package gr.dipae.thesisfitnessapp.ui.diet.foodselection.composable
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
@@ -30,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLText
-import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerDefault
 import gr.dipae.thesisfitnessapp.ui.base.compose.ifable
 import gr.dipae.thesisfitnessapp.ui.diet.foodselection.model.FoodUiItem
 import gr.dipae.thesisfitnessapp.ui.theme.ColorDisabledButton
@@ -48,10 +49,15 @@ fun FoodItemNutrientsDialog(
         AlertDialog(
             onDismissRequest = { onDismiss() },
         ) {
-            Column {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(SpacingDefault_16dp)
+            ) {
                 val localFocusManager = LocalFocusManager.current
                 ThesisFitnessBLAutoSizeText(text = stringResource(id = R.string.diet_food_save_description))
-                VerticalSpacerDefault()
 
                 var gramsValueText by remember {
                     mutableStateOf(
@@ -66,7 +72,6 @@ fun FoodItemNutrientsDialog(
                     onTextFieldValueChanged = { gramsValueText = it },
                     onDone = { localFocusManager.clearFocus() }
                 )
-                VerticalSpacerDefault()
 
                 val addButtonIsEnabled by remember(gramsValueText.text.isNotBlank()) { mutableStateOf(gramsValueText.text.isNotBlank()) }
                 FoodItemNutrientsAddButton(
@@ -122,7 +127,7 @@ fun FoodItemNutrientsAddButton(
     ThesisFitnessHLText(
         modifier = Modifier
             .fillMaxWidth(0.6f)
-            .aspectRatio(4f)
+            .aspectRatio(3.5f)
             .drawBehind {
                 val backgroundColor = if (isEnabled) primaryColor else ColorDisabledButton
                 drawRoundRect(

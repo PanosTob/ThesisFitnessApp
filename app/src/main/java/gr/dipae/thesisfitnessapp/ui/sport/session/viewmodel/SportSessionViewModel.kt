@@ -174,7 +174,9 @@ class SportSessionViewModel @Inject constructor(
             timerState.value = ContinuationState.Running
             iconRes.value = R.drawable.ic_pause
         }
-        subscribeToLocationUpdates()
+        if (sportHasMap == true) {
+            subscribeToLocationUpdates()
+        }
     }
 
     fun onSessionFinish() {

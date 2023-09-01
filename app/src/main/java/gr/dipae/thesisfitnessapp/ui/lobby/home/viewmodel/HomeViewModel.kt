@@ -11,7 +11,7 @@ import gr.dipae.thesisfitnessapp.ui.lobby.home.mapper.HomeUiMapper
 import gr.dipae.thesisfitnessapp.ui.lobby.home.model.HomeUiState
 import gr.dipae.thesisfitnessapp.usecase.app.GetStepCounterUseCase
 import gr.dipae.thesisfitnessapp.usecase.app.GetUserIsRunningStatusUseCase
-import gr.dipae.thesisfitnessapp.usecase.history.GetTodaysSummaryUseCase
+import gr.dipae.thesisfitnessapp.usecase.history.CheckExistenceAndCreateTodaysSummaryUseCase
 import gr.dipae.thesisfitnessapp.usecase.user.GetUserDetailsUseCase
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
@@ -21,7 +21,7 @@ class HomeViewModel @Inject constructor(
     private val getUserDetailsUseCase: GetUserDetailsUseCase,
     private val getStepCounterUseCase: GetStepCounterUseCase,
     private val getUserIsRunningStatusUseCase: GetUserIsRunningStatusUseCase,
-    private val getTodaysSummaryUseCase: GetTodaysSummaryUseCase,
+    private val checkExistenceAndCreateTodaysSummaryUseCase: CheckExistenceAndCreateTodaysSummaryUseCase,
     private val homeUiMapper: HomeUiMapper
 ) : BaseViewModel() {
 
@@ -34,8 +34,8 @@ class HomeViewModel @Inject constructor(
     private var daySummary: DaySummary? = null
     fun init() {
         launchWithProgress {
+            daySummary = checkExistenceAndCreateTodaysSummaryUseCase()
             user = getUserDetailsUseCase()
-            daySummary = getTodaysSummaryUseCase()
             _uiState.value = homeUiMapper(user, daySummary)
         }
         launch {

@@ -13,9 +13,6 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException
 import gr.dipae.thesisfitnessapp.data.diet.model.DailyDietRequest
 import gr.dipae.thesisfitnessapp.data.history.model.RemoteDaySummary
-import gr.dipae.thesisfitnessapp.data.history.model.RemoteSportDone
-import gr.dipae.thesisfitnessapp.data.history.model.RemoteWorkoutDone
-import gr.dipae.thesisfitnessapp.data.history.model.RemoteWorkoutExerciseDone
 import gr.dipae.thesisfitnessapp.data.sport.model.RemoteSport
 import gr.dipae.thesisfitnessapp.data.user.UserDataSource
 import gr.dipae.thesisfitnessapp.data.user.broadcast.AccelerometerBroadcast
@@ -37,7 +34,6 @@ import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_DAILY_DIET
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_DATE
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_SPORTS_DONE_COLLECTION
 import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_WORKOUTS_DONE_COLLECTION
-import gr.dipae.thesisfitnessapp.util.DAY_SUMMARY_WORKOUT_EXERCISES_DONE_COLLECTION
 import gr.dipae.thesisfitnessapp.util.EXERCISES_COLLECTION
 import gr.dipae.thesisfitnessapp.util.GOOGLE_SIGN_IN_BLOCKED_TIME
 import gr.dipae.thesisfitnessapp.util.SCANNED_FOODS_COLLECTION
@@ -223,6 +219,20 @@ class UserDataSourceImpl @Inject constructor(
             .collection(EXERCISES_COLLECTION).getDocumentsResponse()
     }
 
+    override suspend fun createTodaysSummary() {
+        fireStore
+            .collection(USERS_COLLECTION)
+            .document(getFirebaseUserId())
+            .collection(DAY_SUMMARY_COLLECTION)
+            .document()
+            .set(
+                mapOf(
+                    DAY_SUMMARY_DATE to FieldValue.serverTimestamp()
+                )
+            )
+            .await()
+    }
+
     override suspend fun getDaySummary(date: Long?): RemoteDaySummary? {
         val userId = getFirebaseUserId()
         val startOfDayTime = if (date != null) {
@@ -327,38 +337,6 @@ class UserDataSourceImpl @Inject constructor(
                 .collection(DAY_SUMMARY_WORKOUTS_DONE_COLLECTION)
                 .getDocumentsResponse()
         }
-    }
-
-    override suspend fun getDaySummarySportsDone(daySummaryId: String): List<RemoteSportDone> {
-        return fireStore
-            .collection(USERS_COLLECTION)
-            .document(getFirebaseUserId())
-            .collection(DAY_SUMMARY_COLLECTION)
-            .document(daySummaryId)
-            .collection(DAY_SUMMARY_SPORTS_DONE_COLLECTION)
-            .getDocumentsResponse()
-    }
-
-    override suspend fun getDaySummaryWorkoutsDone(daySummaryId: String): List<RemoteWorkoutDone> {
-        return fireStore
-            .collection(USERS_COLLECTION)
-            .document(getFirebaseUserId())
-            .collection(DAY_SUMMARY_COLLECTION)
-            .document(daySummaryId)
-            .collection(DAY_SUMMARY_WORKOUTS_DONE_COLLECTION)
-            .getDocumentsResponse()
-    }
-
-    override suspend fun getDaySummaryWorkoutExercisesDone(daySummaryId: String, workoutId: String): List<RemoteWorkoutExerciseDone> {
-        return fireStore
-            .collection(USERS_COLLECTION)
-            .document(getFirebaseUserId())
-            .collection(DAY_SUMMARY_COLLECTION)
-            .document(daySummaryId)
-            .collection(DAY_SUMMARY_WORKOUTS_DONE_COLLECTION)
-            .document(workoutId)
-            .collection(DAY_SUMMARY_WORKOUT_EXERCISES_DONE_COLLECTION)
-            .getDocumentsResponse()
     }
 
     override suspend fun getFavoriteSportIds(): List<String> {
