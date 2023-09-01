@@ -126,7 +126,7 @@ fun HomeDailyMovementStats(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         HomeUserTrackingStat(
-            title = stringResource(id = R.string.wizard_calories_label),
+            title = stringResource(id = R.string.home_caloric_burn_counter_label),
             trackingItem = userMovementTracking.caloriesTracking,
             imgRes = R.drawable.ic_caloric_burn
         )

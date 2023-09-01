@@ -48,6 +48,7 @@ import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHMAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerDefault
 import gr.dipae.thesisfitnessapp.ui.base.compose.WidthAdjustedDivider
 import gr.dipae.thesisfitnessapp.ui.history.model.HistoryLineChartUiItem
+import gr.dipae.thesisfitnessapp.ui.history.model.HistoryMovementUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportPieChartUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportsLineCharsUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportsUiState
@@ -163,9 +164,9 @@ fun HistorySportsContent(
     HistoryGenericSportDetails(uiState)
 
     VerticalSpacerDefault()
-    WidthAdjustedDivider(Modifier.fillMaxWidth())
     VerticalSpacerDefault()
 
+    HistoryMovementLineChart(uiState.movement)
     HistorySportsPieChart(uiState.pieChart.value)
     HistorySportsDistanceLineChart(uiState.lineCharts.value)
 
@@ -252,6 +253,73 @@ fun HistorySportsPieChart(
                 sliceLabelTextSize = 12.sp,
             )
         )
+    }
+}
+
+@Composable
+fun HistoryMovementLineChart(
+    movement: HistoryMovementUiState?
+) {
+    if (movement != null) {
+        val m3ChartStyle = m3ChartStyle(axisGuidelineColor = MaterialTheme.colorScheme.primary)
+        val stepsChartEntryModel = entryModelOf(movement.stepsLineChart.points)
+        val caloriesChartEntryModel = entryModelOf(movement.caloricBurnLineChart.points)
+
+        ThesisFitnessHLAutoSizeText(
+            text = stringResource(id = movement.stepsLineChart.titleRes),
+            maxLines = 1,
+            maxFontSize = 24.sp,
+            color = MaterialTheme.colorScheme.surface
+        )
+        ProvideChartStyle(chartStyle = remember { m3ChartStyle }) {
+            Chart(
+                autoScaleUp = AutoScaleUp.None,
+                chart = lineChart(
+                    persistentMarkers = movement.stepsLineChart.points.associate { point -> point.x to rememberMarker() }
+                ),
+                model = stepsChartEntryModel,
+                startAxis = rememberStartAxis(
+                    axis = lineComponent(color = MaterialTheme.colorScheme.outline, thickness = 2.dp, shape = Shapes.rectShape)
+                ),
+                bottomAxis = rememberBottomAxis(
+                    axis = lineComponent(color = MaterialTheme.colorScheme.outline, thickness = 2.dp, shape = Shapes.rectShape),
+                    valueFormatter = { value, _ -> movement.stepsLineChart.xAxisLabelMap[value] ?: "" }
+                ),
+                marker = rememberMarker()
+            )
+        }
+
+        VerticalSpacerDefault()
+        WidthAdjustedDivider(Modifier.fillMaxWidth())
+        VerticalSpacerDefault()
+
+        ThesisFitnessHLAutoSizeText(
+            text = stringResource(id = movement.caloricBurnLineChart.titleRes),
+            maxLines = 1,
+            maxFontSize = 24.sp,
+            color = MaterialTheme.colorScheme.surface
+        )
+        ProvideChartStyle(chartStyle = remember { m3ChartStyle }) {
+            Chart(
+                autoScaleUp = AutoScaleUp.None,
+                chart = lineChart(
+                    persistentMarkers = movement.caloricBurnLineChart.points.associate { point -> point.x to rememberMarker() }
+                ),
+                model = caloriesChartEntryModel,
+                startAxis = rememberStartAxis(
+                    axis = lineComponent(color = MaterialTheme.colorScheme.outline, thickness = 2.dp, shape = Shapes.rectShape)
+                ),
+                bottomAxis = rememberBottomAxis(
+                    axis = lineComponent(color = MaterialTheme.colorScheme.outline, thickness = 2.dp, shape = Shapes.rectShape),
+                    valueFormatter = { value, _ -> movement.caloricBurnLineChart.xAxisLabelMap[value] ?: "" }
+                ),
+                marker = rememberMarker()
+            )
+        }
+
+        VerticalSpacerDefault()
+        WidthAdjustedDivider(Modifier.fillMaxWidth())
+        VerticalSpacerDefault()
     }
 }
 

@@ -16,6 +16,7 @@ data class HistoryUiState(
 
 data class HistorySportsUiState(
     val generalDetailsTitle: @Composable () -> String,
+    val movement: HistoryMovementUiState? = null,
     val totalTime: String,
     val totalDistance: String,
     val pieChart: MutableState<HistorySportPieChartUiItem?> = mutableStateOf(null),
@@ -23,6 +24,11 @@ data class HistorySportsUiState(
     val sportsDone: MutableState<List<SportDoneUiItem>> = mutableStateOf(emptyList()),
     val sportsToFilter: MutableState<List<SportDoneUiItem>> = mutableStateOf(emptyList()),
     val showFilterSportsDialog: MutableState<Boolean> = mutableStateOf(false)
+)
+
+data class HistoryMovementUiState(
+    val stepsLineChart: HistoryLineChartUiItem,
+    val caloricBurnLineChart: HistoryLineChartUiItem
 )
 
 data class HistorySportPieChartUiItem(

@@ -52,6 +52,7 @@
     <!-- Home Screen -->
     <string name="home_title">Home</string>
     <string name="home_step_counter_label">Steps</string>
+    <string name="home_caloric_burn_counter_label">Calories</string>
     <string name="home_remaining_goal">remaining</string>
     <string name="home_user_challenges_section">Activity Challenges</string>
     <string name="home_user_challenge_goal_duration_unit">Minutes</string>

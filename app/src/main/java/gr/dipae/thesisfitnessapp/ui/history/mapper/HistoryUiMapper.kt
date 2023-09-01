@@ -34,6 +34,7 @@ import gr.dipae.thesisfitnessapp.ui.history.model.DailyDietUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.DaySummaryUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.HistoryDietUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.HistoryLineChartUiItem
+import gr.dipae.thesisfitnessapp.ui.history.model.HistoryMovementUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportPieChartUiItem
 import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportsLineCharsUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportsUiState
@@ -118,6 +119,7 @@ class HistoryUiMapper @Inject constructor() : Mapper {
             generalDetailsTitle = { stringResource(id = R.string.sport_title) },
             totalTime = totalDuration,
             totalDistance = totalDistanceMeters,
+            movement = populateMovementLineCharts(daySummaries, everyDayDate),
             pieChart = mutableStateOf(
                 HistorySportPieChartUiItem(
                     data = populateSportsPieChartData(daySummaryCountBySport, totalDaysOfSummary),
@@ -125,6 +127,27 @@ class HistoryUiMapper @Inject constructor() : Mapper {
                 )
             ),
             sportsDone = mutableStateOf(daySummaries.mapNotNull { mapDaySummaryUiItem(it) }.flatMap { it.sportsDone })
+        )
+    }
+
+    private fun populateMovementLineCharts(daySummaries: List<DaySummary>, everyDayDate: List<Long>): HistoryMovementUiState {
+        val stepsPoints = everyDayDate.map { date ->
+            Pair(
+                LocalDate.parse(date.toDate(ENGLISH_DATE)).toEpochDay().toFloat(),
+                daySummaries.find { it.dateTime == date }?.steps?.toFloat() ?: 0f
+            )
+        }
+
+        val caloricBurnPoints = everyDayDate.map { date ->
+            Pair(
+                LocalDate.parse(date.toDate(ENGLISH_DATE)).toEpochDay().toFloat(),
+                daySummaries.find { it.dateTime == date }?.caloriesBurned?.toFloat() ?: 0f
+            )
+        }
+
+        return HistoryMovementUiState(
+            stepsLineChart = getHistoryLineChart(stepsPoints, R.string.home_step_counter_label),
+            caloricBurnLineChart = getHistoryLineChart(caloricBurnPoints, R.string.home_caloric_burn_counter_label)
         )
     }
 
