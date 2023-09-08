@@ -18,8 +18,16 @@ class SportSessionRepositoryImpl @Inject constructor(
     private val sportSessionMapper: SportSessionMapper
 ) : SportSessionRepository {
 
-    override suspend fun setSportSession(todaySummaryId: String?, sportId: String, distance: Long, duration: Long, breakTime: Long, goalParameter: SportParameter?) {
-        return dataSource.setSportSession(todaySummaryId, sportSessionMapper(sportId, breakTime, goalParameter), sportSessionMapper(distance, duration))
+    override suspend fun setSportSession(
+        todaySummaryId: String?,
+        sportId: String,
+        distance: Long,
+        duration: Long,
+        breakTime: Long,
+        goalParameter: SportParameter?,
+        sportParameters: List<SportParameter>?
+    ) {
+        return dataSource.setSportSession(todaySummaryId, sportSessionMapper(sportId, breakTime, goalParameter), sportSessionMapper(distance, duration, sportParameters))
     }
 
     override fun getUserLocation(): Flow<LatLng?> {

@@ -15,11 +15,10 @@ import javax.inject.Inject
 class SetSportSessionUseCase @Inject constructor(
     private val repository: SportSessionRepository,
     private val userRepository: UserRepository,
-    private val isSportParameterAchievedUseCase: IsSportParameterAchievedUseCase,
     private val getUserSportChallengesBySportIdUseCase: GetUserSportChallengesBySportIdUseCase,
     private val setUserSportChallengeProgressUseCase: SetUserSportChallengeProgressUseCase
 ) : UseCase {
-    suspend operator fun invoke(sportId: String, goalParameter: SportParameter?, duration: Long, distance: Long, breakTime: Long): SportSessionSaveResult {
+    suspend operator fun invoke(sportId: String, goalParameter: SportParameter?, sportParameters: List<SportParameter>?, duration: Long, distance: Long, breakTime: Long): SportSessionSaveResult {
         try {
 
             val durationMinutes = convertMillisToMinutes(duration)
@@ -48,7 +47,8 @@ class SetSportSessionUseCase @Inject constructor(
                 duration = durationMinutes,
                 distance = distance,
                 breakTime = breakMinutes,
-                goalParameter = goalParameter
+                goalParameter = goalParameter,
+                sportParameters = sportParameters
             )
 
             return SportSessionSaveResult.Success

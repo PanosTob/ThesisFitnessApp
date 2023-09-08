@@ -153,7 +153,7 @@ fun NavGraphBuilder.lobbyNavHost(
                         onSportSessionTimerStop = { stopStopWatch() }
                     )
                     dietScreen(
-                        onDietShown = { viewModel.handleBarsForDiet(it) },
+                        onDietShown = { filtered, action -> viewModel.handleBarsForDiet(filtered, action) },
                         onFoodSelectionFabClicked = { navController.navigateToFoodSelection() },
                         onMacrosFabClicked = { navController.navigateToMacrosDialog() },
                         onDateRangePicked = { startDate, endDate ->
@@ -174,8 +174,8 @@ fun NavGraphBuilder.lobbyNavHost(
                     )
 
                     historyScreen(
-                        onHistoryShown = { fromSports, onFilterClicked ->
-                            viewModel.handleBarsForHistory(fromSports, onFilterClicked) { navController.navigateUp() }
+                        onHistoryShown = { fromSports, filteredSport, onFilterClicked ->
+                            viewModel.handleBarsForHistory(fromSports, filteredSport, onFilterClicked) { navController.navigateUp() }
                         }
                     )
                 }
@@ -204,11 +204,12 @@ fun LobbyTopBar(
                     navigationIconContentColor = MaterialTheme.colorScheme.primary
                 ),
                 navigationIcon = {
-                    topBarState.navigationItem.value.iconVector.value?.let {
-                        IconButton(onClick = { topBarState.navigationItem.value.clickAction.value.invoke() }) {
+                    topBarState.navigationItem.value?.let {
+                        IconButton(onClick = { it.clickAction.invoke() }) {
                             Icon(
-                                imageVector = it,
-                                contentDescription = "Back"
+                                imageVector = it.iconVector,
+                                contentDescription = "Back",
+                                tint = it.tint.invoke()
                             )
                         }
                     }

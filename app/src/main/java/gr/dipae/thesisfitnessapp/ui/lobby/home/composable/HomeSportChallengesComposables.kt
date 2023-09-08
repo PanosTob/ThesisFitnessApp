@@ -30,7 +30,7 @@ import gr.dipae.thesisfitnessapp.ui.base.compose.HorizontalSpacerHalf
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHMAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerHalf
-import gr.dipae.thesisfitnessapp.ui.diet.composable.ArcProgressBar
+import gr.dipae.thesisfitnessapp.ui.diet.composable.ArcProgressBarWithTextUnderneath
 import gr.dipae.thesisfitnessapp.ui.lobby.home.model.UserSportChallengeUiItem
 import gr.dipae.thesisfitnessapp.ui.theme.ColorGold
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
@@ -65,7 +65,7 @@ fun HomeSportChallenge(
         Row(
             modifier = Modifier.fillMaxSize()
         ) {
-            ArcProgressBar(
+            ArcProgressBarWithTextUnderneath(
                 modifier = Modifier
                     .weight(0.4f)
                     .fillMaxHeight(),
@@ -80,7 +80,7 @@ fun HomeSportChallenge(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Bottom
             ) {
-                ThesisFitnessHMAutoSizeText(text = item.goalName, color = Color.White)
+                ThesisFitnessHMAutoSizeText(text = item.goalName + " " + stringResource(id = item.goalUnit), color = Color.White)
             }
         }
 

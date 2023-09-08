@@ -5,10 +5,13 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.dipae.thesisfitnessapp.domain.history.entity.DaySummary
+import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameterType
 import gr.dipae.thesisfitnessapp.ui.base.BaseViewModel
 import gr.dipae.thesisfitnessapp.ui.history.mapper.HistoryUiMapper
 import gr.dipae.thesisfitnessapp.ui.history.model.HistoryUiState
 import gr.dipae.thesisfitnessapp.ui.history.navigation.HistoryRouteArgs
+import gr.dipae.thesisfitnessapp.usecase.user.history.CalculateDaysBetweenTwoDatesUseCase
 import gr.dipae.thesisfitnessapp.usecase.user.history.GetDaySummariesByRangeUseCase
 import javax.inject.Inject
 
@@ -16,7 +19,8 @@ import javax.inject.Inject
 class HistoryViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getDaySummariesByRangeUseCase: GetDaySummariesByRangeUseCase,
-    private val historyUiMapper: HistoryUiMapper
+    private val historyUiMapper: HistoryUiMapper,
+    private val calculateDaysBetweenTwoDatesUseCase: CalculateDaysBetweenTwoDatesUseCase
 ) : BaseViewModel() {
 
     private val _uiState: MutableState<HistoryUiState?> = mutableStateOf(null)
@@ -25,13 +29,42 @@ class HistoryViewModel @Inject constructor(
     private val startDate = savedStateHandle.get<Long>(HistoryRouteArgs[0])
     private val endDate = savedStateHandle.get<Long>(HistoryRouteArgs[1])
 
+    private var daySummaries: MutableList<DaySummary> = mutableListOf()
+    private var totalDays: MutableList<Long> = mutableListOf()
+
     fun init(fromSports: Boolean) {
         launchWithProgress {
-            _uiState.value = historyUiMapper(fromSports, getDaySummariesByRangeUseCase(startDate, endDate))
+            if (startDate != null && endDate != null) {
+                daySummaries.addAll(getDaySummariesByRangeUseCase(startDate, endDate))
+                if (daySummaries.isNotEmpty()) {
+                    totalDays.addAll(calculateDaysBetweenTwoDatesUseCase(startDate, endDate))
+
+                    showHistoryContent(fromSports)
+                }
+            }
         }
     }
 
-    fun filterSportsDone() {
+    fun showHistoryContent(fromSports: Boolean) {
+        _uiState.value = historyUiMapper(fromSports, daySummaries, totalDays)
+    }
 
+    fun showHistoryDialog() {
+        _uiState.value?.sportsUiState?.apply {
+            if (daySummaries.isNotEmpty()) {
+                sportsToFilter.value = daySummaries
+                    .mapNotNull { historyUiMapper.mapDaySummaryUiItem(it) }
+                    .flatMap { it.sportsDone }
+                    .filter { it.sportParameters.any { parameter -> parameter.type == SportParameterType.Distance } }
+                    .distinctBy { it.sportId }
+                showFilterSportsDialog.value = true
+            }
+        }
+    }
+
+    fun filterHistoryBySport(sportId: String) {
+        if (daySummaries.isNotEmpty()) {
+            _uiState.value = historyUiMapper.mapBySportId(daySummaries, totalDays, sportId)
+        }
     }
 }

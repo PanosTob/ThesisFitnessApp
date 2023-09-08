@@ -63,7 +63,7 @@ fun HistoryDateRangePicker(
         DateRangePicker(
             state = this,
             dateFormatter = DatePickerFormatter("yy MM dd", "yy MM dd", "yy MM dd"),
-            dateValidator = { true },
+            showModeToggle = false,
             title = {
                 ThesisFitnessHLAutoSizeText(
                     modifier = Modifier.fillMaxWidth(),
@@ -82,38 +82,31 @@ fun HistoryDateRangePicker(
                     Box(Modifier.weight(1f)) {
                         (if (selectedStartDateMillis != null) selectedStartDateMillis?.toDate() else stringResource(id = R.string.history_date_picker_start_date))?.let {
                             ThesisFitnessBMText(
-                                text = it
+                                text = it,
+                                color = MaterialTheme.colorScheme.background
                             )
                         }
                     }
                     Box(Modifier.weight(1f)) {
                         (if (selectedEndDateMillis != null) selectedEndDateMillis?.toDate() else stringResource(id = R.string.history_date_picker_end_date))?.let {
                             ThesisFitnessBMText(
-                                text = it
+                                text = it,
+                                color = MaterialTheme.colorScheme.background
                             )
                         }
                     }
                     Box(Modifier.weight(0.2f)) {
-                        Icon(modifier = Modifier.clickable {
-                            onDateRangePicked(selectedStartDateMillis, selectedEndDateMillis)
-                        }, imageVector = Icons.Default.Done, contentDescription = "")
+                        Icon(
+                            modifier = Modifier.clickable {
+                                onDateRangePicked(selectedStartDateMillis, selectedEndDateMillis)
+                            }, imageVector = Icons.Default.Done, contentDescription = "",
+                            tint = MaterialTheme.colorScheme.background
+                        )
                     }
                 }
             },
             colors = DatePickerDefaults.colors(
-                containerColor = Color.Black,
-                titleContentColor = Color.Black,
-                headlineContentColor = Color.Black,
-                weekdayContentColor = Color.Black,
-                subheadContentColor = Color.Black,
-                yearContentColor = Color.Black,
-                currentYearContentColor = Color.Black,
-                selectedYearContainerColor = Color.Black,
-                disabledDayContentColor = Color.Black,
-                todayDateBorderColor = MaterialTheme.colorScheme.primary,
-                dayInSelectionRangeContainerColor = Color.Black,
-                dayInSelectionRangeContentColor = Color.Black,
-                selectedDayContainerColor = Color.Black
+
             )
         )
     }

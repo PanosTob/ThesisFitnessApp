@@ -1,5 +1,6 @@
 package gr.dipae.thesisfitnessapp.ui.history.composable
 
+import android.graphics.Typeface
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,18 +28,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import co.yml.charts.axis.AxisData
-import co.yml.charts.ui.linechart.LineChart
-import co.yml.charts.ui.linechart.model.IntersectionPoint
-import co.yml.charts.ui.linechart.model.Line
-import co.yml.charts.ui.linechart.model.LineChartData
-import co.yml.charts.ui.linechart.model.LinePlotData
-import co.yml.charts.ui.linechart.model.LineStyle
-import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
-import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
-import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import co.yml.charts.ui.piechart.charts.PieChart
 import co.yml.charts.ui.piechart.models.PieChartConfig
+import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
+import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
+import com.patrykandpatrick.vico.compose.chart.Chart
+import com.patrykandpatrick.vico.compose.chart.line.lineChart
+import com.patrykandpatrick.vico.compose.component.lineComponent
+import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
+import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
+import com.patrykandpatrick.vico.core.chart.scale.AutoScaleUp
+import com.patrykandpatrick.vico.core.component.shape.Shapes
+import com.patrykandpatrick.vico.core.entry.entryModelOf
 import gr.dipae.thesisfitnessapp.R
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessBMAutoSizeText
@@ -46,20 +48,21 @@ import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHMAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerDefault
 import gr.dipae.thesisfitnessapp.ui.base.compose.WidthAdjustedDivider
-import gr.dipae.thesisfitnessapp.ui.history.model.HistoryDietLineChartUiItem
+import gr.dipae.thesisfitnessapp.ui.history.model.HistoryLineChartUiItem
+import gr.dipae.thesisfitnessapp.ui.history.model.HistoryMovementUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportPieChartUiItem
+import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportsLineCharsUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.HistorySportsUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.HistoryUiState
 import gr.dipae.thesisfitnessapp.ui.history.model.SportDoneUiItem
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingDefault_16dp
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingHalf_8dp
-import gr.dipae.thesisfitnessapp.ui.theme.SpacingQuadruple_64dp
-import gr.dipae.thesisfitnessapp.ui.theme.SpacingQuarter_4dp
 
 @Composable
 fun HistoryContent(
     uiState: HistoryUiState,
+    onSportFilterClicked: (String) -> Unit
 ) {
     Column(
         Modifier
@@ -75,6 +78,14 @@ fun HistoryContent(
 
             uiState.sportsUiState != null -> {
                 HistorySportsContent(uiState.sportsUiState)
+
+                if (uiState.sportsUiState.showFilterSportsDialog.value) {
+                    HistoryFilterSportsDialog(
+                        uiState.sportsUiState.sportsToFilter.value,
+                        onCloseClick = { uiState.sportsUiState.showFilterSportsDialog.value = false },
+                        onSportClicked = { onSportFilterClicked(it) }
+                    )
+                }
             }
 
             uiState.dietUiState != null -> {
@@ -96,7 +107,7 @@ fun HistoryEmptyView() {
 
 @Composable
 fun HistoryDietContent(
-    item: List<HistoryDietLineChartUiItem>
+    item: List<HistoryLineChartUiItem>
 ) {
     ThesisFitnessBLAutoSizeText(
         text = stringResource(id = R.string.history_diet_title),
@@ -104,7 +115,6 @@ fun HistoryDietContent(
         maxLines = 1,
     )
     VerticalSpacerDefault()
-
     item.forEach {
         ThesisFitnessHLAutoSizeText(
             text = stringResource(id = it.titleRes),
@@ -112,46 +122,28 @@ fun HistoryDietContent(
             maxFontSize = 24.sp,
             color = MaterialTheme.colorScheme.surface
         )
-        LineChart(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f),
-            lineChartData = LineChartData(
-                linePlotData = LinePlotData(
-                    lines = listOf(
-                        Line(
-                            dataPoints = it.points,
-                            LineStyle(),
-                            IntersectionPoint(color = MaterialTheme.colorScheme.background),
-                            SelectionHighlightPoint(color = MaterialTheme.colorScheme.primary),
-                            ShadowUnderLine(),
-                            SelectionHighlightPopUp(backgroundColor = MaterialTheme.colorScheme.background, labelColor = MaterialTheme.colorScheme.surface, popUpLabel = { _, y -> y.toString() })
-                        )
-                    ),
-                ),
-                xAxisData = AxisData.Builder()
-                    .backgroundColor(MaterialTheme.colorScheme.primary)
-                    .steps(it.points.size)
-                    .axisLabelColor(MaterialTheme.colorScheme.secondary)
-                    .backgroundColor(Color.Transparent)
-                    .labelAndAxisLinePadding(SpacingQuarter_4dp)
-                    .axisStepSize(SpacingQuadruple_64dp)
-                    .axisLabelFontSize(12.sp)
-                    .labelData(it.xAxisData).build(),
-                yAxisData = AxisData.Builder()
-                    .steps(it.points.size)
-                    .labelAndAxisLinePadding(SpacingDefault_16dp)
-                    .axisLabelFontSize(16.sp)
-                    .axisLabelColor(MaterialTheme.colorScheme.primary)
-                    .backgroundColor(Color.Transparent)
-                    .axisStepSize(SpacingCustom_24dp)
-                    .startPadding(SpacingQuarter_4dp)
-                    .labelData(it.yAxisData).build(),
-                isZoomAllowed = false,
-                containerPaddingEnd = SpacingCustom_24dp,
-                backgroundColor = MaterialTheme.colorScheme.surface
-            )
+        val m3ChartStyle = m3ChartStyle(
+            axisGuidelineColor = MaterialTheme.colorScheme.primary
         )
+        val chartEntryModel = entryModelOf(it.points)
+
+        ProvideChartStyle(chartStyle = remember { m3ChartStyle }) {
+            Chart(
+                autoScaleUp = AutoScaleUp.None,
+                chart = lineChart(
+                    persistentMarkers = it.points.associate { point -> point.x to rememberMarker() }
+                ),
+                model = chartEntryModel,
+                startAxis = rememberStartAxis(
+                    axis = lineComponent(color = MaterialTheme.colorScheme.outline, thickness = 2.dp, shape = Shapes.rectShape)
+                ),
+                bottomAxis = rememberBottomAxis(
+                    axis = lineComponent(color = MaterialTheme.colorScheme.outline, thickness = 2.dp, shape = Shapes.rectShape),
+                    valueFormatter = { value, _ -> it.xAxisLabelMap[value] ?: "" }
+                ),
+                marker = rememberMarker()
+            )
+        }
 
         VerticalSpacerDefault()
         WidthAdjustedDivider(Modifier.fillMaxWidth())
@@ -173,10 +165,11 @@ fun HistorySportsContent(
     HistoryGenericSportDetails(uiState)
 
     VerticalSpacerDefault()
-    WidthAdjustedDivider(Modifier.fillMaxWidth())
     VerticalSpacerDefault()
 
+    HistoryMovementLineChart(uiState.movement)
     HistorySportsPieChart(uiState.pieChart.value)
+    HistorySportsDistanceLineChart(uiState.lineCharts.value)
 
     VerticalSpacerDefault()
     WidthAdjustedDivider(Modifier.fillMaxWidth())
@@ -253,13 +246,129 @@ fun HistorySportsPieChart(
                 .fillMaxWidth(),
             pieChartData = item.data,
             pieChartConfig = PieChartConfig(
-                labelVisible = true,
                 isAnimationEnable = true,
                 showSliceLabels = true,
                 animationDuration = 1500,
-                backgroundColor = MaterialTheme.colorScheme.background
+                backgroundColor = MaterialTheme.colorScheme.background,
+                sliceLabelTextSize = 14.sp,
+                sliceLabelTypeface = Typeface.DEFAULT_BOLD
             )
         )
+    }
+}
+
+@Composable
+fun HistoryMovementLineChart(
+    movement: HistoryMovementUiState?
+) {
+    if (movement != null) {
+        val m3ChartStyle = m3ChartStyle(axisGuidelineColor = MaterialTheme.colorScheme.primary)
+        val stepsChartEntryModel = entryModelOf(movement.stepsLineChart.points)
+        val caloriesChartEntryModel = entryModelOf(movement.caloricBurnLineChart.points)
+
+        ThesisFitnessHLAutoSizeText(
+            text = stringResource(id = movement.stepsLineChart.titleRes),
+            maxLines = 1,
+            maxFontSize = 24.sp,
+            color = MaterialTheme.colorScheme.surface
+        )
+        ProvideChartStyle(chartStyle = remember { m3ChartStyle }) {
+            Chart(
+                autoScaleUp = AutoScaleUp.None,
+                chart = lineChart(
+                    persistentMarkers = movement.stepsLineChart.points.associate { point -> point.x to rememberMarker() }
+                ),
+                model = stepsChartEntryModel,
+                startAxis = rememberStartAxis(
+                    axis = lineComponent(color = MaterialTheme.colorScheme.outline, thickness = 2.dp, shape = Shapes.rectShape)
+                ),
+                bottomAxis = rememberBottomAxis(
+                    axis = lineComponent(color = MaterialTheme.colorScheme.outline, thickness = 2.dp, shape = Shapes.rectShape),
+                    valueFormatter = { value, _ -> movement.stepsLineChart.xAxisLabelMap[value] ?: "" }
+                ),
+                marker = rememberMarker()
+            )
+        }
+
+        VerticalSpacerDefault()
+        WidthAdjustedDivider(Modifier.fillMaxWidth())
+        VerticalSpacerDefault()
+
+        ThesisFitnessHLAutoSizeText(
+            text = stringResource(id = movement.caloricBurnLineChart.titleRes),
+            maxLines = 1,
+            maxFontSize = 24.sp,
+            color = MaterialTheme.colorScheme.surface
+        )
+        ProvideChartStyle(chartStyle = remember { m3ChartStyle }) {
+            Chart(
+                autoScaleUp = AutoScaleUp.None,
+                chart = lineChart(
+                    persistentMarkers = movement.caloricBurnLineChart.points.associate { point -> point.x to rememberMarker() }
+                ),
+                model = caloriesChartEntryModel,
+                startAxis = rememberStartAxis(
+                    axis = lineComponent(color = MaterialTheme.colorScheme.outline, thickness = 2.dp, shape = Shapes.rectShape)
+                ),
+                bottomAxis = rememberBottomAxis(
+                    axis = lineComponent(color = MaterialTheme.colorScheme.outline, thickness = 2.dp, shape = Shapes.rectShape),
+                    valueFormatter = { value, _ -> movement.caloricBurnLineChart.xAxisLabelMap[value] ?: "" }
+                ),
+                marker = rememberMarker()
+            )
+        }
+
+        VerticalSpacerDefault()
+        WidthAdjustedDivider(Modifier.fillMaxWidth())
+        VerticalSpacerDefault()
+    }
+}
+
+@Composable
+fun HistorySportsDistanceLineChart(
+    sportsDistanceLineCharts: HistorySportsLineCharsUiState?
+) {
+    if (sportsDistanceLineCharts != null) {
+        ThesisFitnessBLAutoSizeText(
+            text = stringResource(id = R.string.history_activities_pie_chart_total_days, sportsDistanceLineCharts.totalDays),
+            maxFontSize = 22.sp,
+            maxLines = 1,
+        )
+        VerticalSpacerDefault()
+        sportsDistanceLineCharts.lineCharts.value.forEach {
+            ThesisFitnessHLAutoSizeText(
+                text = stringResource(id = it.titleRes),
+                maxLines = 1,
+                maxFontSize = 24.sp,
+                color = MaterialTheme.colorScheme.surface
+            )
+            val m3ChartStyle = m3ChartStyle(
+                axisGuidelineColor = MaterialTheme.colorScheme.primary
+            )
+            val chartEntryModel = entryModelOf(it.points)
+
+            ProvideChartStyle(chartStyle = remember { m3ChartStyle }) {
+                Chart(
+                    autoScaleUp = AutoScaleUp.None,
+                    chart = lineChart(
+                        persistentMarkers = it.points.associate { point -> point.x to rememberMarker() }
+                    ),
+                    model = chartEntryModel,
+                    startAxis = rememberStartAxis(
+                        axis = lineComponent(color = MaterialTheme.colorScheme.outline, thickness = 2.dp, shape = Shapes.rectShape)
+                    ),
+                    bottomAxis = rememberBottomAxis(
+                        axis = lineComponent(color = MaterialTheme.colorScheme.outline, thickness = 2.dp, shape = Shapes.rectShape),
+                        valueFormatter = { value, _ -> it.xAxisLabelMap[value] ?: "" }
+                    ),
+                    marker = rememberMarker()
+                )
+            }
+
+            VerticalSpacerDefault()
+            WidthAdjustedDivider(Modifier.fillMaxWidth())
+            VerticalSpacerDefault()
+        }
     }
 }
 
@@ -273,7 +382,7 @@ fun HistoryGenericSportDetails(
             .aspectRatio(2.5f)
     ) {
         ThesisFitnessHLAutoSizeText(
-            text = stringResource(id = R.string.history_activities_generic_details),
+            text = stringResource(id = R.string.history_activities_generic_details, uiState.generalDetailsTitle.invoke()),
             maxLines = 1,
             maxFontSize = 18.sp,
             color = MaterialTheme.colorScheme.surface

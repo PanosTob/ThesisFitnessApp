@@ -6,8 +6,6 @@ import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestoreSettings
-import com.google.firebase.firestore.ktx.memoryCacheSettings
 import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
@@ -44,11 +42,7 @@ object GoogleModule {
     //Firebase
     @Provides
     fun provideFirebaseFireStore(): FirebaseFirestore =
-        FirebaseFirestore.getInstance().apply {
-            firestoreSettings = firestoreSettings {
-                setLocalCacheSettings(memoryCacheSettings {})
-            }
-        }
+        FirebaseFirestore.getInstance()
 
     @Provides
     fun provideFirebaseStorage(): FirebaseStorage {

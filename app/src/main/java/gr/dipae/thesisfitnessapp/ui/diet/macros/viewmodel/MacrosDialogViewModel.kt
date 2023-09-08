@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MacrosDialogViewModel @Inject constructor(
-    private val setMacrosDailyUseCase: SetMacrosDailyUseCase,
+    private val setMacrosDailyUseCase: SetMacrosDailyUseCase
 ) : BaseViewModel() {
 
     private val _uiState: MutableState<MacrosDialogUiState> = mutableStateOf(MacrosDialogUiState())

@@ -16,6 +16,7 @@ data class UserSportChallengeUiItem(
     val sportName: String,
     val sportImgUrl: String,
     val goalName: String,
+    val goalUnit: Int,
     val goalAmount: String,
     val completed: Boolean,
     val amount: String,
@@ -41,5 +42,6 @@ data class UserMovementTrackingUiItems(
 
 data class UserMovementTrackingUiItem(
     val fulfillmentPercentage: MutableState<Float> = mutableStateOf(0f),
+    val goal: String,
     val remaining: MutableState<String>
 )

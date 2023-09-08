@@ -5,7 +5,7 @@ import gr.dipae.thesisfitnessapp.domain.sport.entity.SportParameterType
 data class DaySummary(
     val id: String,
     val steps: Long,
-    val calories: Long,
+    val caloriesBurned: Long,
     val dateTime: Long,
     val dailyDiet: DailyDiet,
     val sportsDone: List<SportDone>,
@@ -24,6 +24,7 @@ data class SportDone(
     val id: String,
     val sportId: String,
     val breakTime: Long,
+    val date: Long,
     val sportParameters: List<SportDoneParameter>,
     val goalParameter: SportDoneParameter
 )

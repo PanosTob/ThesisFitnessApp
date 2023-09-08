@@ -26,6 +26,7 @@ import gr.dipae.thesisfitnessapp.data.sport.location.composable.OnLocationPermis
 import gr.dipae.thesisfitnessapp.ui.base.compose.HorizontalSpacerHalf
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLAutoSizeText
 import gr.dipae.thesisfitnessapp.ui.base.compose.ThesisFitnessHLText
+import gr.dipae.thesisfitnessapp.ui.base.compose.VerticalSpacerDefault
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.SportSessionRealTimeDataUiItem
 import gr.dipae.thesisfitnessapp.ui.sport.session.model.SportSessionUiState
 import gr.dipae.thesisfitnessapp.ui.theme.SpacingCustom_24dp
@@ -60,6 +61,9 @@ fun SportSessionContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom
         ) {
+            ThesisFitnessHLText(text = sportTitle, fontSize = 24.sp, maxLines = 1)
+            VerticalSpacerDefault()
+
             var startAnimation by remember { mutableStateOf(false) }
             LottieCountDownAnimationOverlay(
                 modifier = Modifier

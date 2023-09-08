@@ -45,11 +45,6 @@ data class WizardUiState(
         }
     }
 
-    private fun onSelectFitnessLevel(fitnessLevelUiItem: FitnessLevelUiItem) {
-        fitnessLevels.onEach { it.isSelectedState.value = false }
-        fitnessLevels.find { it == fitnessLevelUiItem }?.isSelectedState?.value = true
-    }
-
     fun isFinishButtonEnabled(): Boolean =
         if (wizardPageIndexState.value == wizardSteps - 1) {
             usernameState.value.isNotBlank() &&
