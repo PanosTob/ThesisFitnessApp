@@ -98,6 +98,11 @@
 
     <!-- Profile Screen -->
     <string name="profile_title">Profile</string>
+    <string name="profile_change_body_btn">Change Body Composition Details</string>
+    <string name="profile_change_daily_movement_goals_btn">Change Daily Movement Goals</string>
+    <string name="profile_change_daily_diet_goals_btn">Change Daily Diet Goals</string>
+    <string name="profile_change_language_btn">Change Language</string>
+    <string name="profile_delete_acc_btn">Delete Account</string>
     <string name="profile_logout_btn">Logout</string>
 
     <string name="google_maps_key" translatable="false">AIzaSyB_HCdtKwGn823A2c4fvPPLtSb9VFxeS14</string>

@@ -81,7 +81,7 @@ class LobbyViewModel @Inject constructor(
 
     fun showProfileTopBar() {
         _uiState.value.topBarState.actionIcons.value = listOf()
-        _uiState.value.topBarState.isVisible.value = false
+        _uiState.value.topBarState.isVisible.value = true
     }
 
     fun handleBarsForInnerDestination(onBackButtonPressed: () -> Unit) {
